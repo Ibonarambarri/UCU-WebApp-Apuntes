@@ -1,0 +1,39 @@
+<!--
+    TA 5
+    En un nuevo documento HTML, crear un formulario de registro utilizando los
+    tags <form>, <label> e <input>. El formulario debe contar con un input de
+    tipo submit para enviar la información, y un input de tipo reset para
+    restablecer el formulario.
+-->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de registro</title>
+</head>
+
+<body>
+    <form action="#" method="post">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required>
+
+        <br><br>
+
+        <label for="email">Correo electrónico:</label>
+        <input type="email" id="email" name="email" required>
+
+        <br><br>
+
+        <label for="contrasena">Contraseña:</label>
+        <input type="password" id="contrasena" name="contrasena" required>
+
+        <br><br>
+
+        <input type="submit" value="Registrarse">
+        <input type="reset" value="Restablecer">
+    </form>
+</body>
+
+</html>
