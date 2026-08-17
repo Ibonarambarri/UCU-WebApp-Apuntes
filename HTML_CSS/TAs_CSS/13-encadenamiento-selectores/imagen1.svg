@@ -1,0 +1,10 @@
+<!-- Imagen cuadrada (400x400) usada como imagen de ejemplo en el TA 13 -->
+<!-- preserveAspectRatio="none" hace que el contenido se estire igual que una foto -->
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"
+    preserveAspectRatio="none">
+    <rect width="400" height="400" fill="#2f6f6f" />
+    <circle cx="200" cy="150" r="70" fill="#f2e3c6" />
+    <path d="M 60 400 Q 200 220 340 400 Z" fill="#f2e3c6" />
+    <text x="200" y="380" font-family="Verdana, sans-serif" font-size="28" fill="#2f6f6f"
+        text-anchor="middle">Imagen 1</text>
+</svg>

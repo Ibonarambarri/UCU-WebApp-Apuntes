@@ -1,0 +1,21 @@
+body {
+    margin: 40px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #222222;
+}
+
+#contador {
+    font-size: 24px;
+    font-weight: bold;
+    color: royalblue;
+}
+
+button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    background-color: royalblue;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200">
+    <rect width="300" height="200" fill="#87ceeb" />
+    <circle cx="240" cy="50" r="28" fill="#ffd700" />
+    <path d="M0 200 L90 90 L160 200 Z" fill="#6b8e23" />
+    <path d="M120 200 L200 100 L300 200 Z" fill="#556b2f" />
+    <text x="150" y="185" font-family="Arial" font-size="18" fill="white" text-anchor="middle">Día</text>
+</svg>

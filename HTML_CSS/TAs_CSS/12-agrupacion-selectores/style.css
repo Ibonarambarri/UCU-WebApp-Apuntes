@@ -1,0 +1,17 @@
+/* Selector de agrupamiento: estilos compartidos por ambos botones */
+.oscuro,
+.brillante {
+    font-size: 28px;
+    font-family: Helvetica, "Times New Roman", sans-serif;
+}
+
+/* Estilos únicos del primer elemento */
+.oscuro {
+    background-color: black;
+    color: white;
+}
+
+/* Estilos únicos del segundo elemento */
+.brillante {
+    background-color: yellow;
+}

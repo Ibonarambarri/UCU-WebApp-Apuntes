@@ -1,0 +1,60 @@
+/*
+    Problemas encontrados y cómo se arreglaron (sin tocar ninguna declaración, sólo
+    moviendo bloques y editando un selector):
+
+    1. El segundo párrafo (.para .small-para) se veía de 22px en lugar de 14px: ambas
+       clases tienen la misma especificidad (0,1,0), así que ganaba la que estaba
+       declarada más abajo, y .para estaba después de .small-para. Solución: mover el
+       bloque .para por encima del bloque .small-para.
+
+    2. El botón Confirm se veía con fondo blanco en lugar de verde: .button y .confirm
+       también tienen la misma especificidad, y .button estaba declarado después.
+       Solución: mover el bloque .button por encima del bloque .confirm.
+
+    3. El div hijo (.text .child) se veía de 22px y con texto finito: div.text tiene
+       especificidad (0,1,1), mayor que .child (0,1,0), así que ganaba siempre.
+       Solución: encadenar el selector como div.text.child (0,2,1).
+*/
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.para,
+.small-para {
+    color: hsl(0, 0%, 0%);
+    font-weight: 800;
+}
+
+.para {
+    font-size: 22px;
+}
+
+.small-para {
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.button {
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    font-size: 20px;
+}
+
+.confirm {
+    background: green;
+    color: white;
+    font-weight: bold;
+}
+
+div.text {
+    color: rgb(0, 0, 0);
+    font-size: 22px;
+    font-weight: 100;
+}
+
+div.text.child {
+    color: rgb(0, 0, 0);
+    font-weight: 800;
+    font-size: 14px;
+}

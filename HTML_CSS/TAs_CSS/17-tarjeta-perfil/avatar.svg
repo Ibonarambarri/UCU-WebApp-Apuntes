@@ -1,0 +1,6 @@
+<!-- Imagen cuadrada (200x200) usada como avatar en el TA 17 -->
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+    <rect width="200" height="200" fill="#4a6fa5" />
+    <circle cx="100" cy="75" r="38" fill="#f2e3c6" />
+    <path d="M 30 200 Q 100 110 170 200 Z" fill="#f2e3c6" />
+</svg>

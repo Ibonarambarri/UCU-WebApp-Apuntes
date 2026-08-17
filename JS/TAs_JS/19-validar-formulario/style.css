@@ -1,0 +1,54 @@
+body {
+    margin: 40px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #222222;
+}
+
+form {
+    max-width: 320px;
+}
+
+/* Cada campo se apila en vertical con flexbox */
+.campo {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input {
+    padding: 8px;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+/* El input con error se resalta con un borde rojo */
+input.invalido {
+    border-color: indianred;
+}
+
+.error {
+    margin: 5px 0 0 0;
+    color: indianred;
+    font-size: 13px;
+}
+
+.exito {
+    color: seagreen;
+    font-size: 14px;
+}
+
+button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    background-color: royalblue;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}

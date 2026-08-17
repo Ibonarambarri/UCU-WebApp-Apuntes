@@ -1,0 +1,10 @@
+/*
+    Combinador de descendiente (el espacio entre los dos selectores): sólo alcanza a
+    los p que están dentro de un div, no a los p que son hijos directos del body.
+*/
+div p {
+    background-color: yellow;
+    color: red;
+    font-size: 20px;
+    text-align: center;
+}

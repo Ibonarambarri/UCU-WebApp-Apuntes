@@ -1,0 +1,33 @@
+<!--
+    TA 18
+    Objetivo: Filtrar elementos de una lista mientras se escribe en un input.
+    Instrucciones:
+      Crear un archivo HTML con una lista <ul>, de personas. Dicha lista debe ser
+        renderizada de forma dinámica desde un archivo JavaScript usando template
+        strings.
+      Añadir un input de búsqueda.
+      Mientras el usuario escribe en el input, los elementos de la lista que no
+        coincidan con el texto deben ocultarse.
+-->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtrar lista</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>TA 18 - Filtrar una lista de personas</h1>
+
+    <input type="text" id="busqueda" placeholder="Buscar persona...">
+
+    <!-- La lista se completa desde script.js usando template strings -->
+    <ul id="lista-personas"></ul>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

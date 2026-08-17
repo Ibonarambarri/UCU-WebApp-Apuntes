@@ -1,0 +1,38 @@
+<!--
+    TA 13
+    El propósito de este ejercicio es enfocarse en entender cómo combinar diferentes
+    selectores, en lugar de simplemente agregar atributos. Se tienen 2 imágenes (que
+    deben ser proporcionadas por el alumno), las cuáles se quiere estilar. El
+    objetivo aquí es combinar los selectores para ambos elementos, de modo que cada
+    uno tenga un estilo único aplicado, a pesar de usar un selector de clase
+    compartido. Las reglas CSS que necesitas agregar a cada elemento son:
+      Haz que el elemento con ambas clases avatar y proportioned tenga un ancho de
+        300px, luego dale una altura para que mantenga sus proporciones cuadradas
+        originales. No hay que darle un valor en píxeles para la altura.
+      Haz que el elemento con ambas clases avatar y distorted tenga un ancho de 200
+        píxeles, luego haz que su altura sea el doble de su ancho. Para este caso, sí
+        hay que usar un valor en píxeles para la altura.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaining Selectors</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div>
+        <img class="avatar proportioned" src="imagen1.svg" alt="Imagen cuadrada con proporciones respetadas">
+        <img class="avatar distorted" src="imagen2.svg" alt="Imagen cuadrada deformada a lo alto">
+    </div>
+    <div>
+        <img class="original proportioned" src="imagen1.svg" alt="Imagen cuadrada en su tamaño original">
+        <img class="original distorted" src="imagen2.svg" alt="Imagen cuadrada en su tamaño original">
+    </div>
+</body>
+
+</html>

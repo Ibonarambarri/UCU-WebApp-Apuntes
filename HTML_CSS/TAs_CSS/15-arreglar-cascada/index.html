@@ -1,0 +1,35 @@
+<!--
+    TA 15
+    Hay algunos elementos que tienen algún tipo de problema de especificidad o de
+    orden de reglas en el archivo CSS proporcionado. Se pide descubrir qué problema
+    está afectando a un elemento y cómo solucionarlo, de forma tal de alcanzar el
+    resultado esperado. Se puede editar el archivo CSS agregando, eliminando o
+    editando selectores para un bloque de declaraciones, o moviendo bloques de
+    declaraciones. No se debe editar el archivo HTML ni ninguno de los estilos
+    actuales en el CSS.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix the Cascade</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <p class="para">I'm just a paragraph with extra bold text!</p>
+    <p class="para small-para">I'm a smaller paragraph, also with extra bold text!</p>
+
+    <button id="confirm-button" class="button confirm">Confirm</button>
+    <button id="cancel-button" class="button cancel">Cancel</button>
+
+    <div class="text">I'm a div with thin text!</div>
+    <div class="text">I'm a div with thin text and a child div!
+        <div class="text child">I'm a smaller child div with extra bold text.</div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,17 @@
+/*
+    Selectores encadenados: ambas reglas comparten la clase .avatar, pero la segunda
+    clase encadenada decide qué estilos recibe cada imagen. Las imágenes con la clase
+    .original no se estilan, por lo que se muestran en su tamaño natural.
+*/
+
+/* .avatar + .proportioned: mantiene las proporciones cuadradas originales */
+.avatar.proportioned {
+    width: 300px;
+    height: auto;
+}
+
+/* .avatar + .distorted: la altura es el doble del ancho, así que se deforma */
+.avatar.distorted {
+    width: 200px;
+    height: 400px;
+}

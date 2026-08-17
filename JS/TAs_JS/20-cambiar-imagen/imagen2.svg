@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200">
+    <rect width="300" height="200" fill="#1c2b4a" />
+    <circle cx="240" cy="50" r="24" fill="#f5f3ce" />
+    <circle cx="230" cy="42" r="24" fill="#1c2b4a" />
+    <circle cx="60" cy="40" r="3" fill="white" />
+    <circle cx="110" cy="70" r="2" fill="white" />
+    <circle cx="160" cy="30" r="2.5" fill="white" />
+    <path d="M0 200 L90 90 L160 200 Z" fill="#2f4f2f" />
+    <path d="M120 200 L200 100 L300 200 Z" fill="#1f3a1f" />
+    <text x="150" y="185" font-family="Arial" font-size="18" fill="white" text-anchor="middle">Noche</text>
+</svg>

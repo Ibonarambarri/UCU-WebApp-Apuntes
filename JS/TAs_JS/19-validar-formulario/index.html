@@ -1,0 +1,52 @@
+<!--
+    TA 19
+    Objetivo: Validar un formulario en tiempo real.
+    Instrucciones:
+      Crear un formulario con campos de texto para nombre, contraseña y correo
+        electrónico.
+      Añadir un mensaje de error debajo de cada campo que aparezca si los campos
+        están vacíos, la contraseña tiene menos de 8 caracteres, o si el correo no
+        es válido.
+      El formulario no debe enviarse si hay errores.
+-->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validar formulario</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>TA 19 - Validación de formulario en tiempo real</h1>
+
+    <!-- novalidate desactiva la validación del navegador para hacerla con JavaScript -->
+    <form id="formulario" novalidate>
+        <div class="campo">
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre">
+            <p class="error" id="error-nombre"></p>
+        </div>
+
+        <div class="campo">
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" name="password">
+            <p class="error" id="error-password"></p>
+        </div>
+
+        <div class="campo">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" name="email">
+            <p class="error" id="error-email"></p>
+        </div>
+
+        <button type="submit">Enviar</button>
+        <p class="exito" id="mensaje-exito"></p>
+    </form>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

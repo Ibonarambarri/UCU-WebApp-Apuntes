@@ -1,0 +1,33 @@
+<!--
+    TA 14
+    El objetivo de este ejercicio es aplicar estilos a los elementos que son
+    descendientes de otro elemento, dejando sin estilo los elementos que no son
+    descendientes de ese elemento. Se pueden usar selectores de tipo o de clase para
+    este ejercicio. Concretamente, lo que se pide es:
+      Solo los elementos p que son descendientes del elemento div deben tener un
+      fondo amarillo, texto rojo, un tamaño de fuente de 20px y alineación centrada
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descendant Combinator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <p class="text">This should be styled.</p>
+    </div>
+    <p class="text">This should be unstyled.</p>
+    <p class="text">This should be unstyled.</p>
+    <div class="container">
+        <p class="text">This should be styled.</p>
+        <p class="text">This should be styled.</p>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+/* Elementos impares (1, 3 y 5): comparten la clase .impar */
+.impar {
+    background-color: lightpink;
+    font-family: Verdana, "DejaVu Sans", sans-serif;
+}
+
+/* Segundo elemento */
+#segundo {
+    color: blue;
+    font-size: 36px;
+}
+
+/* Tercer elemento: suma una segunda clase a los estilos de .impar */
+.cooler {
+    font-size: 24px;
+}
+
+/* Cuarto elemento */
+#cuarto {
+    background-color: lightgreen;
+    font-size: 24px;
+    font-weight: bold;
+}
