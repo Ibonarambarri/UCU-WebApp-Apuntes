@@ -1,0 +1,57 @@
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.linkBtn {
+  text-decoration: none;
+  color: #fff;
+  background: #0f172a;
+  padding: 0.45rem 0.8rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  /* Tarjetas una al lado de la otra (como el bosquejo): tantas columnas
+     como entren de 220px, y se ajusta solo en pantallas chicas */
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.9rem;
+}
+
+.card {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.6rem;
+  padding: 0.8rem;
+  background: #fff;
+}
+
+.client {
+  margin: 0 0 0.6rem;
+  font-size: 1.1rem;
+}
+
+.items {
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.total {
+  margin: 0.75rem 0 0;
+  font-weight: 700;
+}
+
+.error {
+  color: #b91c1c;
+}

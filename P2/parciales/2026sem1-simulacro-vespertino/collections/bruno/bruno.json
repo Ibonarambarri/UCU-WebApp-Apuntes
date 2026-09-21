@@ -1,0 +1,6 @@
+{
+  "version": "1",
+  "name": "Bar — cuentas (JSON Server)",
+  "type": "collection",
+  "ignore": ["node_modules", ".git"]
+}

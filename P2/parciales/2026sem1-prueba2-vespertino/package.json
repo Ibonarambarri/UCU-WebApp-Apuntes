@@ -1,0 +1,35 @@
+{
+  "name": "prueba-2-2026-sem1-vespertino",
+  "version": "1.0.0",
+  "description": "Proyecto Trello - Prueba 2 DWYM 2026 Sem1 Vespertino",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "server": "json-server --watch BE/db.json --port 3001",
+    "start": "concurrently \"npm run dev\" \"npm run server\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ucu-fit-dwym/prueba-2-2026-sem1-vespertino.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ucu-fit-dwym/prueba-2-2026-sem1-vespertino/issues"
+  },
+  "homepage": "https://github.com/ucu-fit-dwym/prueba-2-2026-sem1-vespertino#readme",
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.1",
+    "concurrently": "^9.2.1",
+    "json-server": "^1.0.0-beta.15",
+    "vite": "^8.0.12"
+  },
+  "dependencies": {
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-router-dom": "^7.15.0"
+  }
+}

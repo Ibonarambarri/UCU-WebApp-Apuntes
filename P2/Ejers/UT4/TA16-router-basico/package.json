@@ -1,0 +1,9 @@
+{
+  "name": "ta16-router-basico",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  }
+}

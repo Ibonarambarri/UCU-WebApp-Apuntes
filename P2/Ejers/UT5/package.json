@@ -1,0 +1,19 @@
+{
+  "name": "ejercicios-ut5",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Dependencias compartidas por todos los ejercicios de UT5. Instalar UNA sola vez aca con: npm install",
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.9.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.0.4",
+    "vite": "^7.1.7"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}

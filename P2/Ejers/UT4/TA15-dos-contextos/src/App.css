@@ -1,0 +1,56 @@
+/* ==============================================
+   Archivo: src/App.css
+   Qué hace: estilos base y los dos temas como clases.
+   ============================================== */
+
+/* Sin margen para que el fondo del tema ocupe toda la pantalla */
+body {
+  margin: 0;
+}
+
+/* Contenedor principal a pantalla completa */
+.contenedor {
+  min-height: 100vh;
+  padding: 16px;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Tema claro */
+.tema-claro {
+  background-color: #ffffff;
+  color: #222222;
+}
+
+/* Tema oscuro */
+.tema-oscuro {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+}
+
+/* Botones separados entre sí */
+.controles button {
+  margin-right: 8px;
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Tarjeta del tema: borde del color del texto actual */
+.tarjeta {
+  border: 2px solid currentColor;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 16px;
+  max-width: 400px;
+}
+
+/* Tarjeta del idioma: borde punteado para diferenciarla */
+.tarjeta-idioma {
+  border: 2px dotted currentColor;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 16px;
+  max-width: 400px;
+}

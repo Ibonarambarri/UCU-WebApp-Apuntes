@@ -1,0 +1,53 @@
+.board {
+  display: flex;
+  gap: 20px;
+  padding: 24px;
+  overflow-x: auto;
+  align-items: flex-start;
+}
+
+.column {
+  flex: 1;
+  min-width: 260px;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.columnHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.columnTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.count {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #1e293b;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.empty {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  text-align: center;
+  padding: 16px 0;
+  font-style: italic;
+}

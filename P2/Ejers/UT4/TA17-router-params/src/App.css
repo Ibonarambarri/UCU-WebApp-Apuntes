@@ -1,0 +1,56 @@
+/* ==============================================
+   Archivo: src/App.css
+   Qué hace: estilos de la barra, la lista y el detalle.
+   ============================================== */
+
+/* Caja central */
+.contenedor {
+  max-width: 700px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+/* Barra de navegación */
+.barra {
+  display: flex;
+  gap: 8px;
+  background-color: #333333;
+  padding: 10px;
+}
+
+/* Enlaces de la barra */
+.enlace {
+  color: #ffffff;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+/* Enlace activo resaltado */
+.enlace-activo {
+  background-color: #007bff;
+  font-weight: bold;
+}
+
+/* Contenido */
+.contenido {
+  padding: 16px;
+}
+
+/* Lista de productos con espacio entre ítems */
+.lista-productos li {
+  margin-bottom: 8px;
+}
+
+/* Tarjeta de detalle */
+.detalle {
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+/* Botón volver */
+button {
+  padding: 6px 12px;
+  cursor: pointer;
+}

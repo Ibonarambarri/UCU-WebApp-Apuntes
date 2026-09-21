@@ -1,0 +1,91 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "Bar — cuentas (JSON Server)",
+    "description": "Colección para el recurso `cuentas` en http://localhost:3001",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001"
+    }
+  ],
+  "item": [
+    {
+      "name": "Listar cuentas",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/cuentas"
+      }
+    },
+    {
+      "name": "Obtener cuenta por id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/cuentas/1"
+      }
+    },
+    {
+      "name": "Crear cuenta",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cliente\": \"Cliente nuevo\",\n  \"consumos\": [\n    { \"emoji\": \"🍺\", \"item\": \"Cerveza\", \"cantidad\": 1, \"precio\": 900 }\n  ]\n}"
+        },
+        "url": "{{baseUrl}}/cuentas"
+      }
+    },
+    {
+      "name": "Reemplazar cuenta (PUT)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"1\",\n  \"cliente\": \"María\",\n  \"consumos\": [\n    { \"emoji\": \"🍺\", \"item\": \"Cerveza\", \"cantidad\": 2, \"precio\": 400 },\n    { \"emoji\": \"🍟\", \"item\": \"Papas\", \"cantidad\": 1, \"precio\": 1200 }\n  ]\n}"
+        },
+        "url": "{{baseUrl}}/cuentas/1"
+      }
+    },
+    {
+      "name": "Actualizar cuenta (PATCH)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cliente\": \"María G.\"\n}"
+        },
+        "url": "{{baseUrl}}/cuentas/2"
+      }
+    },
+    {
+      "name": "Eliminar cuenta",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/cuentas/3"
+      }
+    }
+  ]
+}

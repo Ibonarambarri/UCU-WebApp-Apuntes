@@ -1,0 +1,48 @@
+/* ==============================================
+   Archivo: src/componentes/Contador.css
+   Qué hace: estilo del contador y sus botones.
+   ============================================== */
+
+/* Caja centrada con fondo blanco */
+.contador {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 24px;
+  width: 200px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* El número grande para que se vea bien */
+.contador-valor {
+  font-size: 48px;
+  margin: 0 0 16px 0;
+  color: #2c3e50;
+}
+
+/* Botones uno al lado del otro */
+.contador-botones {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Botones grandes y fáciles de clickear */
+.contador-botones button {
+  font-size: 20px;
+  padding: 8px 20px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  background-color: #3498db;
+  color: #ffffff;
+}
+
+/* --- Agregado en TA09 --- */
+
+/* Texto chiquito de ayuda debajo de los botones */
+.contador-ayuda {
+  margin: 16px 0 0 0;
+  font-size: 12px;
+  color: #888888;
+}

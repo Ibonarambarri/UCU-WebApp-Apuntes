@@ -1,0 +1,17 @@
+meta {
+  name: Actualizar cuenta (PATCH)
+  type: http
+  seq: 5
+}
+
+patch {
+  url: http://localhost:3001/cuentas/2
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "cliente": "Juan P."
+  }
+}

@@ -1,0 +1,62 @@
+/* ==============================================
+   Archivo: src/App.css
+   Qué hace: estilos de la barra y el contenido.
+   ============================================== */
+
+/* Caja central */
+.contenedor {
+  max-width: 700px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+/* Barra horizontal; align-items para que el botón y el texto queden centrados */
+.barra {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #333333;
+  padding: 10px;
+}
+
+/* Enlaces */
+.enlace {
+  color: #ffffff;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+/* Enlace activo */
+.enlace-activo {
+  background-color: #007bff;
+  font-weight: bold;
+}
+
+/* El saludo se empuja a la derecha con margin-left: auto */
+.usuario {
+  color: #ffffff;
+  margin-left: auto;
+}
+
+/* Botón de logout rojo */
+.boton-logout {
+  background-color: #cc0000;
+  color: #ffffff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Contenido */
+.contenido {
+  padding: 16px;
+}
+
+/* Input del login */
+input {
+  padding: 6px;
+  font-size: 16px;
+  margin-right: 8px;
+}

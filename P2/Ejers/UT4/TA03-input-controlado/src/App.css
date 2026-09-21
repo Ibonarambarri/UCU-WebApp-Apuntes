@@ -1,0 +1,35 @@
+/* ==============================================
+   Archivo: src/App.css
+   Qué hace: estilos simples para el input y el párrafo de resultado.
+   ============================================== */
+
+/* Fuente y fondo generales */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f8;
+  margin: 0;
+  padding: 20px;
+}
+
+/* La etiqueta y el input van uno al lado del otro con espacio entre medio */
+.campo {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Input un poco más grande y con borde redondeado */
+.campo input {
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+}
+
+/* Párrafo de resultado con fondo para que se note */
+.resultado {
+  margin-top: 16px;
+  padding: 12px;
+  background-color: #ffffff;
+  border-left: 4px solid #3498db;
+}

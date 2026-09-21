@@ -1,0 +1,67 @@
+/* ==============================================
+   Archivo: src/App.css
+   Qué hace: estilos del formulario y de la lista de tareas.
+   ============================================== */
+
+/* Fuente y fondo generales */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f8;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Input y botón uno al lado del otro */
+.formulario-tarea {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+/* Input que ocupa el espacio disponible */
+.formulario-tarea input {
+  flex: 1;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+}
+
+/* Botón azul */
+.formulario-tarea button {
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  background-color: #3498db;
+  color: #ffffff;
+}
+
+/* Lista sin los puntitos por defecto */
+.lista-tareas {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Cada tarea es una "fila" blanca */
+.tarea {
+  background-color: #ffffff;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  border-radius: 4px;
+  border-left: 4px solid #2ecc71;
+}
+
+/* Mensaje cuando no hay tareas */
+.sin-tareas {
+  color: #888888;
+  font-style: italic;
+}
+
+/* Contador de tareas al pie */
+.contador-tareas {
+  margin-top: 16px;
+  color: #555555;
+}

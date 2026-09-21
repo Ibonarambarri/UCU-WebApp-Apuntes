@@ -1,0 +1,58 @@
+/* ==============================================
+   Archivo: src/App.css
+   Qué hace: define los DOS temas como clases (.tema-claro y .tema-oscuro)
+   y los estilos base. React decide cuál clase poner según el contexto.
+   ============================================== */
+
+/* Sin margen en el body para que el fondo del tema ocupe toda la pantalla */
+body {
+  margin: 0;
+}
+
+/* Contenedor principal: ocupa toda la altura de la ventana */
+.contenedor {
+  min-height: 100vh;
+  padding: 16px;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+  /* transición suave entre colores al cambiar de tema */
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* TEMA CLARO: fondo blanco y texto oscuro */
+.tema-claro {
+  background-color: #ffffff;
+  color: #222222;
+}
+
+/* TEMA OSCURO: fondo oscuro y texto claro */
+.tema-oscuro {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+}
+
+/* La tarjeta: borde y padding; el color lo aporta la clase de tema */
+.tarjeta {
+  border: 2px solid currentColor;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+  max-width: 400px;
+}
+
+/* En tema claro la tarjeta tiene fondo gris muy claro */
+.tarjeta.tema-claro {
+  background-color: #f2f2f2;
+}
+
+/* En tema oscuro la tarjeta tiene fondo un poco más claro que el fondo general */
+.tarjeta.tema-oscuro {
+  background-color: #333333;
+}
+
+/* Botón */
+button {
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+}

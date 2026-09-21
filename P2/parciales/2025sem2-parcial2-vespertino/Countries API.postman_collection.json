@@ -1,0 +1,287 @@
+{
+	"info": {
+		"_postman_id": "859aa2ef-fa10-4764-adfc-5b9ac070daa2",
+		"name": "Countries API",
+		"description": "API collection for Countries information including currencies, languages, and timezones",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19717119"
+	},
+	"item": [
+		{
+			"name": "Countries",
+			"item": [
+				{
+					"name": "Get All Countries",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/countries",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"countries"
+							]
+						},
+						"description": "Retrieves a list of all countries. Returns an array of country codes (CCA3 format)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Countries by Currency",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/countries?currency=USD",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"countries"
+							],
+							"query": [
+								{
+									"key": "currency",
+									"value": "USD",
+									"description": "Filter countries by currency code (e.g., USD, EUR, GBP)"
+								}
+							]
+						},
+						"description": "Retrieves countries that use a specific currency. Pass the currency code as a query parameter."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Countries by Language",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/countries?language=spa",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"countries"
+							],
+							"query": [
+								{
+									"key": "language",
+									"value": "spa",
+									"description": "Filter countries by language code (e.g., spa, eng, fra)"
+								}
+							]
+						},
+						"description": "Retrieves countries where a specific language is spoken. Pass the language code as a query parameter."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Countries by Timezone",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/countries?timezone=UTC-04%3A00",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"countries"
+							],
+							"query": [
+								{
+									"key": "timezone",
+									"value": "UTC-04%3A00",
+									"description": "Filter countries by timezone (e.g., America/New_York, Europe/London)"
+								}
+							]
+						},
+						"description": "Retrieves countries in a specific timezone. Pass the timezone string as a query parameter."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Countries with Multiple Filters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/countries?currency=USD&language=eng",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"countries"
+							],
+							"query": [
+								{
+									"key": "currency",
+									"value": "USD",
+									"description": "Currency filter"
+								},
+								{
+									"key": "language",
+									"value": "eng",
+									"description": "Language filter"
+								}
+							]
+						},
+						"description": "Retrieves countries matching multiple filters. All filters are combined with AND logic."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Country by Code",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/countries/URY",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"countries",
+								"URY"
+							]
+						},
+						"description": "Retrieves detailed information about a specific country using its CCA3 code (3-letter country code). Returns 404 if country not found."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Country by Code - USA Example",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/countries/USA",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"countries",
+								"USA"
+							]
+						},
+						"description": "Example request for USA country details."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Country by Code - Not Found",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/countries/XXX",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"countries",
+								"XXX"
+							]
+						},
+						"description": "Example request that will return 404 error for non-existent country code."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints related to country information"
+		},
+		{
+			"name": "Currencies",
+			"item": [
+				{
+					"name": "Get All Currencies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/currencies",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"currencies"
+							]
+						},
+						"description": "Retrieves a list of all currencies used across all countries. Each currency includes code, name, and symbol."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints related to currency information"
+		},
+		{
+			"name": "Languages",
+			"item": [
+				{
+					"name": "Get All Languages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/languages",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"languages"
+							]
+						},
+						"description": "Retrieves a list of all languages spoken across all countries. Each language includes code and name."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints related to language information"
+		},
+		{
+			"name": "Timezones",
+			"item": [
+				{
+					"name": "Get All Timezones",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/timezones",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"timezones"
+							]
+						},
+						"description": "Retrieves a list of all timezones across all countries. Returns timezone strings in standard format."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints related to timezone information"
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:5173",
+			"type": "string"
+		}
+	]
+}

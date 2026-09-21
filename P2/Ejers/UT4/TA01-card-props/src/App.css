@@ -1,0 +1,19 @@
+/* ==============================================
+   Archivo: src/App.css
+   Qué hace: estilos generales de la página (no de la Card).
+   ============================================== */
+
+/* Fuente y fondo de toda la página */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f8;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Las tarjetas se acomodan en fila y bajan de línea si no entran */
+.lista-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}

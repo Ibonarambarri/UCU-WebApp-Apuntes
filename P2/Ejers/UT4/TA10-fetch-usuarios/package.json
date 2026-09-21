@@ -1,0 +1,9 @@
+{
+  "name": "ta10-fetch-usuarios",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  }
+}

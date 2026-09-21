@@ -1,0 +1,43 @@
+/* ==============================================
+   Archivo: src/App.css
+   Qué hace: estilos simples para la lista de usuarios.
+   ============================================== */
+
+/* Caja central con un ancho máximo para que no se estire de más */
+.contenedor {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 16px;
+  font-family: Arial, sans-serif;
+}
+
+/* Quitamos las viñetas y el margen por defecto del <ul> */
+.lista-usuarios {
+  list-style: none;
+  padding: 0;
+}
+
+/* Cada tarjeta: borde suave, esquinas redondeadas y espacio entre ellas */
+.tarjeta-usuario {
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+}
+
+/* El nombre sin margen superior para que quede pegado al borde de la tarjeta */
+.tarjeta-usuario h3 {
+  margin-top: 0;
+}
+
+/* Texto gris mientras carga */
+.aviso {
+  color: #666666;
+}
+
+/* Texto rojo cuando hay error */
+.error {
+  color: #cc0000;
+  font-weight: bold;
+}

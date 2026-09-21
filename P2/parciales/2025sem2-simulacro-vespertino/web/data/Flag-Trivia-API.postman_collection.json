@@ -1,0 +1,451 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
+		"name": "Flag Trivia API",
+		"description": "Colección de endpoints para la aplicación Flag Trivia.\n\nEsta API permite obtener información sobre países, incluyendo sus banderas, fronteras y otros datos relevantes para el juego de trivia.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12345678"
+	},
+	"item": [
+		{
+			"name": "Countries",
+			"item": [
+				{
+					"name": "Get All Countries",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Array contains country codes\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.above(0);",
+									"    pm.expect(jsonData[0]).to.be.a('string');",
+									"    pm.expect(jsonData[0]).to.have.lengthOf(3);",
+									"});",
+									"",
+									"// Guardar el primer país para usar en otras requests",
+									"if (pm.response.json().length > 0) {",
+									"    pm.collectionVariables.set(\"country_code\", pm.response.json()[0]);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/countries",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"countries"
+							]
+						},
+						"description": "Obtiene la lista de todos los códigos de países disponibles (formato CCA3).\n\n**Response Example:**\n```json\n[\"ABW\", \"AFG\", \"AGO\", \"ARG\", \"BRA\", \"URY\", ...]\n```"
+					},
+					"response": [
+						{
+							"name": "Success - Get All Countries",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/countries",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"countries"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    \"ABW\",\n    \"AFG\",\n    \"AGO\",\n    \"ARG\",\n    \"AUS\",\n    \"BRA\",\n    \"CAN\",\n    \"CHL\",\n    \"COL\",\n    \"ESP\",\n    \"FRA\",\n    \"URY\"\n]"
+						}
+					]
+				},
+				{
+					"name": "Get Country by Code",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has required fields\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData).to.have.property('borders');",
+									"    pm.expect(jsonData).to.have.property('flag');",
+									"});",
+									"",
+									"pm.test(\"Borders is an array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.borders).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Flag object has required properties\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.flag).to.have.property('svg');",
+									"    pm.expect(jsonData.flag).to.have.property('alt');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/countries/URY",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"countries",
+								"URY"
+							]
+						},
+						"description": "Obtiene la información detallada de un país específico usando su código CCA3.\n\n**Path Parameters:**\n- `cca3` (string, required): Código de 3 letras del país (ej: URY, ARG, BRA)\n\n**Response Example:**\n```json\n{\n  \"id\": \"URY\",\n  \"borders\": [\"ARG\", \"BRA\"],\n  \"name\": {\n    \"common\": \"Uruguay\",\n    \"official\": \"Oriental Republic of Uruguay\"\n  },\n  \"flag\": {\n    \"svg\": \"/flags/URY.svg\",\n    \"alt\": \"The flag of Uruguay is composed of nine equal horizontal bands...\"\n  },\n  \"capital\": [\"Montevideo\"],\n  \"region\": \"Americas\",\n  \"subregion\": \"South America\",\n  \"population\": 3473727\n}\n```"
+					},
+					"response": [
+						{
+							"name": "Success - Uruguay",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/countries/URY",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"countries",
+										"URY"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"URY\",\n    \"borders\": [\n        \"ARG\",\n        \"BRA\"\n    ],\n    \"name\": {\n        \"common\": \"Uruguay\",\n        \"official\": \"Oriental Republic of Uruguay\"\n    },\n    \"flag\": {\n        \"svg\": \"/flags/URY.svg\",\n        \"alt\": \"The flag of Uruguay is composed of nine equal horizontal bands of white alternating with blue...\"\n    },\n    \"capital\": [\n        \"Montevideo\"\n    ],\n    \"region\": \"Americas\",\n    \"subregion\": \"South America\",\n    \"population\": 3473727\n}"
+						},
+						{
+							"name": "Success - Argentina",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/countries/ARG",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"countries",
+										"ARG"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"ARG\",\n    \"borders\": [\n        \"BOL\",\n        \"BRA\",\n        \"CHL\",\n        \"PRY\",\n        \"URY\"\n    ],\n    \"name\": {\n        \"common\": \"Argentina\",\n        \"official\": \"Argentine Republic\"\n    },\n    \"flag\": {\n        \"svg\": \"/flags/ARG.svg\",\n        \"alt\": \"The flag of Argentina features three equal horizontal bands...\"\n    },\n    \"capital\": [\n        \"Buenos Aires\"\n    ],\n    \"region\": \"Americas\",\n    \"subregion\": \"South America\",\n    \"population\": 45376763\n}"
+						},
+						{
+							"name": "Error - Country Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/countries/XXX",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"countries",
+										"XXX"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Country XXX not found!\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Country by Code (with variable)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response matches requested country code\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var requestedCode = pm.collectionVariables.get(\"country_code\");",
+									"    pm.expect(jsonData.id).to.eql(requestedCode);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/countries/{{country_code}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"countries",
+								"{{country_code}}"
+							]
+						},
+						"description": "Este request usa la variable `country_code` que se guarda automáticamente al ejecutar \"Get All Countries\".\n\nPermite probar dinámicamente con cualquier código de país."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Brazil",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Country is Brazil\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.eql('BRA');",
+									"    pm.expect(jsonData.name.common).to.eql('Brazil');",
+									"});",
+									"",
+									"pm.test(\"Brazil has borders with multiple countries\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.borders.length).to.be.above(5);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/countries/BRA",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"countries",
+								"BRA"
+							]
+						},
+						"description": "Ejemplo específico: obtiene información de Brasil, que tiene muchas fronteras (útil para testing del juego)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Chile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Country is Chile\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.eql('CHL');",
+									"    pm.expect(jsonData.name.common).to.eql('Chile');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/countries/CHL",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"countries",
+								"CHL"
+							]
+						},
+						"description": "Ejemplo específico: obtiene información de Chile."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints relacionados con la información de países.\n\nEstos endpoints son la base para el juego de trivia de banderas."
+		},
+		{
+			"name": "Static Assets",
+			"item": [
+				{
+					"name": "Get Flag Image (Uruguay)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/flags/URY.svg",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"flags",
+								"URY.svg"
+							]
+						},
+						"description": "Obtiene la imagen SVG de la bandera de Uruguay.\n\nLas banderas se encuentran en la ruta `/flags/{CCA3}.svg`"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Flag Image (Argentina)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/flags/ARG.svg",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"flags",
+								"ARG.svg"
+							]
+						},
+						"description": "Obtiene la imagen SVG de la bandera de Argentina."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Flag Image (Brazil)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/flags/BRA.svg",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"flags",
+								"BRA.svg"
+							]
+						},
+						"description": "Obtiene la imagen SVG de la bandera de Brasil."
+					},
+					"response": []
+				}
+			],
+			"description": "Recursos estáticos como imágenes de banderas.\n\nTodos los archivos SVG de las banderas están disponibles en `/flags/{CCA3}.svg`"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:5173",
+			"type": "string"
+		},
+		{
+			"key": "country_code",
+			"value": "URY",
+			"type": "string"
+		}
+	]
+}

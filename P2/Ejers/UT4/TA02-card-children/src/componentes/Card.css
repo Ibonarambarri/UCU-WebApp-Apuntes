@@ -1,0 +1,36 @@
+/* ==============================================
+   Archivo: src/componentes/Card.css
+   Qué hace: estilo de la tarjeta (Card). El estilo lo elige el alumno.
+   ============================================== */
+
+/* La tarjeta: fondo blanco, borde redondeado y una sombra suave */
+.card {
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  padding: 16px;
+  width: 280px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Título con una línea abajo para separarlo del resto */
+.card-titulo {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 6px;
+}
+
+/* Descripción en gris, un poco más chica */
+.card-descripcion {
+  color: #555555;
+  font-size: 14px;
+  margin: 0 0 12px 0;
+}
+
+/* Cada dato (persona, fechas) en una línea con poco margen */
+.card-dato {
+  margin: 4px 0;
+  font-size: 14px;
+}

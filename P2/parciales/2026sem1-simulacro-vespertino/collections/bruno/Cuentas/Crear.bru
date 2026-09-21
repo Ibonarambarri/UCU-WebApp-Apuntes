@@ -1,0 +1,20 @@
+meta {
+  name: Crear cuenta
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3001/cuentas
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "cliente": "Cliente nuevo",
+    "consumos": [
+      { "emoji": "🍺", "item": "Cerveza", "cantidad": 1, "precio": 900 }
+    ]
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "productos": [
+    {
+      "id": "1",
+      "icono": "🍺",
+      "nombre": "Cerveza",
+      "precio": 900
+    },
+    {
+      "id": "2",
+      "icono": "🍔",
+      "nombre": "Hamburguesa",
+      "precio": 3500
+    },
+    {
+      "id": "3",
+      "icono": "🍟",
+      "nombre": "Papas",
+      "precio": 1400
+    },
+    {
+      "id": "4",
+      "icono": "🍕",
+      "nombre": "Pizza",
+      "precio": 4200
+    },
+    {
+      "id": "5",
+      "icono": "🥤",
+      "nombre": "Gaseosa",
+      "precio": 1100
+    },
+    {
+      "nombre": "Brocoli",
+      "icono": "🥦",
+      "precio": 50,
+      "id": "xeUHnuz"
+    },
+    {
+      "nombre": "Ramen",
+      "icono": "🍜",
+      "precio": 550,
+      "id": "XoueYJS"
+    }
+  ],
+  "cuentas": [
+    {
+      "id": "1",
+      "cliente": "María",
+      "productos": [
+        {
+          "icono": "🍺",
+          "nombre": "Cerveza",
+          "cantidad": 2
+        },
+        {
+          "icono": "🍟",
+          "nombre": "Papas",
+          "cantidad": 1
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "cliente": "Juan",
+      "productos": [
+        {
+          "icono": "🍔",
+          "nombre": "Hamburguesa",
+          "cantidad": 1
+        },
+        {
+          "icono": "🥤",
+          "nombre": "Gaseosa",
+          "cantidad": 2
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "cliente": "Lucía",
+      "productos": [
+        {
+          "icono": "🍕",
+          "nombre": "Pizza",
+          "cantidad": 1
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "cliente": "Pedro",
+      "productos": [
+        {
+          "icono": "🍺",
+          "nombre": "Cerveza",
+          "cantidad": 3
+        },
+        {
+          "icono": "🍔",
+          "nombre": "Hamburguesa",
+          "cantidad": 1
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "cliente": "Sofía",
+      "productos": [
+        {
+          "icono": "🍟",
+          "nombre": "Papas",
+          "cantidad": 2
+        },
+        {
+          "icono": "🥤",
+          "nombre": "Gaseosa",
+          "cantidad": 1
+        }
+      ]
+    }
+  ]
+}

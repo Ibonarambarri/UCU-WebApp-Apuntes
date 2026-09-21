@@ -1,0 +1,9 @@
+{
+  "name": "ta08-editar-tarea",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  }
+}

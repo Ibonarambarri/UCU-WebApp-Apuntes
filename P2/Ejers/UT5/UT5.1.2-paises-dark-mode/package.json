@@ -1,0 +1,9 @@
+{
+  "name": "ut5-1-2-paises-dark-mode",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  }
+}

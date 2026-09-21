@@ -1,0 +1,128 @@
+/* ==============================================
+   Archivo: src/index.css
+   Qué hace: estilos simples de toda la app (se importa desde main.jsx).
+   ============================================== */
+
+/* Fuente y fondo generales */
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f4f4f4;
+  color: #222;
+}
+
+/* Contenedor de cada página: centrado y con ancho máximo */
+.pagina {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 16px;
+  text-align: center;
+}
+
+/* Mapa: tamaño fijo para que todas las rondas se vean parecidas */
+.contenedor-mapa {
+  margin: 16px 0;
+}
+.imagen-mapa {
+  width: 320px;
+  max-width: 100%;
+  height: 240px;
+  object-fit: contain; /* que el svg entre entero sin deformarse */
+  background-color: white;
+  border: 1px solid #ccc;
+}
+
+/* Fila de las 4 banderas: flex para que queden una al lado de la otra */
+.fila-banderas {
+  display: flex;
+  flex-wrap: wrap; /* en pantallas chicas pasan a otra línea */
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Botón con bandera: sin fondo, con borde para marcar el resultado */
+.boton-bandera {
+  padding: 6px;
+  background-color: white;
+  border: 3px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.boton-bandera:disabled {
+  cursor: default;
+}
+/* La imagen adentro del botón: tamaño fijo */
+.imagen-bandera {
+  width: 140px;
+  height: 90px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Después de responder: verde la correcta, rojo la elegida incorrecta */
+.boton-bandera.correcta {
+  border-color: #2e8b57;
+}
+.boton-bandera.incorrecta {
+  border-color: #c0392b;
+}
+
+/* Texto del resultado (bien / mal) */
+.texto-estado {
+  font-size: 1.1em;
+}
+.texto-estado.bien {
+  color: #2e8b57;
+  font-weight: bold;
+}
+.texto-estado.mal {
+  color: #c0392b;
+  font-weight: bold;
+}
+
+/* Puntaje */
+.texto-puntaje {
+  font-size: 1.2em;
+  margin-top: 16px;
+}
+
+/* Botón "Otro desafío" y similares */
+.boton-principal {
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+/* Página del país: bandera y mapa en una misma línea */
+.fila-imagenes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.imagen-bandera-grande {
+  width: 240px;
+  height: 160px;
+  object-fit: contain;
+  border: 1px solid #ccc;
+  background-color: white;
+}
+
+/* Bloque de datos: alineado a la izquierda para leer mejor */
+.datos-pais {
+  text-align: left;
+  display: inline-block;
+  margin-top: 16px;
+}
+
+/* Enlace de vuelta al inicio */
+.enlace-volver {
+  display: block;
+  margin-top: 24px;
+}
+
+/* Mensajes de error */
+.mensaje-error {
+  color: #c0392b;
+}

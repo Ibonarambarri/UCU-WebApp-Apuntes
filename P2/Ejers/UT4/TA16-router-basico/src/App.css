@@ -1,0 +1,38 @@
+/* ==============================================
+   Archivo: src/App.css
+   Qué hace: estilos de la barra de navegación y el contenido.
+   ============================================== */
+
+/* Caja central */
+.contenedor {
+  max-width: 700px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+/* Barra horizontal con fondo oscuro */
+.barra {
+  display: flex;
+  gap: 8px;
+  background-color: #333333;
+  padding: 10px;
+}
+
+/* Cada enlace de la barra */
+.enlace {
+  color: #ffffff;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+/* El enlace de la página actual se ve resaltado */
+.enlace-activo {
+  background-color: #007bff;
+  font-weight: bold;
+}
+
+/* Contenido de la página */
+.contenido {
+  padding: 16px;
+}

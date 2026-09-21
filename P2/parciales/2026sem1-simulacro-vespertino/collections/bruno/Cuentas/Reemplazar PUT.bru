@@ -1,0 +1,22 @@
+meta {
+  name: Reemplazar cuenta (PUT)
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:3001/cuentas/1
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": "1",
+    "cliente": "María",
+    "consumos": [
+      { "emoji": "🍺", "item": "Cerveza", "cantidad": 2, "precio": 400 },
+      { "emoji": "🍟", "item": "Papas", "cantidad": 1, "precio": 1200 }
+    ]
+  }
+}

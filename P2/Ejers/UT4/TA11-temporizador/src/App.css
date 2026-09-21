@@ -1,0 +1,40 @@
+/* ==============================================
+   Archivo: src/App.css
+   Qué hace: estilos simples para el temporizador.
+   ============================================== */
+
+/* Caja central */
+.contenedor {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 16px;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+/* Botón un poco más grande y con cursor de mano */
+button {
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Recuadro del temporizador */
+.temporizador {
+  margin-top: 20px;
+  padding: 20px;
+  border: 2px solid #333333;
+  border-radius: 8px;
+}
+
+/* El número grande para que se vea bien */
+.numero {
+  font-size: 64px;
+  margin: 0;
+  font-weight: bold;
+}
+
+/* Texto gris cuando está desmontado */
+.aviso {
+  color: #666666;
+}

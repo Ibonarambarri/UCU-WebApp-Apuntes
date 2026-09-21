@@ -1,0 +1,31 @@
+/* ==============================================
+   Archivo: src/App.css
+   Qué hace: estilos simples para el botón y el texto.
+   ============================================== */
+
+/* Fuente y fondo generales */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f8;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Botón azul cómodo de clickear */
+button {
+  font-size: 16px;
+  padding: 8px 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  background-color: #3498db;
+  color: #ffffff;
+}
+
+/* El texto que aparece/desaparece, con fondo blanco para que se note */
+.texto {
+  margin-top: 16px;
+  padding: 12px;
+  background-color: #ffffff;
+  border-left: 4px solid #2ecc71;
+}

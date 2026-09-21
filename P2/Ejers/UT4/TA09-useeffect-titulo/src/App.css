@@ -1,0 +1,12 @@
+/* ==============================================
+   Archivo: src/App.css
+   Qué hace: estilos generales de la página.
+   ============================================== */
+
+/* Fuente y fondo generales */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f8;
+  margin: 0;
+  padding: 20px;
+}

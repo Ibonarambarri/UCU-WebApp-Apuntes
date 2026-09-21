@@ -1,0 +1,9 @@
+{
+  "name": "ta01-card-props",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  }
+}

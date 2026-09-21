@@ -1,0 +1,208 @@
+/* ==============================================
+   Archivo: src/App.css
+   Qué hace: estilos generales de la app (grilla, tarjetas, detalle) y las
+   reglas de los dos modos: .modo-light y .modo-dark.
+   Idea clave: el <div className="aplicacion modo-xxx"> es el contenedor raíz.
+   Cada regla que depende del modo se escribe como
+     .modo-light .algo { ... }   y   .modo-dark .algo { ... }
+   Así, al cambiar la clase del contenedor, cambian TODOS los hijos a la vez.
+   ============================================== */
+
+/* Reset mínimo: sin margen para que el fondo del modo cubra toda la pantalla */
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Contenedor raíz: ocupa al menos toda la altura de la ventana para que el
+   color de fondo del modo se vea completo. transition suaviza el cambio. */
+.aplicacion {
+  min-height: 100vh;
+  padding: 16px;
+  box-sizing: border-box;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* ---------- MODO CLARO (fondo claro, texto oscuro) ---------- */
+.modo-light {
+  background-color: #f4f4f4;
+  color: #222;
+}
+
+/* ---------- MODO OSCURO (fondo oscuro, texto claro) ---------- */
+.modo-dark {
+  background-color: #121212;
+  color: #eee;
+}
+
+/* Encabezado y contenido centrados con un ancho máximo */
+.encabezado,
+.contenido {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Barra superior: título a la izquierda, selector a la derecha */
+.encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Título de la app (es un Link) */
+.titulo-de-app {
+  font-size: 22px;
+  font-weight: bold;
+  text-decoration: none;
+  color: inherit; /* hereda el color del modo */
+}
+
+/* Los enlaces heredan el color del modo (para que se lean en dark) */
+.modo-dark a {
+  color: #8ab4f8;
+}
+
+.modo-light a {
+  color: #1a4fb0;
+}
+
+/* Cuadro de búsqueda de la lista */
+.buscador {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Inputs y selects en modo oscuro */
+.modo-dark .buscador,
+.modo-dark select {
+  background-color: #2a2a2a;
+  color: #eee;
+  border-color: #555;
+}
+
+/* GRILLA de países: columnas automáticas de mínimo 180px que se reparten
+   el ancho disponible (auto-fill crea tantas columnas como entren). */
+.grilla-de-paises {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  list-style: none; /* sacamos los puntitos de la lista <ul> */
+  padding: 0;
+  margin: 0;
+}
+
+/* Tarjeta y caja de detalle: forma común a ambos modos */
+.tarjeta,
+.detalle {
+  border-radius: 8px;
+  border: 1px solid;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.tarjeta {
+  padding: 12px;
+  text-align: center;
+}
+
+.detalle {
+  padding: 20px;
+}
+
+/* Colores de tarjeta/detalle en modo CLARO */
+.modo-light .tarjeta,
+.modo-light .detalle {
+  background-color: #fff;
+  color: #222;
+  border-color: #ddd;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Colores de tarjeta/detalle en modo OSCURO */
+.modo-dark .tarjeta,
+.modo-dark .detalle {
+  background-color: #222;
+  color: #eee;
+  border-color: #444;
+}
+
+/* El Link ocupa toda la tarjeta y no se ve subrayado */
+.tarjeta a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+/* Bandera chica de la lista: ancho fijo, alto proporcional */
+.bandera-chica {
+  width: 120px;
+  height: 80px;
+  object-fit: cover; /* recorta para que todas queden del mismo tamaño */
+  border: 1px solid #ccc;
+}
+
+/* Nombre del país en la tarjeta */
+.nombre-de-pais {
+  margin: 8px 0 0 0;
+  font-size: 15px;
+}
+
+/* Bandera grande en la página de detalle */
+.bandera-grande {
+  width: 100%;
+  max-width: 320px;
+  border: 1px solid #ccc;
+}
+
+/* Lista de datos del detalle (población, capital, etc.) */
+.detalle ul {
+  padding-left: 20px;
+}
+
+/* Botón "Volver" */
+.boton {
+  padding: 8px 14px;
+  font-size: 15px;
+  cursor: pointer;
+  border: 1px solid #888;
+  border-radius: 6px;
+  margin-right: 12px;
+}
+
+/* Botón en cada modo */
+.modo-light .boton {
+  background-color: #eee;
+  color: #222;
+}
+
+.modo-dark .boton {
+  background-color: #333;
+  color: #eee;
+}
+
+/* Mensajes de error (rojo un poco más claro en dark para que se lea) */
+.mensaje-error {
+  font-weight: bold;
+}
+
+.modo-light .mensaje-error {
+  color: #b00020;
+}
+
+.modo-dark .mensaje-error {
+  color: #ff6b6b;
+}
+
+/* Selector de modo del encabezado */
+.selector-de-modo select {
+  padding: 4px 8px;
+  font-size: 14px;
+  border-radius: 6px;
+}

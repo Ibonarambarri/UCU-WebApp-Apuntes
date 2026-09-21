@@ -1,0 +1,9 @@
+{
+  "name": "ta13-contexto-actualizar",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  }
+}

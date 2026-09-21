@@ -1,0 +1,95 @@
+/* ==============================================
+   Archivo: src/index.css
+   Qué hace: estilos mínimos para que la app se parezca al croquis.
+   Se importa una sola vez desde main.jsx y aplica a toda la app.
+   ============================================== */
+
+/* Fuente y márgenes generales de la página */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background-color: #f5f5f5;
+}
+
+/* Contenedor de cada página: centrado y con un ancho máximo */
+.pagina {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* Los tres selects en fila, con espacio entre ellos */
+.filtros {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+/* Cada select ocupa el mismo ancho */
+.filtros select {
+  flex: 1;
+  padding: 6px;
+}
+
+/* Lista sin viñetas ni sangría */
+.lista-paises {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Cada ítem es una "tarjeta" con borde redondeado como en el croquis */
+.item-pais {
+  border: 1px solid #333;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background-color: white;
+}
+
+/* El enlace ocupa todo el ítem: bandera a la izquierda, nombre a la derecha */
+.enlace-pais {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: #222;
+}
+
+/* Bandera chica de la lista, con ancho fijo para que todas queden iguales */
+.bandera-chica {
+  width: 64px;
+  height: 40px;
+  object-fit: cover;
+  border: 1px solid #999;
+}
+
+/* Nombre del país más grande */
+.nombre-pais {
+  font-size: 1.3rem;
+}
+
+/* Detalle: bandera a la izquierda y datos a la derecha */
+.detalle-pais {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+/* Bandera grande de la página de país */
+.bandera-grande {
+  width: 200px;
+  border: 1px solid #999;
+}
+
+/* Botón de volver con un poco de aire arriba */
+.boton-volver {
+  margin-top: 16px;
+  padding: 8px 16px;
+  font-size: 1rem;
+}
+
+/* Mensajes de error en rojo */
+.mensaje-error {
+  color: #b00020;
+}

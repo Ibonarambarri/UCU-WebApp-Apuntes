@@ -1,0 +1,80 @@
+.card {
+  background-color: #fff;
+  border-radius: 6px;
+  padding: 14px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: box-shadow 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+  flex: 1;
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+}
+
+.editBtn,
+.deleteBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 2px 4px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.15s;
+}
+
+.editBtn:hover,
+.deleteBtn:hover {
+  background-color: #f1f5f9;
+}
+
+.description {
+  font-size: 0.82rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.assignee {
+  font-size: 0.8rem;
+  color: #475569;
+  font-weight: 500;
+}
+
+.statusSelect {
+  font-size: 0.8rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 4px 8px;
+  background-color: #f8fafc;
+  cursor: pointer;
+  color: #334155;
+  align-self: flex-start;
+}
+
+.statusSelect:focus {
+  outline: none;
+  border-color: #0052cc;
+}

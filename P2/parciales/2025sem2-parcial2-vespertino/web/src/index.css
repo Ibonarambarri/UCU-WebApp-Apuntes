@@ -1,0 +1,111 @@
+/* ==============================================
+   Archivo: src/index.css
+   Qué hace: estilos mínimos para parecerse al croquis (tarjetas con borde
+   redondeado). Se importa una vez desde main.jsx.
+   ============================================== */
+
+/* Fuente y fondo general */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background-color: #f5f5f5;
+}
+
+/* Contenedor de cada página, centrado */
+.pagina {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* Menú del inicio: los 4 enlaces en columna */
+.menu-inicio {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 250px;
+}
+
+/* Enlace con aspecto de botón (croquis del inicio) */
+.boton-enlace {
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 8px 16px;
+  text-decoration: none;
+  color: #222;
+  background-color: white;
+}
+
+/* Lista sin viñetas */
+.lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Cada ítem es una tarjeta */
+.item-lista {
+  border: 1px solid #333;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background-color: white;
+}
+
+/* El enlace ocupa todo el ítem; bandera a la izquierda y nombre a la derecha */
+.enlace-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: #222;
+}
+
+/* Para las listas de monedas/lenguajes/zonas el texto va centrado */
+.enlace-centrado {
+  justify-content: center;
+}
+
+/* Bandera chica con tamaño fijo */
+.bandera-chica {
+  width: 64px;
+  height: 40px;
+  object-fit: cover;
+  border: 1px solid #999;
+}
+
+/* Texto del ítem un poco más grande */
+.texto-item {
+  font-size: 1.2rem;
+}
+
+/* Enlace de volver debajo de las listas */
+.enlace-volver {
+  display: inline-block;
+  margin-top: 16px;
+}
+
+/* Detalle: bandera a la izquierda, datos a la derecha */
+.detalle-pais {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+/* Bandera grande del detalle */
+.bandera-grande {
+  width: 200px;
+  border: 1px solid #999;
+}
+
+/* Botón de volver */
+.boton-volver {
+  margin-top: 16px;
+  padding: 8px 16px;
+  font-size: 1rem;
+}
+
+/* Errores en rojo */
+.mensaje-error {
+  color: #b00020;
+}

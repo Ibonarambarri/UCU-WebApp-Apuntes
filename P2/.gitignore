@@ -1,0 +1,8 @@
+# Dependencias instaladas (se regeneran con npm install)
+node_modules/
+# Salida de vite build
+dist/
+# Basura de macOS
+.DS_Store
+# Copias de seguridad de json-server
+BE/db.original.json

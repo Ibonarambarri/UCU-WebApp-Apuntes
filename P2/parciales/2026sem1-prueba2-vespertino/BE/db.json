@@ -1,0 +1,59 @@
+{
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Diseñar pantalla de login",
+      "description": "Crear los mockups y estilos de la pantalla de login.",
+      "status": "Done",
+      "assignee": "Ana García"
+    },
+    {
+      "id": "2",
+      "title": "Configurar base de datos",
+      "description": "Instalar y configurar PostgreSQL para el proyecto.",
+      "status": "Done",
+      "assignee": "Carlos Pérez"
+    },
+    {
+      "id": "3",
+      "title": "Implementar autenticación",
+      "description": "Desarrollar el sistema de login con JWT.",
+      "status": "In Progress",
+      "assignee": "Ana García"
+    },
+    {
+      "title": "Crear endpoints REST",
+      "description": "Definir e implementar los endpoints de la API.",
+      "status": "To Do",
+      "id": "4"
+    },
+    {
+      "id": "5",
+      "title": "Pruebas de integración",
+      "description": "Escribir tests de integración para la API.",
+      "status": "To Do",
+      "assignee": "María López"
+    },
+    {
+      "id": "6",
+      "title": "Deploy en producción",
+      "description": "Configurar CI/CD y hacer el deploy final.",
+      "status": "To Do",
+      "assignee": ""
+    },
+    {
+      "id": "7",
+      "title": "Documentación API",
+      "description": "Escribir la documentación de los endpoints con Swagger.",
+      "status": "To Do",
+      "assignee": "Carlos Pérez"
+    },
+    {
+      "id": "8",
+      "title": "Optimizar consultas SQL",
+      "description": "Revisar y mejorar las consultas a la base de datos.",
+      "status": "To Do",
+      "assignee": "Luis Martínez"
+    }
+  ]
+}

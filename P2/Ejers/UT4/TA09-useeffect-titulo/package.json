@@ -1,0 +1,9 @@
+{
+  "name": "ta09-useeffect-titulo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  }
+}

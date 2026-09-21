@@ -1,0 +1,109 @@
+/* ==============================================
+   Archivo: src/App.css
+   Qué hace: estilos generales de la app (lista en grilla, tarjetas, detalle).
+   ============================================== */
+
+/* Fuente y fondo generales de la página */
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f4f4f4;
+  color: #222;
+}
+
+/* Contenedor de toda la app: centrado y con un ancho máximo */
+.aplicacion {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* Cuadro de búsqueda de la lista */
+.buscador {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* GRILLA de países: columnas automáticas de mínimo 180px que se reparten
+   el ancho disponible (auto-fill crea tantas columnas como entren). */
+.grilla-de-paises {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  list-style: none; /* sacamos los puntitos de la lista <ul> */
+  padding: 0;
+  margin: 0;
+}
+
+/* Cada país es una tarjeta */
+.tarjeta {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* El Link ocupa toda la tarjeta y no se ve subrayado */
+.tarjeta a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+/* Bandera chica de la lista: ancho fijo, alto proporcional */
+.bandera-chica {
+  width: 120px;
+  height: 80px;
+  object-fit: cover; /* recorta para que todas queden del mismo tamaño */
+  border: 1px solid #ccc;
+}
+
+/* Nombre del país en la tarjeta */
+.nombre-de-pais {
+  margin: 8px 0 0 0;
+  font-size: 15px;
+}
+
+/* Bandera grande en la página de detalle */
+.bandera-grande {
+  width: 100%;
+  max-width: 320px;
+  border: 1px solid #ccc;
+}
+
+/* Caja del detalle: lo mismo que la tarjeta pero alineado a la izquierda */
+.detalle {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+/* Lista de datos del detalle (población, capital, etc.) */
+.detalle ul {
+  padding-left: 20px;
+}
+
+/* Botón "Volver" */
+.boton {
+  padding: 8px 14px;
+  font-size: 15px;
+  cursor: pointer;
+  border: 1px solid #888;
+  border-radius: 6px;
+  background-color: #eee;
+  margin-right: 12px;
+}
+
+/* Mensajes de error en rojo */
+.mensaje-error {
+  color: #b00020;
+  font-weight: bold;
+}

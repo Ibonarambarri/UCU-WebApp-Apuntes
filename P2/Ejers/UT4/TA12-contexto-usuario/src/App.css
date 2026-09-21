@@ -1,0 +1,27 @@
+/* ==============================================
+   Archivo: src/App.css
+   Qué hace: estilos simples para ver los "niveles" del árbol.
+   ============================================== */
+
+/* Caja central */
+.contenedor {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 16px;
+  font-family: Arial, sans-serif;
+}
+
+/* El panel intermedio con un borde para distinguirlo */
+.panel {
+  border: 2px dashed #999999;
+  padding: 12px;
+  margin-top: 12px;
+}
+
+/* El saludo (nivel más profundo) con fondo de color */
+.saludo {
+  background-color: #e6f2ff;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 12px;
+}

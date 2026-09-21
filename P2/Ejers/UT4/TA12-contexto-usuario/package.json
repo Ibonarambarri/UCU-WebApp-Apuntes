@@ -1,0 +1,9 @@
+{
+  "name": "ta12-contexto-usuario",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  }
+}
