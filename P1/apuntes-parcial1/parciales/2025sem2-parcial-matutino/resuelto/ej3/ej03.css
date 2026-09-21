@@ -1,0 +1,76 @@
+/* 
+  Modificar este código CSS con los estilos necesarios.
+*/
+body {
+  align-items: center;
+  background: #020202;
+  color: #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+}
+
+#content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+}
+
+#displayLED {
+  height: 350px;
+  position: relative;
+  width: 200px;
+}
+
+.segment {
+  /* background: #030303; /* off */
+  background: #e0e000;
+  /* on */
+  position: absolute;
+}
+
+/* Diseño de los 7 segmentos. Por favor no modificar*/
+#seg-a {
+  top: 0;
+  left: 20px;
+  width: 160px;
+  height: 30px;
+}
+#seg-b {
+  top: 15px;
+  right: 0;
+  width: 30px;
+  height: 140px;
+}
+#seg-c {
+  bottom: 30px;
+  right: 0;
+  width: 30px;
+  height: 140px;
+}
+#seg-d {
+  bottom: 0;
+  left: 20px;
+  width: 160px;
+  height: 30px;
+}
+#seg-e {
+  bottom: 30px;
+  left: 0;
+  width: 30px;
+  height: 140px;
+}
+#seg-f {
+  top: 15px;
+  left: 0;
+  width: 30px;
+  height: 140px;
+}
+#seg-g {
+  top: 155px;
+  left: 20px;
+  width: 160px;
+  height: 30px;
+}

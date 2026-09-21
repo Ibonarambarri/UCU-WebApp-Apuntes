@@ -1,0 +1,13 @@
+{
+  "description": "Ej03",
+  "license": "UNLICENSED",
+  "name": "ej03",
+  "scripts": {
+    "start": "json-server api/db.json -s ./public",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.1.0",
+  "dependencies": {
+    "json-server": "^1.0.0-beta.15"
+  }
+}

@@ -1,0 +1,105 @@
+/*
+  Reemplazar este código CSS con los estilos necesarios.
+*/
+body {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  margin: 1em 10vh;
+}
+
+#content {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  width: 100%;
+}
+
+#arena {
+  align-items: center;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 1.5em 2em;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#prompt {
+  font-size: 1.2em;
+  font-style: italic;
+  margin: 0;
+  text-align: center;
+}
+
+#contendientes {
+  align-items: center;
+  display: flex;
+  gap: 2em;
+}
+
+.contendiente {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.modelo-emoji {
+  font-size: 2.5em;
+}
+
+.modelo-nombre {
+  font-weight: bold;
+}
+
+.vs {
+  color: #999;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+button {
+  background: none;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.5em;
+  padding: 0.2em 0.6em;
+  transition: border-color 0.15s;
+}
+
+button:hover {
+  border-color: #f2b544;
+}
+
+#history {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.duelo {
+  align-items: center;
+  background: #f4f4f4;
+  border-radius: 6px;
+  display: flex;
+  gap: 1em;
+  justify-content: space-between;
+  padding: 0.6em 1em;
+}
+
+.duelo-prompt {
+  font-style: italic;
+}
+
+.duelo-resultado {
+  font-weight: bold;
+  white-space: nowrap;
+}

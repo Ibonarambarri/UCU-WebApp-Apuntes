@@ -1,0 +1,13 @@
+{
+  "libros": [
+    { "id": 1, "titulo": "JavaScript Avanzado", "autor": "John Doe", "categoria": "Programación", "precio": 42,
+      "prestamos": [{ "estudiante": "Ana", "fechaPrestamo": "2026-03-01", "fechaDevolucion": null }] },
+    { "id": 2, "titulo": "Diseño Responsive", "autor": "Jane Smith", "categoria": "Diseño", "precio": 30,
+      "prestamos": [] },
+    { "id": 3, "titulo": "Node para todos", "autor": "John Doe", "categoria": "Programación", "precio": 55,
+      "prestamos": [{ "estudiante": "Beto", "fechaPrestamo": "2026-02-10", "fechaDevolucion": "2026-02-28" },
+                    { "estudiante": "Cami", "fechaPrestamo": "2026-03-05", "fechaDevolucion": null }] },
+    { "id": 4, "titulo": "UX Fundamentals", "autor": "Laura Torres", "categoria": "Diseño", "precio": 18,
+      "prestamos": [] }
+  ]
+}

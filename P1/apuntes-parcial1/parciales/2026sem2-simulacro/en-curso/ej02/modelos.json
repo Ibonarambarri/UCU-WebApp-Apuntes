@@ -1,0 +1,86 @@
+[
+  {
+    "sigla": "GPT",
+    "nombre": "ChatGPT",
+    "empresa": "OpenAI",
+    "contexto": 400000,
+    "capacidades": ["texto", "imagen", "web"]
+  },
+  {
+    "sigla": "CLD",
+    "nombre": "Claude",
+    "empresa": "Anthropic",
+    "contexto": 1000000,
+    "capacidades": ["texto", "codigo", "razonamiento"]
+  },
+  {
+    "sigla": "GEM",
+    "nombre": "Gemini",
+    "empresa": "Google",
+    "contexto": 2000000,
+    "capacidades": ["texto", "imagen", "audio", "video"]
+  },
+  {
+    "sigla": "CPL",
+    "nombre": "Copilot",
+    "empresa": "Microsoft",
+    "contexto": 128000,
+    "capacidades": ["texto", "codigo"]
+  },
+  {
+    "sigla": "LLM",
+    "nombre": "Llama",
+    "empresa": "Meta",
+    "contexto": 128000,
+    "capacidades": ["texto", "codigo"]
+  },
+  {
+    "sigla": "DSK",
+    "nombre": "DeepSeek",
+    "empresa": "DeepSeek",
+    "contexto": 128000,
+    "capacidades": ["texto", "razonamiento", "codigo"]
+  },
+  {
+    "sigla": "MST",
+    "nombre": "Mistral",
+    "empresa": "Mistral AI",
+    "contexto": 128000,
+    "capacidades": ["texto", "codigo"]
+  },
+  {
+    "sigla": "GRK",
+    "nombre": "Grok",
+    "empresa": "xAI",
+    "contexto": 256000,
+    "capacidades": ["texto", "imagen", "web"]
+  },
+  {
+    "sigla": "QWN",
+    "nombre": "Qwen",
+    "empresa": "Alibaba",
+    "contexto": 131072,
+    "capacidades": ["texto", "razonamiento"]
+  },
+  {
+    "sigla": "PPX",
+    "nombre": "Perplexity",
+    "empresa": "Perplexity AI",
+    "contexto": 127000,
+    "capacidades": ["texto", "web"]
+  },
+  {
+    "sigla": "NVA",
+    "nombre": "Nova",
+    "empresa": "Amazon",
+    "contexto": 300000,
+    "capacidades": ["texto", "imagen", "video"]
+  },
+  {
+    "sigla": "SUN",
+    "nombre": "Suno",
+    "empresa": "Suno AI",
+    "contexto": 8000,
+    "capacidades": ["audio"]
+  }
+]

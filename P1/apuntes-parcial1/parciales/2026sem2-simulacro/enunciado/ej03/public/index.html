@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulacro Prueba 1 - Ej03</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="ej03.js"></script>
+</head>
+
+<body onload="onLoad()">
+  <div id="content">
+    <h1>Ejercicio 03 — Arena de Prompts</h1>
+
+    <p>Al cargar la página se debe generar un <em>duelo</em> aleatorio: un
+      prompt tomado de la lista <code>PROMPTS</code> y dos asistentes
+      <strong>distintos</strong> tomados de la lista <code>MODELOS</code>
+      (ambas listas están definidas en <code>ej03.js</code>). El duelo se
+      muestra en el recuadro de abajo. El usuario elige con cuál asistente
+      preferiría resolver ese prompt usando los botones 🏆. Al hacerlo, el
+      duelo y la decisión se envían a la API, se genera un nuevo duelo
+      aleatorio, y el historial se recarga.
+    </p>
+
+    <div id="arena">
+      <p id="prompt">«Explicame flexbox como si tuviera 5 años»</p>
+      <div id="contendientes">
+        <div class="contendiente">
+          <span class="modelo-emoji">🧠</span>
+          <span class="modelo-nombre" id="modelo-a">Claude</span>
+          <button onclick="onVoteA()">🏆</button>
+        </div>
+        <span class="vs">VS</span>
+        <div class="contendiente">
+          <span class="modelo-emoji">✨</span>
+          <span class="modelo-nombre" id="modelo-b">Gemini</span>
+          <button onclick="onVoteB()">🏆</button>
+        </div>
+      </div>
+    </div>
+
+    <h2>Historial</h2>
+    <p>Aquí se deben mostrar todos los duelos guardados en la API, cargados al
+      iniciar la página y recargados luego de cada decisión. El ganador de cada
+      duelo se marca con 🏆.
+    </p>
+
+    <div id="history">
+
+      <div class="duelo">
+        <span class="duelo-prompt">«Escribí un mensaje para pedir prórroga del parcial»</span>
+        <span class="duelo-resultado">ChatGPT 🏆 vs Llama</span>
+      </div>
+      <div class="duelo">
+        <span class="duelo-prompt">«Explicame flexbox como si tuviera 5 años»</span>
+        <span class="duelo-resultado">Copilot vs DeepSeek 🏆</span>
+      </div>
+      <div class="duelo">
+        <span class="duelo-prompt">«Generá un plan de estudio para la prueba de DWYM»</span>
+        <span class="duelo-resultado">Claude 🏆 vs Grok</span>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

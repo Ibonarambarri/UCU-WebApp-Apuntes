@@ -1,0 +1,81 @@
+{
+  "libros": [
+    { 
+      "id": 1, 
+      "titulo": "JavaScript Avanzado", 
+      "autor": "John Doe", 
+      "disponible": true, 
+      "categoria": "Programación", 
+      "añoPublicacion": 2022,
+      "prestamos": [] 
+    },
+    { 
+      "id": 2, 
+      "titulo": "Diseño Web Responsive", 
+      "autor": "Jane Smith", 
+      "disponible": false, 
+      "categoria": "Diseño",
+      "añoPublicacion": 2021, 
+      "prestamos": [
+        { "estudiante": "Ana García", "fechaPrestamo": "2025-08-15", "fechaDevolucion": null }
+      ] 
+    },
+    { 
+      "id": 3, 
+      "titulo": "Node.js para Principiantes", 
+      "autor": "Carlos López", 
+      "disponible": true, 
+      "categoria": "Programación",
+      "añoPublicacion": 2023, 
+      "prestamos": [
+        { "estudiante": "Pedro Gomez", "fechaPrestamo": "2025-07-10", "fechaDevolucion": "2025-07-30" }
+      ] 
+    },
+    { 
+      "id": 4, 
+      "titulo": "UX/UI Fundamentals", 
+      "autor": "Laura Torres", 
+      "disponible": true, 
+      "categoria": "Diseño",
+      "añoPublicacion": 2020, 
+      "prestamos": [] 
+    },
+    { 
+      "id": 5, 
+      "titulo": "Algoritmos y Estructuras de Datos", 
+      "autor": "John Doe", 
+      "disponible": false, 
+      "categoria": "Programación",
+      "añoPublicacion": 2019, 
+      "prestamos": [
+        { "estudiante": "María Rodríguez", "fechaPrestamo": "2025-09-01", "fechaDevolucion": null }
+      ] 
+    }
+  ],
+  "estudiantes": [
+    { 
+      "id": 1, 
+      "nombre": "Ana García", 
+      "carrera": "Ingeniería Informática", 
+      "librosActuales": [2] 
+    },
+    { 
+      "id": 2, 
+      "nombre": "Pedro Gomez", 
+      "carrera": "Ingeniería Informática", 
+      "librosActuales": [] 
+    },
+    { 
+      "id": 3, 
+      "nombre": "María Rodríguez", 
+      "carrera": "Diseño Gráfico", 
+      "librosActuales": [5] 
+    },
+    { 
+      "id": 4, 
+      "nombre": "Carlos López", 
+      "carrera": "Diseño Gráfico", 
+      "librosActuales": [] 
+    }
+  ]
+}

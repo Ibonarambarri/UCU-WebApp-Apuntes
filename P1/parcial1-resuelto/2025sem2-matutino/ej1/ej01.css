@@ -1,0 +1,151 @@
+@font-face {
+  font-family: 'Rufina';
+  src: url('./assets/fonts/Rufina-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Rufina';
+  src: url('./assets/fonts/Rufina-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+:root {
+  --amarillo: #f5d800;
+  --rojo: #d1332e;
+  --negro: #1a1a1a;
+  --gris: #4a4a4a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  color: var(--negro);
+  font-family: 'Rufina', Georgia, serif;
+  margin: 0;
+}
+
+/* ---------- Header amarillo ---------- */
+.hero {
+  align-items: flex-start;
+  background-color: var(--amarillo);
+  display: flex;
+  gap: 2em;
+  justify-content: space-between;
+  padding: 3em 4em;
+}
+
+.hero h1 {
+  color: var(--rojo);
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0.4em 0 0.5em;
+}
+
+.tagline {
+  color: var(--rojo);
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin: 0;
+  max-width: 24em;
+}
+
+.logo {
+  max-width: 280px;
+  width: 30%;
+}
+
+/* ---------- Secciones ---------- */
+.seccion {
+  margin: 0 auto;
+  max-width: 1000px;
+  padding: 3em 2em;
+}
+
+.seccion h2 {
+  font-size: 2.6rem;
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+}
+
+.subtitulo {
+  font-size: 0.75rem;
+  margin: 0.6em 0 2.5em;
+  text-align: center;
+}
+
+.seccion-contenido {
+  align-items: flex-start;
+  display: flex;
+  gap: 3em;
+}
+
+/* Las secciones alternan el lado de la ilustración */
+.seccion-contenido.invertida {
+  flex-direction: row-reverse;
+}
+
+.ilustracion {
+  flex: 0 0 40%;
+  max-width: 40%;
+}
+
+/* ---------- Lista de platos ---------- */
+.platos {
+  flex: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.platos li {
+  border-top: 2px dotted var(--negro);
+  padding: 0.8em 0 1.5em;
+}
+
+.precio {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+  text-align: right;
+}
+
+.platos h3 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0.1em 0 0.4em;
+}
+
+.descripcion {
+  color: var(--gris);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 700px) {
+  .hero {
+    flex-direction: column;
+    padding: 2em;
+  }
+  .hero h1 {
+    font-size: 2.4rem;
+  }
+  .seccion-contenido,
+  .seccion-contenido.invertida {
+    flex-direction: column;
+  }
+  .ilustracion {
+    flex: 1;
+    max-width: 100%;
+    width: 100%;
+  }
+}

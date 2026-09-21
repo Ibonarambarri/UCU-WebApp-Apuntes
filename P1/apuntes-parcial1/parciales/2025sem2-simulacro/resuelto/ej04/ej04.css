@@ -1,0 +1,91 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 2rem;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+form {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+input {
+  padding: 0.5rem;
+  font-size: 1rem;
+  width: 300px;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  background-color: #3498db;
+  color: white;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+#task-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); 
+  gap: 1rem;
+  padding: 0;
+  list-style: none;
+  margin: 0 auto;
+  max-width: 1200px; 
+}
+
+li {
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 120px;
+  position: relative;
+}
+
+.task-title {
+  font-size: 1rem;
+  line-height: 1.4;
+  word-break: break-word;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+}
+
+li.completed .task-title {
+  text-decoration: line-through;
+  color: gray;
+}
+
+.task-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.task-actions button {
+  background-color: #ccc;
+  color: #333;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.9rem;
+}
+
+.task-actions button:hover {
+  background-color: #bbb;
+}

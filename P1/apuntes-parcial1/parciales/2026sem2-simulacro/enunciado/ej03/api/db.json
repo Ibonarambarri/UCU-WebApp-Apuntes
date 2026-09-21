@@ -1,0 +1,110 @@
+{
+  "duelos": [
+    {
+      "prompt": "Escribí un mensaje para pedir prórroga del parcial",
+      "modeloA": "DeepSeek",
+      "modeloB": "Llama",
+      "ganador": "A",
+      "id": "5Ei7ZOXqfOA"
+    },
+    {
+      "prompt": "Generá un plan de estudio para la prueba de DWYM",
+      "modeloA": "ChatGPT",
+      "modeloB": "Copilot",
+      "ganador": "B",
+      "id": "iKY_SiPKd1g"
+    },
+    {
+      "prompt": "Generá un plan de estudio para la prueba de DWYM",
+      "modeloA": "Copilot",
+      "modeloB": "Gemini",
+      "ganador": "A",
+      "id": "Lya84u9nQNw"
+    },
+    {
+      "prompt": "Resumí este PDF de 300 páginas en un tweet",
+      "modeloA": "DeepSeek",
+      "modeloB": "Llama",
+      "ganador": "B",
+      "id": "nIBr48iQVhY"
+    },
+    {
+      "prompt": "Resumí este PDF de 300 páginas en un tweet",
+      "modeloA": "Claude",
+      "modeloB": "Copilot",
+      "ganador": "A",
+      "id": "Lfm-9aw3CwE"
+    },
+    {
+      "prompt": "Convertí este for anidado en algo que no dé vergüenza",
+      "modeloA": "ChatGPT",
+      "modeloB": "Claude",
+      "ganador": "B",
+      "id": "iZrYBKHy99k"
+    },
+    {
+      "prompt": "Explicame flexbox como si tuviera 5 años",
+      "modeloA": "Gemini",
+      "modeloB": "Copilot",
+      "ganador": "A",
+      "id": "ABFbjHS8Sh4"
+    },
+    {
+      "prompt": "Generá un plan de estudio para la prueba de DWYM",
+      "modeloA": "Llama",
+      "modeloB": "DeepSeek",
+      "ganador": "B",
+      "id": "V4B723pUHek"
+    },
+    {
+      "prompt": "Generá un plan de estudio para la prueba de DWYM",
+      "modeloA": "Copilot",
+      "modeloB": "DeepSeek",
+      "ganador": "A",
+      "id": "6fSZ_Rz_ntI"
+    },
+    {
+      "prompt": "¿Por qué mi CSS funciona en mi máquina y en la tuya no?",
+      "modeloA": "Claude",
+      "modeloB": "ChatGPT",
+      "ganador": "B",
+      "id": "biX8_SU8-HE"
+    },
+    {
+      "prompt": "Resumí este PDF de 300 páginas en un tweet",
+      "modeloA": "Claude",
+      "modeloB": "ChatGPT",
+      "ganador": "A",
+      "id": "r5r5rHzB7Sw"
+    },
+    {
+      "prompt": "Resumí este PDF de 300 páginas en un tweet",
+      "modeloA": "DeepSeek",
+      "modeloB": "Claude",
+      "ganador": "B",
+      "id": "52Bfjcje8YU"
+    },
+    {
+      "prompt": "Escribí un mensaje para pedir prórroga del parcial",
+      "modeloA": "ChatGPT",
+      "modeloB": "Copilot",
+      "ganador": "A",
+      "id": "ogqTNQXukeI"
+    },
+    {
+      "prompt": "Resumí este PDF de 300 páginas en un tweet",
+      "modeloA": "Claude",
+      "modeloB": "Gemini",
+      "ganador": "B",
+      "id": "0XkIUBXRnNs"
+    },
+    {
+      "prompt": "¿Por qué mi CSS funciona en mi máquina y en la tuya no?",
+      "modeloA": "DeepSeek",
+      "modeloB": "Gemini",
+      "ganador": "A",
+      "id": "JXyJVvv6VMw"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

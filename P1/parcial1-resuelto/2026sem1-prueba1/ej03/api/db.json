@@ -1,0 +1,29 @@
+{
+  "combos": [
+    {
+      "backgroundColor": "#e5e2a7",
+      "textColor": "#7d355a",
+      "approved": true,
+      "id": "zyVRYJIIyec"
+    },
+    {
+      "backgroundColor": "#ac503b",
+      "textColor": "#670b8d",
+      "approved": false,
+      "id": "PIhdi6zHClA"
+    },
+    {
+      "backgroundColor": "#766fea",
+      "textColor": "#3607d0",
+      "approved": true,
+      "id": "mw_TG1pBJPo"
+    },
+    {
+      "backgroundColor": "#2a8808",
+      "textColor": "#c18506",
+      "approved": false,
+      "id": "AYku7rGAUtw"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

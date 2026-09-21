@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>04 — Hero, tabla y piezas sueltas</title>
+<style>
+/* ============================================================
+   PATRÓN 4: piezas sueltas que aparecen mezcladas en los diseños
+   ============================================================ */
+
+* { box-sizing: border-box; }
+
+body { font-family: Arial, Helvetica, sans-serif; line-height: 1.6; margin: 0; }
+
+.contenedor { margin: 0 auto; max-width: 900px; padding: 2em 1.5em; }
+
+/* --- A. Banda de color a sangre + contenido centrado adentro --- */
+.hero { background: linear-gradient(135deg, #2d6a4f, #1b4332); color: #fff; }
+.hero .contenedor { padding: 4em 1.5em; }
+.hero h1 { font-size: 2.6rem; margin: 0 0 0.3em; }
+.hero p { margin: 0; max-width: 40ch; opacity: 0.9; }
+
+/* --- B. Fila de estadísticas: se reparten el ancho por igual --- */
+.stats { display: flex; flex-wrap: wrap; gap: 1em; list-style: none; margin: 2em 0 0; padding: 0; }
+.stats li { background: #ffffff22; border-radius: 8px; flex: 1 1 140px; padding: 1em; }
+.stats .numero { display: block; font-size: 1.8rem; font-weight: bold; }
+.stats .etiqueta { font-size: 0.8rem; opacity: 0.85; }
+
+/* --- C. Tabla legible ------------------------------------------
+   border-collapse junta los bordes; sin eso quedan dobles.
+   El wrapper con overflow-x evita que rompa el layout en el celular.
+   --------------------------------------------------------------- */
+.tabla-scroll { overflow-x: auto; }
+table { border-collapse: collapse; min-width: 520px; width: 100%; }
+caption { font-weight: bold; padding-bottom: 0.6em; text-align: left; }
+th, td { border: 1px solid #ddd; padding: 0.5em 0.8em; text-align: left; }
+thead th { background: #f2f4f6; }
+tbody tr:nth-child(even) { background: #fafbfc; }   /* filas alternadas */
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* --- D. Grilla de iconos que se acomoda sola --- */
+.iconos {
+  display: grid; gap: 1em;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  list-style: none; margin: 0; padding: 0;
+}
+.iconos li {
+  align-items: center; border: 1px solid #e3e3e3; border-radius: 8px;
+  display: flex; flex-direction: column; gap: 0.4em; padding: 1em 0.5em;
+}
+.iconos .emoji { font-size: 2rem; line-height: 1; }
+.iconos .nombre { font-size: 0.75rem; color: #666; }
+
+/* --- E. Aviso / callout con barra lateral --- */
+.aviso {
+  background: #fff8e1; border-left: 4px solid #f0ad4e;
+  border-radius: 0 6px 6px 0; margin: 2em 0; padding: 1em 1.2em;
+}
+.aviso p { margin: 0; }
+
+h2 { border-bottom: 2px solid #eee; margin-top: 2.5em; padding-bottom: 0.3em; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="contenedor">
+    <h1>Programa Apollo</h1>
+    <p>Once misiones tripuladas entre 1967 y 1972, seis de ellas con alunizaje.</p>
+    <ul class="stats">
+      <li><span class="numero">12</span><span class="etiqueta">misiones</span></li>
+      <li><span class="numero">6</span><span class="etiqueta">alunizajes</span></li>
+      <li><span class="numero">36</span><span class="etiqueta">tripulantes</span></li>
+    </ul>
+  </div>
+</header>
+
+<main class="contenedor">
+
+  <h2>Tabla</h2>
+  <div class="tabla-scroll">
+    <table>
+      <caption>Misiones seleccionadas</caption>
+      <thead>
+        <tr><th>Misión</th><th>Lanzamiento</th><th>Alunizó</th><th class="num">Días</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Apollo 8</td><td>21 de diciembre de 1968</td><td>No</td><td class="num">6</td></tr>
+        <tr><td>Apollo 11</td><td>16 de julio de 1969</td><td>Sí</td><td class="num">8</td></tr>
+        <tr><td>Apollo 13</td><td>11 de abril de 1970</td><td>No</td><td class="num">5</td></tr>
+        <tr><td>Apollo 17</td><td>7 de diciembre de 1972</td><td>Sí</td><td class="num">12</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="aviso">
+    <p><strong>Recordá:</strong> envolvé siempre la tabla en un div con
+      <code>overflow-x: auto</code>. Es la pieza que más rompe el diseño responsivo.</p>
+  </div>
+
+  <h2>Grilla de iconos</h2>
+  <ul class="iconos">
+    <li><span class="emoji">🚀</span><span class="nombre">Saturno V</span></li>
+    <li><span class="emoji">🌖</span><span class="nombre">Luna</span></li>
+    <li><span class="emoji">🧑‍🚀</span><span class="nombre">Tripulación</span></li>
+    <li><span class="emoji">📅</span><span class="nombre">Cronograma</span></li>
+    <li><span class="emoji">🚨</span><span class="nombre">Incidentes</span></li>
+    <li><span class="emoji">🔥</span><span class="nombre">Reentrada</span></li>
+  </ul>
+
+</main>
+</body>
+</html>

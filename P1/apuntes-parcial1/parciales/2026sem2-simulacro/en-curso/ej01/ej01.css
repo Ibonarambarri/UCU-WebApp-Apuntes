@@ -1,0 +1,119 @@
+/*
+  Reemplazar este código CSS con los estilos necesarios.
+*/
+* {
+  box-sizing: border-box;
+}
+
+body {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.2em;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 769px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.caja {
+  border: 2px solid #1b1b1b;
+  border-radius: 14px;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em;
+}
+
+.logo {
+  border: 2px solid #1b1b1b;
+  border-radius: 14px;
+  font-size: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+}
+
+.encabezado {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.text-encabezado h2,
+.text-encabezado h3 {
+  margin: 0;
+}
+
+.text-encabezado h2 {
+  font-size: 1.2em;
+}
+
+.text-encabezado h3 {
+  font-size: 0.85em;
+  font-weight: normal;
+}
+
+.fichas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6em;
+}
+
+.ficha {
+  border: 2px solid #1b1b1b;
+  border-radius: 50%;
+  padding: 0.4em 1.4em;
+  text-align: center;
+}
+
+.ficha h3 {
+  font-size: 0.8em;
+  font-weight: normal;
+  margin: 0;
+  white-space: nowrap;
+}
+
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+  width: 100%;
+  margin-top: 1.5em;
+}
+
+.footer h3 {
+  font-size: 0.8em;
+  font-weight: normal;
+  margin: 0;
+}
+.caja.destacada {
+  border-color: #f5a623;
+}
+
+.etiqueta {
+  margin-left: auto;
+  border-color: #f5a623;
+  color: #f5a623;
+}

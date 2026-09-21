@@ -1,0 +1,3087 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parcial 1 · DWYM — Apuntes de HTML y CSS</title>
+<style>
+  * { box-sizing: border-box; }
+  :root {
+    --bg: #f6f7f9;
+    --panel: #fff;
+    --linea: #e2e5ea;
+    --texto: #1b1f24;
+    --tenue: #6a7280;
+    --acento: #1b4f9c;
+    --amarillo: #fff6e0;
+    --amarillo-b: #f0d79a;
+    --code-bg: #1b1f24;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    --h-header: 52px;
+  }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--texto);
+    display: flex;
+    flex-direction: column;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  /* ===================== HEADER ===================== */
+  header {
+    align-items: center;
+    background: var(--panel);
+    border-bottom: 1px solid var(--linea);
+    display: flex;
+    flex-shrink: 0;
+    gap: 1.5em;
+    height: var(--h-header);
+    padding: 0 1.2em;
+  }
+  .marca { font-size: .82rem; font-weight: 700; white-space: nowrap; }
+  .marca span { color: var(--tenue); font-weight: 400; }
+  #tabs { display: flex; gap: .2em; overflow-x: auto; }
+  #tabs button {
+    background: none; border: none; border-radius: 7px; color: var(--tenue);
+    cursor: pointer; font: inherit; font-size: .85rem; padding: .45em .85em; white-space: nowrap;
+  }
+  #tabs button:hover { background: #eef1f5; color: var(--texto); }
+  #tabs button.activo { background: var(--acento); color: #fff; }
+
+  #app { flex: 1; overflow: hidden; }
+  .vista { display: none; height: 100%; }
+  .vista.activa { display: grid; }
+
+  /* ===================== VISTA PARCIALES ===================== */
+  #vista-parciales { grid-template-columns: 270px 1fr; }
+
+  aside {
+    background: var(--panel); border-right: 1px solid var(--linea);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  aside .intro { border-bottom: 1px solid var(--linea); padding: .9em 1.1em; }
+  aside .intro p { color: var(--tenue); font-size: .76rem; line-height: 1.45; margin: 0; }
+  aside nav { flex: 1; overflow-y: auto; padding: .7em .6em 2em; }
+  .grupo {
+    color: var(--tenue); font-size: .66rem; font-weight: 700; letter-spacing: .09em;
+    margin: 1em 0 .35em; padding: 0 .5em; text-transform: uppercase;
+  }
+  .grupo:first-child { margin-top: .2em; }
+  aside nav button {
+    background: none; border: none; border-radius: 7px; color: var(--texto); cursor: pointer;
+    display: block; font: inherit; font-size: .84rem; line-height: 1.3; padding: .5em .6em;
+    text-align: left; width: 100%;
+  }
+  aside nav button:hover { background: #eef1f5; }
+  aside nav button.activo { background: var(--acento); color: #fff; }
+  aside nav button .n { display: block; font-size: .68rem; opacity: .65; }
+
+  .cabecera { background: var(--panel); border-bottom: 1px solid var(--linea); padding: .9em 1.5em; }
+  .cabecera h2 { font-size: 1.15rem; margin: 0 0 .2em; }
+  .origen {
+    background: #eef1f5; border-radius: 999px; color: var(--tenue);
+    font-size: .68rem; margin-left: .55em; padding: .22em .7em; vertical-align: middle; white-space: nowrap;
+  }
+  .resumen { color: var(--tenue); font-size: .84rem; line-height: 1.5; margin: .4em 0 0; max-width: 90ch; }
+  .claves { display: flex; flex-wrap: wrap; gap: .35em; list-style: none; margin: .6em 0 0; padding: 0; }
+  .claves li {
+    background: var(--amarillo); border: 1px solid var(--amarillo-b); border-radius: 6px;
+    font-family: var(--mono); font-size: .7rem; padding: .22em .55em;
+  }
+
+  .col-principal { display: flex; flex-direction: column; overflow: hidden; }
+  .cuerpo { display: grid; flex: 1; grid-template-rows: 1.15fr 1fr; overflow: hidden; }
+
+  .barra {
+    align-items: center; background: var(--panel); border-bottom: 1px solid var(--linea);
+    display: flex; gap: .4em; padding: .45em 1.5em;
+  }
+  .barra .etq { color: var(--tenue); font-size: .68rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
+  .barra .sep { flex: 1; }
+  .barra button, .tabs .copiar {
+    background: #fff; border: 1px solid var(--linea); border-radius: 6px; cursor: pointer;
+    font: inherit; font-size: .76rem; padding: .28em .65em;
+  }
+  .barra button:hover, .tabs .copiar:hover { border-color: var(--acento); color: var(--acento); }
+  .barra button.activo { background: var(--acento); border-color: var(--acento); color: #fff; }
+
+  .marco-preview { background: #dfe3e8; display: flex; flex: 1; justify-content: center; overflow: auto; padding: .9em; }
+  #preview { background: #fff; border: 0; box-shadow: 0 1px 6px rgba(0,0,0,.12); height: 100%; transition: width .18s; width: 100%; }
+
+  .zona-codigo { border-top: 1px solid var(--linea); display: flex; flex-direction: column; overflow: hidden; }
+  .tabs { align-items: center; background: var(--panel); border-bottom: 1px solid var(--linea); display: flex; gap: .25em; padding: .35em 1.5em; }
+  .tabs button[data-tab] { background: none; border: none; border-radius: 6px; cursor: pointer; font: inherit; font-size: .8rem; padding: .35em .85em; }
+  .tabs button[data-tab]:hover { background: #eef1f5; }
+  .tabs button[data-tab].activo { background: #eef1f5; font-weight: 700; }
+  .tabs .sep { flex: 1; }
+
+  pre {
+    background: var(--code-bg); color: #e6e9ef; flex: 1; font-family: var(--mono); font-size: 12.5px;
+    line-height: 1.55; margin: 0; overflow: auto; padding: .9em 1.5em 2em; tab-size: 2;
+  }
+  pre code { background: none; color: inherit; display: block; font-size: inherit; padding: 0; }
+  pre .cmt { color: #7f8c99; font-style: italic; }
+  pre .tag { color: #7bb7ff; }
+  pre .atr { color: #c3a6ff; }
+  pre .str { color: #a5d6a7; }
+  pre .prop { color: #ffcb6b; }
+
+  /* ===================== VISTA APUNTES ===================== */
+  .vista-apuntes { grid-template-columns: 1fr; transition: grid-template-columns .2s; }
+  .vista-apuntes.con-codigo { grid-template-columns: 1fr minmax(340px, 42%); }
+
+  .doc { overflow-y: auto; padding: 1.6em 2em 5em; }
+  .doc > .titulo-doc { margin: 0 0 .3em; font-size: 1.4rem; }
+  .doc > .intro-doc { color: var(--tenue); font-size: .9rem; line-height: 1.6; margin: 0 0 .5em; max-width: 80ch; }
+
+  .seccion {
+    background: var(--panel); border: 1px solid var(--linea); border-radius: 12px;
+    margin-top: 1.5em; overflow: hidden;
+  }
+  .seccion.resaltada { border-color: var(--acento); box-shadow: 0 0 0 3px rgba(27,79,156,.12); }
+  .sec-cabecera { padding: 1em 1.2em .9em; }
+  .sec-cabecera h3 { font-size: 1rem; margin: 0 0 .3em; }
+  .sec-cabecera .nota { color: var(--tenue); font-size: .84rem; line-height: 1.55; margin: 0; max-width: 78ch; }
+  .sec-acciones { align-items: center; display: flex; gap: .6em; margin-top: .8em; }
+  .ver-codigo {
+    background: #fff; border: 1px solid var(--linea); border-radius: 7px; cursor: pointer;
+    font: inherit; font-size: .78rem; padding: .35em .9em;
+  }
+  .ver-codigo:hover { border-color: var(--acento); color: var(--acento); }
+  .ver-codigo.abierto { background: var(--acento); border-color: var(--acento); color: #fff; }
+  .sec-demo { background: #eef1f5; border-top: 1px solid var(--linea); padding: .9em; }
+  .sec-demo iframe { background: #fff; border: 0; border-radius: 8px; display: block; width: 100%; }
+
+  /* panel de código lateral */
+  .panel-codigo {
+    background: var(--panel); border-left: 1px solid var(--linea);
+    display: none; grid-template-rows: auto 1fr 1fr; overflow: hidden;
+  }
+  .vista-apuntes.con-codigo .panel-codigo { display: grid; }
+  .pc-cabecera {
+    align-items: center; border-bottom: 1px solid var(--linea); display: flex;
+    gap: .6em; padding: .55em .9em;
+  }
+  .pc-cabecera .t { flex: 1; font-size: .82rem; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pc-cabecera button {
+    background: #fff; border: 1px solid var(--linea); border-radius: 6px; cursor: pointer;
+    font: inherit; font-size: .74rem; padding: .25em .6em;
+  }
+  .pc-cabecera button:hover { border-color: var(--acento); color: var(--acento); }
+  .pc-mitad { display: flex; flex-direction: column; overflow: hidden; }
+  .pc-mitad + .pc-mitad { border-top: 1px solid var(--linea); }
+  .pc-etq {
+    align-items: center; background: #f2f4f7; color: var(--tenue); display: flex;
+    font-size: .68rem; font-weight: 700; letter-spacing: .08em; padding: .3em .9em; text-transform: uppercase;
+  }
+  .pc-etq .sep { flex: 1; }
+  .pc-etq button {
+    background: #fff; border: 1px solid var(--linea); border-radius: 5px; color: var(--tenue);
+    cursor: pointer; font: inherit; font-size: .66rem; letter-spacing: 0; padding: .15em .5em; text-transform: none;
+  }
+  .pc-mitad pre { font-size: 12px; padding: .8em .9em 1.5em; }
+
+  /* ===================== VISTA COMPARATIVA ===================== */
+  .doc table { border-collapse: collapse; font-size: .82rem; margin: 1em 0 2em; width: 100%; }
+  .doc th, .doc td { border: 1px solid var(--linea); padding: .5em .7em; text-align: left; vertical-align: top; }
+  .doc th { background: #eef1f5; font-size: .74rem; letter-spacing: .04em; text-transform: uppercase; }
+  .doc td.si { background: #eafaef; }
+  .doc h3 { font-size: 1rem; margin: 1.8em 0 .5em; }
+  .doc ul.lista { font-size: .87rem; line-height: 1.7; margin: 0 0 1.5em; padding-left: 1.3em; }
+  .doc code { background: #eef1f5; border-radius: 3px; font-family: var(--mono); font-size: .86em; padding: 1px 5px; }
+  .doc .aviso {
+    background: var(--amarillo); border: 1px solid var(--amarillo-b); border-radius: 10px;
+    font-size: .86rem; line-height: 1.6; margin: 1.2em 0; padding: .9em 1.1em;
+  }
+
+  @media (max-width: 860px) {
+    body { overflow: auto; }
+    #vista-parciales { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+    .vista-apuntes.con-codigo { grid-template-columns: 1fr; grid-template-rows: 1fr 45vh; }
+    .panel-codigo { border-left: none; border-top: 1px solid var(--linea); }
+    .cuerpo { grid-template-rows: 360px 380px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="marca">Parcial 1 · DWYM <span>— HTML y CSS</span></div>
+  <nav id="tabs"></nav>
+</header>
+
+<div id="app">
+
+  <!-- ============ VISTA PARCIALES ============ -->
+  <div class="vista" id="vista-parciales">
+    <aside>
+      <div class="intro">
+        <p>Los ej01 tal cual salieron. Elegí uno, mirá el diseño renderizado y
+           el código completo abajo. Cambiá el ancho para ver cómo responde.</p>
+      </div>
+      <nav id="nav-parciales"></nav>
+    </aside>
+
+    <div class="col-principal">
+      <div class="cabecera">
+        <h2 id="p-titulo"></h2>
+        <p class="resumen" id="p-resumen"></p>
+        <ul class="claves" id="p-claves"></ul>
+      </div>
+      <div class="cuerpo">
+        <div class="col-principal">
+          <div class="barra">
+            <span class="etq">Renderizado</span>
+            <span class="sep"></span>
+            <button data-w="380">📱 380</button>
+            <button data-w="720">💻 720</button>
+            <button data-w="0" class="activo">🖥 completo</button>
+          </div>
+          <div class="marco-preview"><iframe id="preview" title="Vista previa"></iframe></div>
+        </div>
+        <div class="zona-codigo">
+          <div class="tabs">
+            <button data-tab="html" class="activo">HTML</button>
+            <button data-tab="css">CSS</button>
+            <span class="sep"></span>
+            <button class="copiar" id="p-copiar">Copiar</button>
+          </div>
+          <pre><code id="p-codigo"></code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ==========================================================================
+   PARTE 1 — Los parciales completos (ej01 de cada prueba)
+   ========================================================================== */
+const PARCIALES = [
+
+{
+  grupo: "2026sem2 · el más reciente",
+  id: "obs",
+  titulo: "Observatorio de IA 2026",
+  origen: "simulacro-prueba1-2026sem2-matutino / ej01",
+  resumen: "Marco exterior + título centrado + grilla responsiva de tarjetas. Cada tarjeta lleva un encabezado con emoji en cajita y texto de doble fila, una descripción y una fila de fichas. Una tarjeta va destacada con borde de color y etiqueta ⭐. Pie con dos textos a los costados.",
+  claves: ["repeat(auto-fit, minmax())", "flex-direction: column", "margin-left: auto", "margin-top: auto", "border-radius: 999px", "flex-wrap: wrap"],
+  html:
+`<main class="marco">
+  <h1>Observatorio de IA 2026</h1>
+  <h2 class="subtitulo">Los asistentes de IA más votados de este último año</h2>
+
+  <section class="grilla">
+
+    <article class="caja">
+      <div class="encabezado">
+        <span class="logo">🤖</span>
+        <div class="text-encabezado">
+          <h2>ChatGPT</h2>
+          <h3>OpenAI</h3>
+        </div>
+      </div>
+      <p class="descripcion">Lorem ipsum dolor sit amet consectetur adipiscing
+        elit semper habitant pellentesque, ullamcorper fames turpis accumsan.</p>
+      <div class="fichas">
+        <span class="ficha">texto</span>
+        <span class="ficha">imagen</span>
+        <span class="ficha">web</span>
+      </div>
+    </article>
+
+    <article class="caja destacada">
+      <div class="encabezado">
+        <span class="logo">🧠</span>
+        <div class="text-encabezado">
+          <h2>Claude</h2>
+          <h3>Anthropic</h3>
+        </div>
+        <span class="etiqueta">⭐ Más votado</span>
+      </div>
+      <p class="descripcion">Lorem ipsum dolor sit amet consectetur adipiscing
+        elit semper habitant pellentesque, ullamcorper fames turpis accumsan.</p>
+      <div class="fichas">
+        <span class="ficha">texto</span>
+        <span class="ficha">código</span>
+        <span class="ficha">razonamiento</span>
+      </div>
+    </article>
+
+    <article class="caja">
+      <div class="encabezado">
+        <span class="logo">✨</span>
+        <div class="text-encabezado">
+          <h2>Gemini</h2>
+          <h3>Google</h3>
+        </div>
+      </div>
+      <p class="descripcion">Lorem ipsum dolor sit amet consectetur adipiscing
+        elit semper habitant pellentesque, ullamcorper fames turpis accumsan.</p>
+      <div class="fichas">
+        <span class="ficha">texto</span>
+        <span class="ficha">imagen</span>
+        <span class="ficha">audio</span>
+        <span class="ficha">video</span>
+      </div>
+    </article>
+
+    <article class="caja">
+      <div class="encabezado">
+        <span class="logo">💻</span>
+        <div class="text-encabezado">
+          <h2>Copilot</h2>
+          <h3>Microsoft</h3>
+        </div>
+      </div>
+      <p class="descripcion">Lorem ipsum dolor sit amet consectetur adipiscing
+        elit semper habitant pellentesque, ullamcorper fames turpis accumsan.</p>
+      <div class="fichas">
+        <span class="ficha">texto</span>
+        <span class="ficha">código</span>
+      </div>
+    </article>
+
+    <article class="caja">
+      <div class="encabezado">
+        <span class="logo">🦙</span>
+        <div class="text-encabezado">
+          <h2>Llama</h2>
+          <h3>Meta</h3>
+        </div>
+      </div>
+      <p class="descripcion">Lorem ipsum dolor sit amet consectetur adipiscing
+        elit semper habitant pellentesque, ullamcorper fames turpis accumsan.</p>
+      <div class="fichas">
+        <span class="ficha">texto</span>
+        <span class="ficha">código</span>
+        <span class="ficha">local</span>
+      </div>
+    </article>
+
+    <article class="caja">
+      <div class="encabezado">
+        <span class="logo">🔍</span>
+        <div class="text-encabezado">
+          <h2>DeepSeek</h2>
+          <h3>DeepSeek</h3>
+        </div>
+      </div>
+      <p class="descripcion">Lorem ipsum dolor sit amet consectetur adipiscing
+        elit semper habitant pellentesque, ullamcorper fames turpis accumsan.</p>
+      <div class="fichas">
+        <span class="ficha">texto</span>
+        <span class="ficha">razonamiento</span>
+        <span class="ficha">código</span>
+      </div>
+    </article>
+
+  </section>
+
+  <footer>
+    <span>Simulacro Prueba 1 DWYM - FIT - UCU</span>
+    <span>26 de Agosto de 2026</span>
+  </footer>
+</main>`,
+  css:
+`* { box-sizing: border-box; }   /* SIEMPRE lo primero */
+
+:root {
+  --borde: #1b1b1b;
+  --acento: #f5a623;
+  --gris: #666;
+  --radio: 14px;
+}
+
+body {
+  color: var(--borde);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  margin: 0;
+  padding: 2vh 2vw;
+}
+
+/* 1. MARCO EXTERIOR: envuelve toda la página. Es lo que más se olvida. */
+.marco {
+  border: 2px solid var(--borde);
+  border-radius: var(--radio);
+  margin: 0 auto;                 /* centrado horizontal */
+  max-width: 1200px;
+  padding: 1.5em 2em 1.2em;
+}
+
+h1 { font-size: 2.1em; font-weight: normal; margin: .2em 0 .4em; text-align: center; }
+.subtitulo { font-size: 1em; font-weight: normal; margin: 0 0 1.8em; text-align: center; }
+
+/* 2. GRILLA RESPONSIVA sin una sola media query */
+.grilla {
+  display: grid;
+  gap: 1.5em;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* 3. TARJETA: flex column da el gap uniforme entre bloques */
+.caja {
+  border: 2px solid var(--borde);
+  border-radius: var(--radio);
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 1em 1.2em 1.2em;
+}
+
+/* Modificadora: clase base + clase extra. Nunca dupliques la regla entera. */
+.caja.destacada { border-color: var(--acento); }
+.caja.destacada .ficha { border-color: var(--acento); }
+
+/* 4. ENCABEZADO: cajita de emoji | (nombre / empresa) | etiqueta */
+.encabezado { align-items: center; display: flex; gap: .9em; }
+
+.logo {
+  align-items: center;
+  border: 2px solid var(--borde);
+  border-radius: 12px;
+  display: flex;
+  flex-shrink: 0;                 /* si no, se aplasta con nombres largos */
+  font-size: 1.6em;
+  height: 52px;
+  justify-content: center;
+  width: 52px;
+}
+
+.text-encabezado { display: flex; flex-direction: column; gap: .1em; }
+.text-encabezado h2, .text-encabezado h3 { margin: 0; }   /* imprescindible */
+.text-encabezado h2 { font-size: 1.3em; font-weight: normal; }
+.text-encabezado h3 { color: var(--gris); font-size: .85em; font-weight: normal; }
+
+.etiqueta {
+  border: 2px solid var(--acento);
+  border-radius: 999px;
+  color: var(--acento);
+  font-size: .8em;
+  margin-left: auto;              /* empuja SOLO la etiqueta a la derecha */
+  padding: .35em 1em;
+  white-space: nowrap;
+}
+
+.descripcion { line-height: 1.5; margin: 0; }
+
+/* 5. FICHAS / PÍLDORAS */
+.fichas {
+  display: flex;
+  flex-wrap: wrap;                /* sin esto se desbordan de la tarjeta */
+  gap: .55em;
+  margin-top: auto;               /* pega las fichas al fondo de la tarjeta:
+                                     quedan alineadas entre todas */
+}
+
+.ficha {
+  border: 2px solid var(--borde);
+  border-radius: 999px;           /* píldora. Con 50% da una elipse deformada. */
+  font-size: .82em;
+  padding: .35em 1.1em;
+  white-space: nowrap;            /* "razonamiento" no se parte en dos líneas */
+}
+
+/* 6. PIE: uno a cada lado */
+footer {
+  display: flex;
+  font-size: .85em;
+  justify-content: space-between;
+  margin-top: 2em;
+}`
+},
+
+{
+  grupo: "2026sem1 · prueba y simulacro",
+  id: "apollo",
+  titulo: "Programa Apollo (1967-1972)",
+  origen: "prueba1-2026sem1-vespertino / ej01",
+  resumen: "Póster con marco y grilla de misiones. Acá el emoji NO es un hermano del texto: va dentro del propio h2 (🚀 Apollo 11). La lista de tripulantes va alineada a la derecha y vuelve a la izquierda en pantallas chicas. Las misiones que alunizaron llevan fondo gris.",
+  claves: ["emoji inline dentro del h2", "text-align: right", "list-style: none", ".mision.alunizo", "@media (max-width)"],
+  html:
+`<main class="marco">
+  <h1>Programa Apollo (1967-1972)</h1>
+
+  <section class="grilla">
+
+    <article class="mision">
+      <h2><span class="icono">🔥</span> Apollo 1</h2>
+      <p class="fecha"><span class="icono">📅</span> 27 de enero de 1967</p>
+      <ul class="tripulacion">
+        <li>Gus Grissom <span class="icono">🧑‍🚀</span></li>
+        <li>Ed White <span class="icono">🧑‍🚀</span></li>
+        <li>Roger Chaffee <span class="icono">🧑‍🚀</span></li>
+      </ul>
+    </article>
+
+    <article class="mision">
+      <h2><span class="icono">🚀</span> Apollo 8</h2>
+      <p class="fecha"><span class="icono">📅</span> 21 de diciembre de 1968</p>
+      <ul class="tripulacion">
+        <li>Frank Borman <span class="icono">🧑‍🚀</span></li>
+        <li>Jim Lovell <span class="icono">🧑‍🚀</span></li>
+        <li>William Anders <span class="icono">🧑‍🚀</span></li>
+      </ul>
+    </article>
+
+    <article class="mision alunizo">
+      <h2><span class="icono">🌕</span> Apollo 11</h2>
+      <p class="fecha"><span class="icono">📅</span> 20 de julio de 1969</p>
+      <ul class="tripulacion">
+        <li>Neil Armstrong <span class="icono">🧑‍🚀</span></li>
+        <li>Buzz Aldrin <span class="icono">🧑‍🚀</span></li>
+        <li>Michael Collins <span class="icono">🧑‍🚀</span></li>
+      </ul>
+    </article>
+
+    <article class="mision alunizo">
+      <h2><span class="icono">🌕</span> Apollo 12</h2>
+      <p class="fecha"><span class="icono">📅</span> 14 de noviembre de 1969</p>
+      <ul class="tripulacion">
+        <li>Pete Conrad <span class="icono">🧑‍🚀</span></li>
+        <li>Richard Gordon <span class="icono">🧑‍🚀</span></li>
+        <li>Alan Bean <span class="icono">🧑‍🚀</span></li>
+      </ul>
+    </article>
+
+    <article class="mision">
+      <h2><span class="icono">🚀</span> Apollo 13</h2>
+      <p class="fecha"><span class="icono">📅</span> 11 de abril de 1970</p>
+      <ul class="tripulacion">
+        <li>Jim Lovell <span class="icono">🧑‍🚀</span></li>
+        <li>Jack Swigert <span class="icono">🧑‍🚀</span></li>
+        <li>Fred Haise <span class="icono">🧑‍🚀</span></li>
+      </ul>
+    </article>
+
+    <article class="mision alunizo">
+      <h2><span class="icono">🌕</span> Apollo 17</h2>
+      <p class="fecha"><span class="icono">📅</span> 7 de diciembre de 1972</p>
+      <ul class="tripulacion">
+        <li>Gene Cernan <span class="icono">🧑‍🚀</span></li>
+        <li>Ron Evans <span class="icono">🧑‍🚀</span></li>
+        <li>Harrison Schmitt <span class="icono">🧑‍🚀</span></li>
+      </ul>
+    </article>
+
+  </section>
+
+  <footer>
+    <span>Prueba 1 DWYM - FIT - UCU</span>
+    <span>2026</span>
+  </footer>
+</main>`,
+  css:
+`:root {
+  --borde: #1b1b1b;
+  --gris-tarjeta: #dfe3e8;
+  --radio: 14px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: #fff;
+  color: var(--borde);
+  font-family: "Comic Sans MS", "Segoe UI", Arial, sans-serif;
+  font-size: 15px;
+  margin: 0;
+  padding: 2vh 2vw;
+}
+
+/* Marco exterior que envuelve el póster entero */
+.marco {
+  border: 2px solid var(--borde);
+  border-radius: var(--radio);
+  margin: 0 auto;
+  max-width: 1100px;
+  padding: 1.5em;
+}
+
+h1 { font-size: 2em; font-weight: normal; margin: .2em 0 .8em; text-align: center; }
+
+/* Las columnas se ajustan solas al ancho de la ventana */
+.grilla {
+  display: grid;
+  gap: 1.2em;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.mision {
+  border: 2px solid var(--borde);
+  border-radius: var(--radio);
+  padding: .8em 1em 1em;
+}
+
+/* Modificadora: las misiones que alunizaron llevan fondo gris */
+.mision.alunizo { background-color: var(--gris-tarjeta); }
+
+.mision h2 { font-size: 1.2em; font-weight: normal; margin: 0 0 .3em; }
+.fecha { font-size: .95em; margin: 0 0 .8em; }
+
+/* Lista sin viñetas, alineada a la derecha */
+.tripulacion {
+  list-style: none;      /* saca los puntitos */
+  margin: 0;             /* el <ul> trae margin vertical por defecto */
+  padding: 0;            /* y padding-left para las viñetas */
+  text-align: right;
+}
+.tripulacion li { line-height: 1.6; }
+
+/* Fuente explícita de emoji: se ven iguales en Mac, Windows y Linux */
+.icono {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+footer {
+  display: flex;
+  font-size: .9em;
+  justify-content: space-between;
+  margin-top: 1.5em;
+  padding: 0 .3em;
+}
+
+/* En pantallas angostas la tripulación se alinea a la izquierda */
+@media (max-width: 480px) {
+  body { font-size: 14px; }
+  .tripulacion { text-align: left; }
+}`
+},
+
+{
+  grupo: "2026sem1 · prueba y simulacro",
+  id: "menu",
+  titulo: "Menú Internacional",
+  origen: "simulacro-prueba1-2026sem1-vespertino / ej01",
+  resumen: "Tarjeta con dos zonas: un header interno con el nombre a la izquierda y la bandera a la derecha, y un cuerpo con el emoji grande al costado del texto. Algunas tarjetas van sin recuadro pero conservando el espacio, para que la grilla no se desalinee.",
+  claves: ["justify-content: space-between", "flex: 0 0 auto", "flex: 1", "border-color: transparent", "flex-direction: column en mobile"],
+  html:
+`<main class="marco">
+  <h1>Menu Internacional</h1>
+
+  <section class="grilla">
+
+    <article class="plato">
+      <header>
+        <h2>Sushi</h2>
+        <span class="bandera">🇯🇵</span>
+      </header>
+      <div class="cuerpo">
+        <span class="comida">🍣</span>
+        <p>Arroz sazonado envuelto con la suavidad y el sabor del pescado crudo.</p>
+      </div>
+    </article>
+
+    <article class="plato sin-borde">
+      <header>
+        <h2>Taco</h2>
+        <span class="bandera">🇲🇽</span>
+      </header>
+      <div class="cuerpo">
+        <span class="comida">🌮</span>
+        <p>Tortilla de maíz o trigo rellena de sabores vibrantes, carne o
+           verduras, y coronada con salsas intensas.</p>
+      </div>
+    </article>
+
+    <article class="plato sin-borde">
+      <header>
+        <h2>Paella</h2>
+        <span class="bandera">🇪🇸</span>
+      </header>
+      <div class="cuerpo">
+        <span class="comida">🥘</span>
+        <p>Arroz cocinado en una paellera con el aroma de mariscos, verduras
+           y el cálido toque del azafrán.</p>
+      </div>
+    </article>
+
+    <article class="plato">
+      <header>
+        <h2>Tallarines</h2>
+        <span class="bandera">🇮🇹</span>
+      </header>
+      <div class="cuerpo">
+        <span class="comida">🍝</span>
+        <p>Pasta cocida, cubierta por salsas ricas y un abrazo reconfortante
+           de sabores italianos.</p>
+      </div>
+    </article>
+
+  </section>
+
+  <footer>
+    <span>Simulacro Prueba 1 DWYM - FIT - UCU</span>
+    <span>2026</span>
+  </footer>
+</main>`,
+  css:
+`:root { --borde: #1b1b1b; --radio: 16px; }
+
+* { box-sizing: border-box; }
+
+body {
+  background: #fff;
+  color: var(--borde);
+  font-family: "Comic Sans MS", "Segoe UI", Arial, sans-serif;
+  font-size: 15px;
+  margin: 0;
+  padding: 2vh 2vw;
+}
+
+.marco {
+  border: 2px solid var(--borde);
+  border-radius: var(--radio);
+  margin: 0 auto;
+  max-width: 950px;
+  padding: 1.5em;
+}
+
+h1 { font-size: 1.9em; font-weight: normal; margin: .2em 0 1em; text-align: center; }
+
+.grilla {
+  display: grid;
+  gap: 1.5em 2em;                 /* gap: fila columna */
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.plato {
+  border: 2px solid var(--borde);
+  border-radius: var(--radio);
+  padding: .8em 1.2em 1.2em;
+}
+
+/* En el diseño algunas tarjetas no llevan recuadro.
+   "transparent" y no "none": conserva los 2px, así no se desalinean
+   con las tarjetas que sí tienen borde. */
+.plato.sin-borde { border-color: transparent; }
+
+/* HEADER de la tarjeta: nombre a la izquierda, bandera a la derecha */
+.plato header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.plato h2 { font-size: 1.4em; font-weight: normal; margin: 0; }
+.bandera  { font-size: 1.9em; line-height: 1; }
+
+/* CUERPO: emoji grande de tamaño fijo + texto que se come el resto */
+.cuerpo {
+  align-items: center;
+  display: flex;
+  gap: 1em;
+  margin-top: .8em;
+}
+
+.comida {
+  flex: 0 0 auto;       /* no crece ni se achica: mantiene su tamaño */
+  font-size: 3.2em;
+  line-height: 1;
+}
+
+.cuerpo p {
+  flex: 1;              /* ocupa todo el espacio sobrante */
+  line-height: 1.5;
+  margin: 0;
+  text-align: right;
+}
+
+footer {
+  display: flex;
+  font-size: .9em;
+  justify-content: space-between;
+  margin-top: 2em;
+}
+
+/* En pantallas muy angostas: emoji arriba, texto abajo */
+@media (max-width: 420px) {
+  .cuerpo { flex-direction: column; }
+  .cuerpo p { text-align: left; }
+}`
+},
+
+{
+  grupo: "2025sem2 · parciales y simulacro",
+  id: "comidas",
+  titulo: "Comidas (el más simple)",
+  origen: "simulacro-parcial1-2025sem2 / ej01",
+  resumen: "El caso más rápido de reproducir y buena referencia de lo mínimo que hay que saber: fondo oscuro, panel blanco centrado, y una grilla donde el emoji va arriba y el nombre abajo. Fijate que la grilla es el propio <ul>.",
+  claves: ["body oscuro + panel blanco", "width: 100% dentro de flex column", "el <ul> puede ser la grilla", "list-style: none + margin/padding 0"],
+  html:
+`<main class="panel">
+  <h1>Comidas</h1>
+
+  <ul class="grilla">
+    <li class="tarjeta"><span class="emoji">🍕</span><span class="nombre">Pizza</span></li>
+    <li class="tarjeta"><span class="emoji">🌭</span><span class="nombre">Pancho</span></li>
+    <li class="tarjeta"><span class="emoji">🥪</span><span class="nombre">Olímpico</span></li>
+    <li class="tarjeta"><span class="emoji">🌮</span><span class="nombre">Taco</span></li>
+    <li class="tarjeta"><span class="emoji">🥙</span><span class="nombre">Pita rellena</span></li>
+    <li class="tarjeta"><span class="emoji">🥗</span><span class="nombre">Ensalada</span></li>
+    <li class="tarjeta"><span class="emoji">🍔</span><span class="nombre">Hamburguesa</span></li>
+    <li class="tarjeta"><span class="emoji">🍝</span><span class="nombre">Tallarines</span></li>
+    <li class="tarjeta"><span class="emoji">🍣</span><span class="nombre">Sushi</span></li>
+  </ul>
+</main>`,
+  css:
+`* { box-sizing: border-box; }
+
+/* Fondo oscuro + el hijo centrado horizontalmente */
+body {
+  align-items: center;
+  background: #1b1b1b;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  margin: 0;
+  padding: 2em 1em;
+}
+
+/* La "hoja" blanca */
+.panel {
+  background: #fff;
+  border-radius: 6px;
+  max-width: 640px;
+  padding: 1.5em 2em 2.5em;
+  width: 100%;          /* NECESARIO: dentro de un flex column con
+                           align-items:center, sin esto se encoge al
+                           tamaño del contenido */
+}
+
+h1 { color: #222; font-size: 1.6rem; margin: .5em 0 1.2em; }
+
+/* La grilla puede ser el propio <ul>.
+   Solo hay que matarle los estilos que trae el navegador. */
+.grilla {
+  display: grid;
+  gap: 1.2em;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Tarjeta: emoji arriba, nombre abajo, todo centrado.
+   Con flex-direction: column, align-items centra en HORIZONTAL. */
+.tarjeta {
+  align-items: center;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2em;
+  justify-content: center;
+  padding: 1.5em 1em 1em;
+}
+
+.emoji  { font-size: 3rem; line-height: 1; }
+.nombre { color: #1b3a63; font-size: .85rem; }`
+},
+
+{
+  grupo: "2025sem2 · parciales y simulacro",
+  id: "pollos",
+  titulo: "Los Pollos Hermanos (carta de restaurante)",
+  origen: "parcial1-2025sem2-matutino / ej01",
+  resumen: "El caso más distinto de todos: no hay grilla de tarjetas. Hay un hero a sangre con color de fondo y secciones donde la ilustración alterna de lado. Cada plato es una fila con el precio arriba a la derecha y un separador punteado. Las imágenes originales están reemplazadas por emojis.",
+  claves: ["hero con background + space-between", ".invertida { row-reverse }", "border-top: dotted", "text-align: right", "todo a column en mobile"],
+  html:
+`<header class="hero">
+  <div class="hero-texto">
+    <h1>Los Pollos<br>Hermanos</h1>
+    <p class="tagline">El sabor que hace que hasta Heisenberg se saque el sombrero.</p>
+  </div>
+  <span class="logo">🍗</span>
+</header>
+
+<main>
+  <section class="seccion">
+    <h2>Entradas</h2>
+    <p class="subtitulo">El primer paso a la adicción</p>
+
+    <div class="seccion-contenido">
+      <span class="ilustracion">🌶️</span>
+      <ul class="platos">
+        <li>
+          <p class="precio">$20</p>
+          <h3>Alitas de Crystal Meth</h3>
+          <p class="descripcion">Crujientes y adictivas, servidas con una salsa
+            "azul" de la casa.</p>
+        </li>
+        <li>
+          <p class="precio">$18</p>
+          <h3>Nachos Salamanca</h3>
+          <p class="descripcion">Se comen rápido, pero cuidado… siempre hay
+            consecuencias.</p>
+        </li>
+        <li>
+          <p class="precio">$12</p>
+          <h3>Guacamole Better Call Saul</h3>
+          <p class="descripcion">Ideal para empezar la velada con una defensa
+            impecable.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <h2>Platos Principales</h2>
+    <p class="subtitulo">La verdadera 'cocina' de Los Pollos Hermanos</p>
+
+    <!-- MISMA estructura: solo se agrega la clase .invertida -->
+    <div class="seccion-contenido invertida">
+      <span class="ilustracion">🍖</span>
+      <ul class="platos">
+        <li>
+          <p class="precio">$20</p>
+          <h3>Pollo a la Gus Fring</h3>
+          <p class="descripcion">Perfecto, impecable, sin una sola falla.</p>
+        </li>
+        <li>
+          <p class="precio">$22</p>
+          <h3>Ribs al estilo Heisenberg</h3>
+          <p class="descripcion">Tan intensas que parecen cocinadas en un
+            laboratorio de química.</p>
+        </li>
+        <li>
+          <p class="precio">$20</p>
+          <h3>Steak "Say My Name"</h3>
+          <p class="descripcion">Jugoso, potente y servido con respeto absoluto.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <h2>Postres &amp; Bebidas</h2>
+    <p class="subtitulo">Para terminar la jornada como un capo del cartel</p>
+
+    <div class="seccion-contenido">
+      <span class="ilustracion">🍮</span>
+      <ul class="platos">
+        <li>
+          <p class="precio">$40</p>
+          <h3>Flan del Desierto</h3>
+          <p class="descripcion">Suave, dorado y con un caramelo tan dulce que
+            parece cocinado bajo el sol de Albuquerque.</p>
+        </li>
+        <li>
+          <p class="precio">$30</p>
+          <h3>Café Lalo Salamanca</h3>
+          <p class="descripcion">Fuerte, con un "golpe" inesperado al final.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+</main>`,
+  css:
+`:root { --amarillo: #f5d800; --rojo: #d1332e; --negro: #1a1a1a; --gris: #4a4a4a; }
+
+* { box-sizing: border-box; }
+
+body { color: var(--negro); font-family: Georgia, "Times New Roman", serif; margin: 0; }
+
+/* ---------- Hero: banda de color a sangre ---------- */
+.hero {
+  align-items: flex-start;        /* pegados arriba, no centrados */
+  background-color: var(--amarillo);
+  display: flex;
+  gap: 2em;
+  justify-content: space-between;
+  padding: 2.5em 3em;
+}
+
+.hero h1 {
+  color: var(--rojo);
+  font-size: 3rem;
+  line-height: 1.1;               /* título de dos líneas bien junto */
+  margin: .2em 0 .5em;
+}
+
+.tagline {
+  color: var(--rojo);
+  font-size: .85rem;
+  font-weight: 700;
+  margin: 0;
+  max-width: 24em;                /* limita el ancho del texto: se lee mejor */
+}
+
+.logo { font-size: 4.5rem; line-height: 1; }
+
+/* ---------- Secciones centradas ---------- */
+.seccion { margin: 0 auto; max-width: 1000px; padding: 2.5em 2em; }
+.seccion h2 { font-size: 2.2rem; margin: 0; text-align: center; }
+.subtitulo { font-size: .8rem; margin: .6em 0 2em; text-align: center; }
+
+/* Ilustración a un lado, lista al otro */
+.seccion-contenido {
+  align-items: flex-start;
+  display: flex;
+  gap: 3em;
+}
+
+/* EL TRUCO del zigzag: misma clase + una modificadora que invierte la fila */
+.seccion-contenido.invertida { flex-direction: row-reverse; }
+
+.ilustracion { flex: 0 0 30%; font-size: 6rem; line-height: 1; text-align: center; }
+
+/* ---------- Lista de platos ---------- */
+.platos { flex: 1; list-style: none; margin: 0; padding: 0; }
+
+/* Separador punteado ARRIBA de cada plato */
+.platos li {
+  border-top: 2px dotted var(--negro);
+  padding: .8em 0 1.4em;
+}
+
+.precio { font-size: 1.1rem; font-weight: 700; margin: 0; text-align: right; }
+.platos h3 { font-size: 1.5rem; line-height: 1.15; margin: .1em 0 .4em; }
+.descripcion { color: var(--gris); font-size: .8rem; line-height: 1.5; margin: 0; }
+
+/* ---------- Responsivo: todo a una columna ---------- */
+@media (max-width: 700px) {
+  .hero { flex-direction: column; padding: 2em; }
+  .hero h1 { font-size: 2.2rem; }
+  /* hay que resetear TAMBIÉN la regla .invertida, si no queda al revés */
+  .seccion-contenido,
+  .seccion-contenido.invertida { flex-direction: column; }
+  .ilustracion { flex: 1; }
+}`
+},
+
+{
+  grupo: "2025sem2 · parciales y simulacro",
+  id: "cv",
+  titulo: "CV de Lord Voldemort",
+  origen: "parcial1-2025sem2-vespertino / ej01",
+  resumen: "Formato currículum: hoja blanca sobre fondo gris, secciones separadas por líneas horizontales, un bloque de dos columnas, e ítems donde el cargo va a la izquierda y el período a la derecha. Incluye viñetas propias hechas con ::before y una grilla de logos.",
+  claves: ["max-width + margin: 0 auto", ".cv > section { border-top }", "grid-template-columns: 1fr 1fr", "align-items: baseline", "li::before { content }", "border-radius: 50%"],
+  html:
+`<main class="cv">
+
+  <header class="encabezado">
+    <span class="foto">🐍</span>
+    <div>
+      <p class="rol">Cyber Security Specialist / Hacker</p>
+      <h1>Lord Voldemort</h1>
+    </div>
+  </header>
+
+  <section class="dos-columnas">
+    <div>
+      <h2>Perfil</h2>
+      <p class="parrafo">Hacker con amplia experiencia en ingeniería social,
+        penetración de sistemas y control distribuido de redes oscuras.
+        Especializado en crear exploits imposibles de rastrear y en mantener
+        alta disponibilidad incluso después de múltiples intentos de eliminación.</p>
+    </div>
+    <div>
+      <h2>Contacto</h2>
+      <ul class="contacto">
+        <li>Dirección: Dumbledor St 666</li>
+        <li>Email: voldemort@darknet.onion</li>
+        <li>Teléfono: +666-MORTIFAGO</li>
+        <li>Portafolio: lordv.dev/darkarts</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Educación</h2>
+
+    <article class="item">
+      <div class="item-cabecera">
+        <h3>Hogwarts School of Witchcraft and Exploits</h3>
+        <span class="periodo">1938–1945</span>
+      </div>
+      <p class="parrafo">Bachelor of Cyber Security and Dark Web, GPA: 3.4/4.0</p>
+    </article>
+
+    <article class="item">
+      <div class="item-cabecera">
+        <h3>Slytherin Advanced Cyber Institute</h3>
+        <span class="periodo">1945–1947</span>
+      </div>
+      <p class="parrafo">Master in Distributed Systems &amp; Horcrux Architecture</p>
+    </article>
+  </section>
+
+  <section>
+    <h2>Trabajos</h2>
+
+    <article class="item">
+      <div class="item-cabecera">
+        <h3>Head of Security – IBM</h3>
+        <span class="periodo">1960 – Presente</span>
+      </div>
+      <ul class="logros">
+        <li>Lideró proyectos de encriptación tan fuertes que ni Dumbledore.exe
+          pudo romperlos.</li>
+        <li>Implementó sistemas de autenticación biométrica anti muggles.</li>
+      </ul>
+    </article>
+
+    <article class="item">
+      <div class="item-cabecera">
+        <h3>Founder &amp; Lead Hacker – Mortífagos Collective</h3>
+        <span class="periodo">1947 – Presente</span>
+      </div>
+      <ul class="logros">
+        <li>Lideró ataques coordinados de denegación de servicio
+          (Avada-Kedavra DDoS).</li>
+        <li>Administró infraestructura descentralizada para mantener
+          redundancia (7 Horcrux servers).</li>
+      </ul>
+    </article>
+  </section>
+
+  <section>
+    <h2>Tecnologías</h2>
+    <ul class="tecnologias">
+      <li>⚡</li><li>🧙</li><li>🐍</li><li>🕸️</li><li>☕</li>
+    </ul>
+  </section>
+
+</main>`,
+  css:
+`:root { --texto: #2b2b2b; --tenue: #7a7a7a; --linea: #d9d9d9; }
+
+* { box-sizing: border-box; }
+
+body {
+  background: #ededed;          /* fondo gris: hace que la hoja "flote" */
+  color: var(--texto);
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 2em 1em;
+}
+
+/* Hoja blanca centrada */
+.cv {
+  background: #fff;
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 2.5em 3em;
+}
+
+/* Cada sección se separa con una línea.
+   El combinador ">" (hijo directo) evita que la regla afecte
+   a secciones anidadas dentro de otra sección. */
+.cv > section {
+  border-top: 1px solid var(--linea);
+  padding: 1.8em 0;
+}
+
+h2 { font-size: 1rem; margin: 0 0 1.1em; }
+
+/* ---------- Encabezado: avatar redondo + rol/nombre ---------- */
+.encabezado { align-items: center; display: flex; gap: 1.5em; padding-bottom: 1.8em; }
+
+.foto {
+  align-items: center;
+  background: #f0f0f0;
+  border-radius: 50%;           /* círculo perfecto SOLO porque es cuadrado */
+  display: flex;
+  flex-shrink: 0;
+  font-size: 2rem;
+  height: 72px;
+  justify-content: center;
+  width: 72px;
+}
+
+.rol {
+  color: var(--tenue);
+  font-size: .75rem;
+  letter-spacing: .14em;        /* el look "etiqueta" típico de los CV */
+  margin: 0 0 .3em;
+  text-transform: uppercase;
+}
+h1 { font-size: 1.8rem; margin: 0; }
+
+/* ---------- Bloque de dos columnas ---------- */
+.dos-columnas {
+  display: grid;
+  gap: 3em;
+  grid-template-columns: 1fr 1fr;
+}
+
+.parrafo { color: #555; font-size: .85rem; line-height: 1.7; margin: 0; }
+
+/* ---------- Viñetas propias con ::before ---------- */
+.contacto, .logros { color: #555; font-size: .85rem; list-style: none; margin: 0; padding: 0; }
+
+/* padding-left deja el hueco, position:relative es el ancla del ::before */
+.contacto li, .logros li { line-height: 1.7; padding-left: 1.2em; position: relative; }
+.contacto li::before { color: var(--linea); content: "•"; left: 0; position: absolute; }
+.logros  li::before { content: "·"; font-weight: 700; left: .3em; position: absolute; }
+
+/* ---------- Ítem: título a la izquierda, período a la derecha ---------- */
+.item { margin-bottom: 1.4em; }
+
+.item-cabecera {
+  align-items: baseline;        /* alinea por la línea de base del texto,
+                                   no por el alto de la caja. Queda mejor
+                                   cuando los tamaños de fuente difieren. */
+  display: flex;
+  gap: 1em;
+  justify-content: space-between;
+}
+
+.item h3 { font-size: .92rem; margin: 0 0 .4em; }
+.periodo { color: var(--tenue); font-size: .75rem; white-space: nowrap; }
+
+/* ---------- Grilla de logos ---------- */
+.tecnologias { display: flex; flex-wrap: wrap; gap: 1em; list-style: none; margin: 0; padding: 0; }
+.tecnologias li {
+  align-items: center;
+  border: 1px solid var(--linea);
+  border-radius: 4px;
+  display: flex;
+  font-size: 1.6rem;
+  height: 62px;
+  justify-content: center;
+  width: 62px;
+}
+
+@media (max-width: 640px) {
+  .cv { padding: 2em 1.5em; }
+  .dos-columnas { gap: 2em; grid-template-columns: 1fr; }
+  .item-cabecera { flex-direction: column; }
+}`
+},
+
+];
+
+/* ==========================================================================
+   PARTE 2 — Los apuntes por tema. Cada sección tiene su demo y su código.
+   ========================================================================== */
+
+/* Reset que se le inyecta a TODOS los demos y que no se muestra en el código,
+   para que el CSS de cada sección hable solo del patrón que enseña. */
+const BASE_DEMO = `* { box-sizing: border-box; }
+body { font-family: Arial, Helvetica, sans-serif; font-size: 15px; margin: 0; padding: 14px; }
+h4.demo-h { color: #6a7280; font-size: .72rem; letter-spacing: .06em; margin: 1.4em 0 .6em; text-transform: uppercase; }
+h4.demo-h:first-child { margin-top: 0; }`;
+
+const APUNTES = [
+
+/* ======================= DOC: ICONO + TEXTO ======================= */
+{
+  id: "icono",
+  tab: "Icono + texto",
+  titulo: "Icono / emoji + texto de doble fila",
+  intro: "El patrón que más se repite en los parciales 1: un emoji a la izquierda y al lado un bloque de dos líneas (un texto principal y un subtítulo). Salió en el simulacro 2026sem2 (🧠 Claude / Anthropic), en la prueba 2026sem1 (🚀 Apollo 11), en el menú 2026sem1 (🍣 Sushi / 🇯🇵) y en los platos de 2025sem2. Son ocho variantes del MISMO esqueleto: lo único que cambia es el flex-direction de cada nivel.",
+  secciones: [
+    {
+      id: "ico-base",
+      titulo: "1 — La base: dos niveles de flex",
+      nota: "Nivel 1 en fila (icono | texto), nivel 2 en columna (título / subtítulo). Los tres detalles que no podés olvidar: align-items:center para que el icono quede centrado contra las dos líneas, margin:0 en los títulos (es el error nº1 de las correcciones: el margen por defecto del h3 descentra todo), y line-height:1 en el emoji para que no agrande la fila.",
+      claves: ["align-items: center", "flex-direction: column", "margin: 0", "line-height: 1"],
+      html:
+`<div class="item">
+  <span class="icono">🧠</span>
+  <div class="texto">
+    <h3>Claude</h3>
+    <p>Anthropic</p>
+  </div>
+</div>`,
+      css:
+`.item {
+  align-items: center;   /* centra el icono contra las DOS líneas */
+  display: flex;
+  gap: 1em;              /* separación icono - texto. Nunca uses margin. */
+}
+
+.texto {
+  display: flex;
+  flex-direction: column;
+  gap: .15em;            /* separación entre título y subtítulo */
+}
+
+/* SIN ESTO el margen por defecto del h3 descentra todo. Error nº1. */
+.texto h3, .texto p { margin: 0; }
+
+.texto h3 { font-size: 1.2em; }
+.texto p  { color: #666; font-size: .85em; }   /* subtítulo: chico y tenue */
+
+.icono {
+  font-size: 2.4em;
+  line-height: 1;        /* sin esto el emoji arrastra interlineado
+                            y engorda la fila sin motivo */
+}`
+    },
+    {
+      id: "ico-caja",
+      titulo: "2 — El icono dentro de una cajita",
+      nota: "Es la del diseño del simulacro 2026sem2. Los tres ingredientes de una cajita de icono: ancho y alto fijos, flex + center + center para centrar el emoji adentro, y flex-shrink:0 para que el flex padre no la deforme cuando el nombre es largo. Cambiando el border-radius tenés la cuadrada, la redonda o la de fondo.",
+      claves: ["width + height fijos", "flex-shrink: 0", "justify-content: center", "border-radius: 50%"],
+      html:
+`<div class="item">
+  <span class="icono">🤖</span>
+  <div class="texto">
+    <h3>ChatGPT</h3>
+    <p>OpenAI</p>
+  </div>
+</div>
+
+<div class="item">
+  <span class="icono redonda">✨</span>
+  <div class="texto">
+    <h3>Gemini</h3>
+    <p>Google</p>
+  </div>
+</div>
+
+<div class="item">
+  <span class="icono rellena">🦙</span>
+  <div class="texto">
+    <h3>Llama</h3>
+    <p>Meta con un nombre larguísimo que empuja</p>
+  </div>
+</div>`,
+      css:
+`.item { align-items: center; display: flex; gap: 1em; margin-bottom: 1.1em; }
+.texto h3, .texto p { margin: 0; }
+.texto h3 { font-size: 1.15em; }
+.texto p  { color: #666; font-size: .85em; }
+
+/* Los 3 ingredientes de una cajita de icono */
+.icono {
+  align-items: center;        /* 2. centrar el emoji adentro */
+  border: 2px solid #1b1b1b;
+  border-radius: 14px;
+  display: flex;
+  flex-shrink: 0;             /* 3. que el flex padre NO la deforme */
+  font-size: 1.7em;
+  height: 58px;               /* 1. tamaño fijo */
+  justify-content: center;
+  width: 58px;
+}
+
+/* Variantes: solo cambia el redondeo o el relleno */
+.icono.redonda { border-radius: 50%; }
+.icono.rellena { background: #eef2ff; border-color: transparent; }`
+    },
+    {
+      id: "ico-etiqueta",
+      titulo: "3 — Con una etiqueta empujada a la derecha",
+      nota: "El encabezado de la tarjeta de Claude en el simulacro 2026sem2. La clave es margin-left:auto en el ÚLTIMO hijo. Ojo con la tentación de usar justify-content:space-between: eso reparte todos los huecos y te separaría también el icono del texto.",
+      claves: ["margin-left: auto", "NO space-between", "white-space: nowrap"],
+      html:
+`<div class="item destacado">
+  <span class="icono">🧠</span>
+  <div class="texto"><h3>Claude</h3><p>Anthropic</p></div>
+  <span class="etiqueta">⭐ Más votado</span>
+</div>
+
+<h4 class="demo-h">Lo que pasaría con space-between (mal)</h4>
+
+<div class="item mal">
+  <span class="icono">🧠</span>
+  <div class="texto"><h3>Claude</h3><p>Anthropic</p></div>
+  <span class="etiqueta">⭐ Más votado</span>
+</div>`,
+      css:
+`.item {
+  align-items: center;
+  border: 2px solid #1b1b1b;
+  border-radius: 14px;
+  display: flex;
+  gap: 1em;
+  padding: .8em 1em;
+}
+
+.icono {
+  align-items: center; border: 2px solid currentColor; border-radius: 12px;
+  display: flex; flex-shrink: 0; font-size: 1.5em;
+  height: 52px; justify-content: center; width: 52px;
+}
+
+.texto h3, .texto p { margin: 0; }
+.texto h3 { font-size: 1.15em; }
+.texto p  { color: #666; font-size: .85em; }
+
+.destacado { border-color: #f5a623; }
+
+.etiqueta {
+  border: 2px solid #f5a623;
+  border-radius: 999px;
+  color: #f5a623;
+  font-size: .8em;
+  margin-left: auto;      /* EL TRUCO: empuja SOLO este elemento */
+  padding: .3em 1em;
+  white-space: nowrap;    /* que no se parta en dos líneas */
+}
+
+/* ❌ Con space-between se reparten TODOS los huecos: el icono
+   se despega del texto. No es lo que muestra el diseño. */
+.item.mal { justify-content: space-between; }
+.item.mal .etiqueta { margin-left: 0; }`
+    },
+    {
+      id: "ico-invertido",
+      titulo: "4 — Icono a la derecha (sin tocar el HTML)",
+      nota: "El mismo HTML de la variante 1. Solo cambia el CSS: row-reverse da vuelta el orden visual de los hijos. Es la forma correcta de invertir un layout, en vez de reordenar el HTML (el orden del HTML lo lee el lector de pantalla, así que conviene dejarlo lógico).",
+      claves: ["flex-direction: row-reverse", "text-align: right", "margin-right: auto"],
+      html:
+`<div class="item invertido">
+  <span class="icono">💻</span>
+  <div class="texto"><h3>Copilot</h3><p>Microsoft</p></div>
+</div>
+
+<h4 class="demo-h">Variante: icono a la derecha pero texto pegado a la izquierda</h4>
+
+<div class="item invertido separado">
+  <span class="icono">🔍</span>
+  <div class="texto"><h3>DeepSeek</h3><p>DeepSeek</p></div>
+</div>`,
+      css:
+`.item { align-items: center; display: flex; gap: 1em; margin-bottom: 1em; }
+.icono { font-size: 2.2em; line-height: 1; }
+.texto h3, .texto p { margin: 0; }
+.texto h3 { font-size: 1.15em; }
+.texto p  { color: #666; font-size: .85em; }
+
+/* Da vuelta el orden visual: el primer hijo del HTML aparece último */
+.invertido { flex-direction: row-reverse; }
+.invertido .texto { text-align: right; }
+
+/* Si además querés separarlos a los extremos:
+   margin-right:auto en el bloque de texto (que en row-reverse
+   es el que queda a la izquierda) */
+.separado .texto { margin-right: auto; text-align: left; }`
+    },
+    {
+      id: "ico-columna",
+      titulo: "5 — Icono arriba, texto abajo (centrado)",
+      nota: "La de los contendientes del ej03 del simulacro 2026sem2 y la de las tarjetas de Comidas 2025sem2. Acá está la trampa que más confunde: cuando el flex es column, align-items y justify-content SE DAN VUELTA. align-items pasa a controlar el eje horizontal.",
+      claves: ["flex-direction: column", "align-items controla el eje horizontal", "text-align: center"],
+      html:
+`<div class="fila">
+  <div class="item">
+    <span class="icono">🧠</span>
+    <div class="texto"><h3>Claude</h3><p>Anthropic</p></div>
+  </div>
+  <span class="vs">VS</span>
+  <div class="item">
+    <span class="icono">✨</span>
+    <div class="texto"><h3>Gemini</h3><p>Google</p></div>
+  </div>
+</div>`,
+      css:
+`.fila { align-items: center; display: flex; gap: 2.5em; justify-content: center; }
+
+.item {
+  align-items: center;      /* en COLUMN, esto centra en HORIZONTAL */
+  display: flex;
+  flex-direction: column;
+  gap: .4em;
+  text-align: center;
+}
+
+.icono { font-size: 2.8em; line-height: 1; }
+.texto h3, .texto p { margin: 0; }
+.texto h3 { font-size: 1.05em; }
+.texto p  { color: #666; font-size: .8em; }
+
+.vs { color: #999; font-size: 1.4em; font-weight: bold; }
+
+/* ┌──────────────┬────────────────────┬─────────────────────┐
+   │ direction    │ align-items        │ justify-content     │
+   ├──────────────┼────────────────────┼─────────────────────┤
+   │ row          │ eje VERTICAL       │ eje HORIZONTAL      │
+   │ column       │ eje HORIZONTAL     │ eje VERTICAL        │
+   └──────────────┴────────────────────┴─────────────────────┘ */`
+    },
+    {
+      id: "ico-inline",
+      titulo: "6 — Emoji inline dentro del propio título",
+      nota: "La de la prueba 2026sem1 (Apollo). Acá el emoji no es un hermano del texto: va adentro del h2. Es la variante más rápida de escribir. Usala cuando el emoji es 'parte de la frase'. Si el diseño lo muestra como un avatar separado y alineado en columna entre tarjetas, usá flex (variantes 1 y 2), porque inline no te garantiza esa alineación.",
+      claves: ["<span> dentro del h2", "font-family de emoji", "sin flex"],
+      html:
+`<div class="mision">
+  <h3><span class="icono">🚀</span> Apollo 11</h3>
+  <p class="fecha"><span class="icono">📅</span> 20 de julio de 1969</p>
+  <ul class="tripulacion">
+    <li>Neil Armstrong <span class="icono">🧑‍🚀</span></li>
+    <li>Buzz Aldrin <span class="icono">🧑‍🚀</span></li>
+    <li>Michael Collins <span class="icono">🧑‍🚀</span></li>
+  </ul>
+</div>`,
+      css:
+`.mision {
+  border: 2px solid #1b1b1b;
+  border-radius: 14px;
+  max-width: 340px;
+  padding: .8em 1em 1em;
+}
+
+.mision h3 { font-size: 1.2em; font-weight: normal; margin: 0 0 .3em; }
+.fecha { font-size: .95em; margin: 0 0 .8em; }
+
+/* Lista sin viñetas, alineada a la derecha */
+.tripulacion {
+  list-style: none;   /* saca los puntitos */
+  margin: 0;          /* el <ul> trae margin vertical por defecto */
+  padding: 0;         /* y padding-left para las viñetas */
+  text-align: right;
+}
+.tripulacion li { line-height: 1.6; }
+
+/* Declarar la familia de emoji garantiza que se vean igual
+   en Mac, Windows y Linux */
+.icono {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}`
+    },
+    {
+      id: "ico-fila",
+      titulo: "7 — Fila de lista: icono + doble texto + valor a la derecha",
+      nota: "El patrón de historial, ranking o lista de resultados. flex:1 en el bloque de texto hace que se coma el espacio sobrante y que el valor de la derecha nunca se salga. Y el detalle que casi nadie sabe: para que text-overflow:ellipsis funcione dentro de un flex hace falta min-width:0, porque por defecto un ítem flex no se encoge por debajo de su contenido.",
+      claves: ["flex: 1", "min-width: 0", "text-overflow: ellipsis", "white-space: nowrap"],
+      html:
+`<div class="lista">
+  <div class="fila">
+    <span class="icono">🤖</span>
+    <div class="texto"><h3>ChatGPT</h3><p>OpenAI · 12 duelos</p></div>
+    <span class="valor">🏆 8</span>
+  </div>
+  <div class="fila">
+    <span class="icono">🧠</span>
+    <div class="texto"><h3>Claude</h3><p>Anthropic · 12 duelos</p></div>
+    <span class="valor">🏆 9</span>
+  </div>
+  <div class="fila">
+    <span class="icono">🔍</span>
+    <div class="texto">
+      <h3>Un nombre exageradamente largo que no entra de ninguna manera acá</h3>
+      <p>DeepSeek · 3 duelos</p>
+    </div>
+    <span class="valor">🏆 1</span>
+  </div>
+</div>`,
+      css:
+`.lista { display: flex; flex-direction: column; gap: .5em; }
+
+.fila {
+  align-items: center;
+  background: #f4f4f4;
+  border-radius: 8px;
+  display: flex;
+  gap: .8em;
+  padding: .6em 1em;
+}
+
+.fila .icono { font-size: 1.7em; line-height: 1; }
+
+.texto {
+  flex: 1;          /* se come todo el espacio sobrante */
+  min-width: 0;     /* CLAVE: por defecto un ítem flex no se encoge por
+                       debajo del ancho de su contenido. Sin esto,
+                       el ellipsis NO funciona y el valor se sale. */
+}
+
+.texto h3, .texto p { margin: 0; }
+.texto h3 {
+  font-size: 1em;
+  overflow: hidden;
+  text-overflow: ellipsis;   /* los 3 van SIEMPRE juntos */
+  white-space: nowrap;
+}
+.texto p { color: #666; font-size: .8em; }
+
+.valor { font-weight: bold; white-space: nowrap; }`
+    },
+    {
+      id: "ico-stats",
+      titulo: "8 — Grilla de estadísticas (icono + número + etiqueta)",
+      nota: "La variante 5 metida dentro de una grilla auto-fit. Es un buen comodín si el diseño te pide una fila de datos destacados arriba de la página.",
+      claves: ["grid auto-fit", "flex column centrado", "strong para el número"],
+      html:
+`<div class="stats">
+  <div class="stat"><span class="icono">🗳️</span><strong>1.284</strong><span class="etq">votos</span></div>
+  <div class="stat"><span class="icono">🤖</span><strong>6</strong><span class="etq">modelos</span></div>
+  <div class="stat"><span class="icono">⚡</span><strong>0,4 s</strong><span class="etq">latencia</span></div>
+  <div class="stat"><span class="icono">📈</span><strong>+18 %</strong><span class="etq">vs. 2025</span></div>
+</div>`,
+      css:
+`.stats {
+  display: grid;
+  gap: 1em;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+}
+
+.stat {
+  align-items: center;
+  border: 2px solid #1b1b1b;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+}
+
+.stat .icono { font-size: 2em; line-height: 1; }
+.stat strong { font-size: 1.6em; }
+.stat .etq   { color: #666; font-size: .85em; }`
+    }
+  ]
+},
+
+/* ======================= DOC: FICHAS Y ETIQUETAS ======================= */
+{
+  id: "fichas",
+  tab: "Fichas y etiquetas",
+  titulo: "Fichas, etiquetas y tarjetas destacadas",
+  intro: "Las piezas chicas que aparecen sueltas en todos los ej01: las píldoras de capacidades del simulacro 2026sem2, las formas de destacar una tarjeta (borde de color en 2026sem2, fondo gris en 2026sem1, sin borde en el menú), y la etiqueta que flota sobre la esquina.",
+  secciones: [
+    {
+      id: "fic-pildoras",
+      titulo: "1 — Píldoras: las formas y el porqué de cada una",
+      nota: "flex-wrap:wrap en el contenedor es obligatorio: sin eso las fichas se desbordan de la tarjeta. Y white-space:nowrap en cada ficha para que una palabra larga como 'razonamiento' no se parta en dos líneas. Fijate la diferencia entre 999px y 50%: el 50% es proporcional al tamaño de la caja, así que en una caja ancha te da una elipse deformada.",
+      claves: ["flex-wrap: wrap", "border-radius: 999px", "white-space: nowrap", "display: inline-flex"],
+      html:
+`<div class="fichas">
+  <span class="ficha">999px (píldora)</span>
+  <span class="ficha elipse">50% (elipse)</span>
+  <span class="ficha cuadrada">6px</span>
+  <span class="ficha rellena">rellena</span>
+  <span class="ficha suave">suave</span>
+  <span class="ficha con-icono">📝 con icono</span>
+</div>
+
+<h4 class="demo-h">Sin flex-wrap: wrap (se desbordan)</h4>
+
+<div class="caja-angosta">
+  <div class="fichas sin-wrap">
+    <span class="ficha">texto</span>
+    <span class="ficha">imagen</span>
+    <span class="ficha">razonamiento</span>
+    <span class="ficha">código</span>
+  </div>
+</div>
+
+<h4 class="demo-h">Con flex-wrap: wrap (bien)</h4>
+
+<div class="caja-angosta">
+  <div class="fichas">
+    <span class="ficha">texto</span>
+    <span class="ficha">imagen</span>
+    <span class="ficha">razonamiento</span>
+    <span class="ficha">código</span>
+  </div>
+</div>`,
+      css:
+`.fichas {
+  display: flex;
+  flex-wrap: wrap;        /* OBLIGATORIO: sin esto se salen de la tarjeta */
+  gap: .55em;
+}
+
+.ficha {
+  border: 2px solid #1b1b1b;
+  border-radius: 999px;   /* píldora perfecta a cualquier alto */
+  font-size: .85em;
+  padding: .35em 1.1em;
+  white-space: nowrap;    /* "razonamiento" no se parte en dos líneas */
+}
+
+/* 50% es PROPORCIONAL al tamaño: en una caja ancha da una elipse */
+.ficha.elipse   { border-radius: 50%; }
+.ficha.cuadrada { border-radius: 6px; }
+.ficha.rellena  { background: #1b1b1b; border-color: #1b1b1b; color: #fff; }
+.ficha.suave    { background: #eef2ff; border-color: transparent; color: #3b4cca; }
+
+/* inline-flex: alinea el emoji con el texto sin sacar la ficha del flujo */
+.ficha.con-icono { align-items: center; display: inline-flex; gap: .4em; }
+
+/* Para la demostración de abajo */
+.caja-angosta { border: 2px dashed #bbb; border-radius: 10px; max-width: 260px; padding: .7em; }
+.fichas.sin-wrap { flex-wrap: nowrap; }`
+    },
+    {
+      id: "fic-destacar",
+      titulo: "2 — Las 5 formas de destacar una tarjeta",
+      nota: "Siempre igual: una clase base con todo el estilo común, y una clase modificadora que cambia UNA cosa. Nunca escribas la regla entera dos veces. Ojo con .sin-borde: se usa border-color:transparent y no border:none, porque así la tarjeta conserva sus 2px y no se desalinea con las que sí tienen borde.",
+      claves: ["clase base + modificadora", "border-color: transparent", "background-color", "box-shadow"],
+      html:
+`<div class="tarjetas">
+  <div class="card"><h3>Normal</h3><p>.card</p></div>
+  <div class="card borde-color"><h3>Borde de color</h3><p>simulacro 2026sem2</p></div>
+  <div class="card fondo-gris"><h3>Fondo gris</h3><p>prueba 2026sem1</p></div>
+  <div class="card sin-borde"><h3>Sin borde</h3><p>menú 2026sem1</p></div>
+  <div class="card sombra"><h3>Con sombra</h3><p>alternativa moderna</p></div>
+</div>`,
+      css:
+`.tarjetas {
+  display: grid;
+  gap: 1em;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+/* CLASE BASE: todo lo común va acá, una sola vez */
+.card {
+  border: 2px solid #1b1b1b;
+  border-radius: 14px;
+  padding: 1em;
+}
+.card h3 { font-size: 1.05em; font-weight: normal; margin: 0 0 .4em; }
+.card p  { color: #666; font-size: .85em; margin: 0; }
+
+/* MODIFICADORAS: cada una cambia UNA sola propiedad */
+.card.borde-color { border-color: #f5a623; }
+.card.fondo-gris  { background-color: #dfe3e8; }
+
+/* transparent y NO "none": conserva los 2px de la caja,
+   así no se desalinea con las tarjetas que sí tienen borde */
+.card.sin-borde   { border-color: transparent; }
+
+.card.sombra { border-color: transparent; box-shadow: 0 2px 10px rgba(0,0,0,.15); }`
+    },
+    {
+      id: "fic-flotante",
+      titulo: "3 — Etiqueta flotando sobre la esquina",
+      nota: "Cuando el diseño muestra la etiqueta pisando el borde de la tarjeta (fuera del flujo normal), es position:absolute. La regla de oro: un elemento absoluto se posiciona respecto del antecesor más cercano que tenga position distinto de static. Si te olvidás el position:relative en la tarjeta, la etiqueta se va a la esquina de la PÁGINA.",
+      claves: ["position: relative en el ancla", "position: absolute", "top negativo", "background para tapar el borde"],
+      html:
+`<div class="tarjetas">
+  <div class="card ancla borde-color">
+    <span class="badge">⭐ Más votado</span>
+    <h3>Claude</h3>
+    <p>Pisa el borde superior con top negativo.</p>
+  </div>
+
+  <div class="card ancla">
+    <span class="badge interno">nuevo</span>
+    <h3>Gemini</h3>
+    <p>Por dentro de la tarjeta.</p>
+  </div>
+
+  <div class="card">
+    <span class="badge sin-ancla">se escapó</span>
+    <h3>Sin position: relative</h3>
+    <p>La etiqueta se fue a la esquina de la página. ⬈</p>
+  </div>
+</div>`,
+      css:
+`.tarjetas { display: grid; gap: 1.4em; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+
+.card { border: 2px solid #1b1b1b; border-radius: 14px; padding: 1em; }
+.card h3 { font-size: 1.05em; font-weight: normal; margin: 0 0 .4em; }
+.card p  { color: #666; font-size: .82em; margin: 0; }
+.card.borde-color { border-color: #f5a623; }
+
+/* EL ANCLA. Sin esto el badge busca hacia arriba hasta el <body>. */
+.ancla { position: relative; }
+
+.badge {
+  background: #fff;        /* tapa el borde de la tarjeta que queda debajo */
+  border: 2px solid #f5a623;
+  border-radius: 999px;
+  color: #f5a623;
+  font-size: .72em;
+  padding: .25em .9em;
+  position: absolute;
+  right: .8em;
+  top: -.75em;             /* negativo: se sale hacia arriba */
+  white-space: nowrap;
+}
+
+/* Misma etiqueta, pero por dentro */
+.badge.interno { top: .8em; }
+
+/* ❌ Esta tarjeta NO tiene position:relative */
+.badge.sin-ancla { border-color: #c00; color: #c00; }`
+    },
+    {
+      id: "fic-separador",
+      titulo: "4 — Separador punteado entre texto y precio",
+      nota: "El de la carta de Los Pollos Hermanos. Un <span> vacío con flex:1 y border-bottom punteado: se estira y ocupa exactamente el hueco que sobra. align-items:baseline alinea todo por la línea de base del texto, que queda mejor que center cuando los tamaños de fuente son distintos.",
+      claves: ["span vacío con flex: 1", "border-bottom: dotted", "align-items: baseline"],
+      html:
+`<div class="linea"><span>Pollo entero</span><span class="puntos"></span><span class="precio">$ 450</span></div>
+<div class="linea"><span>Medio pollo con papas</span><span class="puntos"></span><span class="precio">$ 290</span></div>
+<div class="linea"><span>Alitas de Crystal Meth</span><span class="puntos"></span><span class="precio">$ 20</span></div>
+
+<h4 class="demo-h">Variante: la línea arriba de cada ítem (Los Pollos Hermanos)</h4>
+
+<ul class="platos">
+  <li>
+    <p class="precio-arriba">$20</p>
+    <h3>Pollo a la Gus Fring</h3>
+    <p class="desc">Perfecto, impecable, sin una sola falla.</p>
+  </li>
+  <li>
+    <p class="precio-arriba">$22</p>
+    <h3>Ribs al estilo Heisenberg</h3>
+    <p class="desc">Tan intensas que parecen hechas en un laboratorio.</p>
+  </li>
+</ul>`,
+      css:
+`.linea {
+  align-items: baseline;   /* alinea por la línea de base del texto */
+  display: flex;
+  gap: .5em;
+  margin-bottom: .5em;
+}
+
+/* Un span VACÍO que se estira y ocupa el hueco sobrante */
+.linea .puntos {
+  border-bottom: 2px dotted #999;
+  flex: 1;
+}
+
+.precio { font-weight: bold; }
+
+/* --- Variante con la línea arriba de cada ítem --- */
+.platos { list-style: none; margin: 0; max-width: 420px; padding: 0; }
+
+.platos li {
+  border-top: 2px dotted #1a1a1a;   /* el separador es el borde del <li> */
+  padding: .8em 0 1.2em;
+}
+
+.precio-arriba { font-weight: bold; margin: 0; text-align: right; }
+.platos h3 { font-size: 1.2em; margin: .1em 0 .3em; }
+.desc { color: #4a4a4a; font-size: .85em; line-height: 1.5; margin: 0; }`
+    },
+    {
+      id: "fic-badges-nb",
+      titulo: "5 — Encabezado de tarjeta: nombre a un lado, bandera al otro",
+      nota: "El header interno del menú internacional 2026sem1. Es space-between puro, pero fijate que acá SÍ corresponde (a diferencia de la variante con etiqueta del apartado anterior): son solo dos elementos y el diseño los quiere en los extremos opuestos.",
+      claves: ["justify-content: space-between", "align-items: center", "flex: 0 0 auto", "flex: 1"],
+      html:
+`<article class="plato">
+  <header>
+    <h3>Sushi</h3>
+    <span class="bandera">🇯🇵</span>
+  </header>
+  <div class="cuerpo">
+    <span class="comida">🍣</span>
+    <p>Arroz sazonado envuelto con la suavidad y el sabor del pescado crudo.</p>
+  </div>
+</article>
+
+<article class="plato sin-borde">
+  <header>
+    <h3>Paella</h3>
+    <span class="bandera">🇪🇸</span>
+  </header>
+  <div class="cuerpo">
+    <span class="comida">🥘</span>
+    <p>Arroz cocinado con el aroma de mariscos, verduras y el toque del azafrán.</p>
+  </div>
+</article>`,
+      css:
+`.plato {
+  border: 2px solid #1b1b1b;
+  border-radius: 16px;
+  margin-bottom: 1.2em;
+  max-width: 420px;
+  padding: .8em 1.2em 1.2em;
+}
+
+.plato.sin-borde { border-color: transparent; }
+
+/* HEADER: nombre a la izquierda, bandera a la derecha */
+.plato header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.plato h3 { font-size: 1.3em; font-weight: normal; margin: 0; }
+.bandera  { font-size: 1.8em; line-height: 1; }
+
+/* CUERPO: emoji de tamaño fijo + texto que se come el resto */
+.cuerpo { align-items: center; display: flex; gap: 1em; margin-top: .8em; }
+
+.comida {
+  flex: 0 0 auto;    /* no crece ni se achica */
+  font-size: 3em;
+  line-height: 1;
+}
+
+.cuerpo p {
+  flex: 1;           /* ocupa todo el sobrante */
+  line-height: 1.5;
+  margin: 0;
+  text-align: right;
+}`
+    }
+  ]
+},
+
+/* ======================= DOC: GRILLAS Y LAYOUTS ======================= */
+{
+  id: "layouts",
+  tab: "Grillas y layouts",
+  titulo: "Grillas y estructuras de página",
+  intro: "Desde 2026 el enunciado del ej01 dice literalmente «la página debe ser responsiva: si se modifican las dimensiones de la ventana, la grilla debe ajustarse automáticamente». Acá están las dos formas de resolverlo y el resto de estructuras de página que salieron. Achicá el panel de código para ver cómo responden los demos.",
+  secciones: [
+    {
+      id: "lay-autofit",
+      titulo: "1 — Grilla auto-fit: la respuesta correcta desde 2026",
+      nota: "Se lee así: «meté todas las columnas que entren; cada una mide 260px como mínimo y el sobrante se reparte en partes iguales». Responsivo sin escribir una sola media query. Para tener MENOS columnas máximas, subí el número del minmax. auto-fit vs auto-fill: con auto-fit las columnas vacías se colapsan y las tarjetas ocupan todo el ancho, que es lo que casi siempre querés.",
+      claves: ["repeat(auto-fit, minmax(260px, 1fr))", "gap", "auto-fit vs auto-fill", "grid-column: span 2"],
+      html:
+`<h4 class="demo-h">minmax(260px, 1fr)</h4>
+<div class="g g-260">
+  <div class="b">1</div><div class="b">2</div><div class="b">3</div>
+  <div class="b">4</div><div class="b">5</div><div class="b">6</div>
+</div>
+
+<h4 class="demo-h">minmax(150px, 1fr) — entran más columnas</h4>
+<div class="g g-150">
+  <div class="b">1</div><div class="b">2</div><div class="b">3</div>
+  <div class="b">4</div><div class="b">5</div><div class="b">6</div>
+</div>
+
+<h4 class="demo-h">Una celda que ocupa dos columnas</h4>
+<div class="g g-260">
+  <div class="b ancha">grid-column: span 2</div>
+  <div class="b">2</div><div class="b">3</div><div class="b">4</div>
+</div>`,
+      css:
+`.g {
+  display: grid;
+  gap: 1em;
+}
+
+/* "Todas las columnas que entren, mínimo 260px cada una,
+   y el sobrante se reparte en partes iguales (1fr)." */
+.g-260 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+
+/* Mismo patrón, mínimo más chico -> entran más columnas */
+.g-150 { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+
+/* Una celda que ocupa el doble */
+.ancha { grid-column: span 2; }
+
+.b {
+  align-items: center; background: #e7ecf3; border: 2px solid #9fb3cc;
+  border-radius: 10px; display: flex; justify-content: center;
+  min-height: 62px; padding: .5em; text-align: center;
+}`
+    },
+    {
+      id: "lay-mq",
+      titulo: "2 — Media queries: cuando el enunciado te da los números",
+      nota: "Si te piden explícitamente 3, 2 y 1 columnas, usá media queries. Mobile first: arrancás en 1 columna y vas SUMANDO con min-width. Dos errores frecuentes: escribir grid-template-columns dos veces en la misma regla (la segunda pisa a la primera y la primera no hace nada — pasa hoy en el ej01 del simulacro 2026sem2), y mezclar auto-fit CON media queries, que te deja dos sistemas peleando.",
+      claves: ["mobile first", "@media (min-width)", "no repitas la propiedad", "no mezcles con auto-fit"],
+      html:
+`<h4 class="demo-h">3 → 2 → 1 columnas (achicá el panel para verlo)</h4>
+<div class="g-mq">
+  <div class="b">1</div><div class="b">2</div><div class="b">3</div>
+  <div class="b">4</div><div class="b">5</div><div class="b">6</div>
+</div>`,
+      css:
+`/* MOBILE FIRST: el caso base es el más chico */
+.g-mq {
+  display: grid;
+  gap: 1em;
+  grid-template-columns: 1fr;
+}
+
+/* Y vas SUMANDO columnas a medida que hay más ancho */
+@media (min-width: 520px) {
+  .g-mq { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 800px) {
+  .g-mq { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ❌ ERROR FRECUENTE — la segunda pisa a la primera:
+   .g { grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+
+   ❌ ERROR FRECUENTE — dos sistemas peleando:
+   auto-fit + media queries. Elegí UNO. */
+
+.b {
+  align-items: center; background: #e7ecf3; border: 2px solid #9fb3cc;
+  border-radius: 10px; display: flex; justify-content: center;
+  min-height: 62px; padding: .5em;
+}`
+    },
+    {
+      id: "lay-marco",
+      titulo: "3 — El marco exterior y el contenedor centrado",
+      nota: "Está en los tres diseños de 2026 y es lo que más se olvida: un borde redondeado que envuelve TODA la página, con el título adentro. La receta es margin:0 auto + max-width. No uses body { display:flex; align-items:center } para centrar: te obliga a poner width:100% en cada hijo y después el footer no llega a los bordes.",
+      claves: ["margin: 0 auto", "max-width", "padding: 2vh 2vw en el body", "footer con space-between"],
+      html:
+`<main class="marco">
+  <h3>Observatorio de IA 2026</h3>
+  <p class="subtitulo">Los asistentes más votados de este último año</p>
+
+  <div class="g">
+    <div class="b">tarjeta</div>
+    <div class="b">tarjeta</div>
+    <div class="b">tarjeta</div>
+  </div>
+
+  <footer>
+    <span>Simulacro Prueba 1 DWYM - FIT - UCU</span>
+    <span>26 de Agosto de 2026</span>
+  </footer>
+</main>`,
+      css:
+`body {
+  padding: 2vh 2vw;    /* aire alrededor del marco. vh/vw = % de la ventana */
+}
+
+/* LA RECETA del contenedor centrado */
+.marco {
+  border: 2px solid #1b1b1b;
+  border-radius: 14px;
+  margin: 0 auto;      /* auto a los lados = centrado horizontal */
+  max-width: 1100px;   /* deja de crecer en pantallas grandes */
+  padding: 1.5em 2em 1.2em;
+}
+
+h3 { font-size: 1.8em; font-weight: normal; margin: .2em 0 .3em; text-align: center; }
+.subtitulo { font-size: .95em; margin: 0 0 1.5em; text-align: center; }
+
+.g { display: grid; gap: 1em; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.b {
+  align-items: center; background: #e7ecf3; border: 2px solid #9fb3cc;
+  border-radius: 10px; display: flex; justify-content: center; min-height: 70px;
+}
+
+/* PIE: uno a cada lado. Sale en todos los parciales de 2026. */
+footer {
+  display: flex;
+  font-size: .85em;
+  justify-content: space-between;
+  margin-top: 1.5em;
+}`
+    },
+    {
+      id: "lay-columnas",
+      titulo: "4 — Dos columnas desiguales (CV, perfil, sidebar)",
+      nota: "El layout del CV de Voldemort. 1fr 2fr significa «la segunda columna es el doble de ancha que la primera». Colapsa a una sola columna en mobile con una media query.",
+      claves: ["grid-template-columns: 1fr 2fr", "gap", "colapsar a 1fr en mobile"],
+      html:
+`<h4 class="demo-h">1fr 1fr (iguales)</h4>
+<div class="dos iguales">
+  <div class="b">Perfil</div>
+  <div class="b">Contacto</div>
+</div>
+
+<h4 class="demo-h">1fr 2fr (la segunda es el doble)</h4>
+<div class="dos desiguales">
+  <div class="b">lateral</div>
+  <div class="b">contenido</div>
+</div>
+
+<h4 class="demo-h">260px 1fr (la primera fija, la segunda elástica)</h4>
+<div class="dos fija">
+  <div class="b">menú 260px</div>
+  <div class="b">contenido</div>
+</div>`,
+      css:
+`.dos { display: grid; gap: 1.5em; margin-bottom: .5em; }
+
+/* fr = fracción del espacio disponible */
+.iguales    { grid-template-columns: 1fr 1fr; }
+.desiguales { grid-template-columns: 1fr 2fr; }
+
+/* Podés mezclar unidades fijas con fr */
+.fija       { grid-template-columns: 260px 1fr; }
+
+/* Todas colapsan a una columna en pantallas chicas */
+@media (max-width: 560px) {
+  .dos { gap: 1em; grid-template-columns: 1fr; }
+}
+
+.b {
+  align-items: center; background: #e7ecf3; border: 2px solid #9fb3cc;
+  border-radius: 10px; display: flex; justify-content: center;
+  min-height: 62px; padding: .5em;
+}`
+    },
+    {
+      id: "lay-zigzag",
+      titulo: "5 — Filas alternadas (zigzag)",
+      nota: "El menú de Los Pollos Hermanos. :nth-child(even) selecciona los hijos pares y les da vuelta la fila. El detalle que se olvida: en la media query hay que resetear TAMBIÉN la regla de :nth-child(even), si no las filas pares quedan al revés (column-reverse implícito).",
+      claves: [":nth-child(even)", "flex-direction: row-reverse", "resetear la regla even en mobile"],
+      html:
+`<div class="zigzag">
+  <div class="zig"><span class="emoji">🍗</span><p>Fila impar: la ilustración va a la izquierda.</p></div>
+  <div class="zig"><span class="emoji">🍟</span><p>Fila par: va a la derecha, sin tocar el HTML.</p></div>
+  <div class="zig"><span class="emoji">🥤</span><p>Solo con row-reverse en :nth-child(even).</p></div>
+  <div class="zig"><span class="emoji">🍮</span><p>Y así sucesivamente.</p></div>
+</div>`,
+      css:
+`.zigzag { display: flex; flex-direction: column; gap: 1em; }
+
+.zig {
+  align-items: center;
+  background: #f6f7f9;
+  border-radius: 10px;
+  display: flex;
+  gap: 1.2em;
+  padding: 1em;
+}
+
+/* EL TRUCO: invertir SOLO las filas pares.
+   :nth-child(odd) sería las impares, :nth-child(3n) cada 3. */
+.zig:nth-child(even) { flex-direction: row-reverse; }
+
+.zig .emoji { font-size: 2.6em; line-height: 1; }
+.zig p { flex: 1; margin: 0; }
+
+/* En mobile todo a columna. Hay que resetear TAMBIÉN la regla even:
+   si solo ponés .zig { flex-direction: column }, las pares quedan
+   con row-reverse todavía ganando por especificidad. */
+@media (max-width: 480px) {
+  .zig,
+  .zig:nth-child(even) { flex-direction: column; text-align: center; }
+}`
+    },
+    {
+      id: "lay-hero",
+      titulo: "6 — Hero: banda de color a sangre",
+      nota: "El header de Los Pollos Hermanos. «A sangre» significa que el fondo llega hasta los bordes de la ventana: para eso el body no puede tener padding lateral, y el hero se pone antes del contenedor con max-width.",
+      claves: ["body { margin: 0 }", "background-color en el header", "justify-content: space-between", "max-width en el texto"],
+      html:
+`<header class="hero">
+  <div>
+    <h3>Los Pollos<br>Hermanos</h3>
+    <p class="tagline">El sabor que hace que hasta Heisenberg se saque el sombrero.</p>
+  </div>
+  <span class="logo">🍗</span>
+</header>
+
+<main class="contenido">
+  <p>El contenido de abajo sí va dentro de un contenedor con max-width
+     y centrado, mientras que el hero llega hasta los bordes.</p>
+</main>`,
+      css:
+`body { margin: 0; padding: 0; }   /* el hero tiene que llegar a los bordes */
+
+.hero {
+  align-items: flex-start;         /* pegados arriba, no centrados */
+  background-color: #f5d800;
+  display: flex;
+  gap: 2em;
+  justify-content: space-between;
+  padding: 2em 2.5em;
+}
+
+.hero h3 {
+  color: #d1332e;
+  font-family: Georgia, serif;
+  font-size: 2.2rem;
+  line-height: 1.1;                /* título de dos líneas bien junto */
+  margin: 0 0 .5em;
+}
+
+.tagline {
+  color: #d1332e;
+  font-size: .8rem;
+  font-weight: bold;
+  margin: 0;
+  max-width: 24em;                 /* limita el ancho: se lee mucho mejor */
+}
+
+.logo { font-size: 3.5rem; line-height: 1; }
+
+/* El contenido sí va centrado con ancho máximo */
+.contenido { margin: 0 auto; max-width: 700px; padding: 1.5em; }
+.contenido p { color: #555; line-height: 1.6; margin: 0; }`
+    },
+    {
+      id: "lay-panel",
+      titulo: "7 — Panel claro sobre fondo oscuro",
+      nota: "El de Comidas 2025sem2. Cuidado con el width:100%: dentro de un body en flex column con align-items:center, sin él el panel se encoge al tamaño de su contenido en vez de respetar el max-width.",
+      claves: ["body flex column + align-items: center", "width: 100% + max-width", "background en el body"],
+      html:
+`<main class="panel">
+  <h3>Comidas</h3>
+  <ul class="grilla">
+    <li class="tarjeta"><span class="emoji">🍕</span><span class="nombre">Pizza</span></li>
+    <li class="tarjeta"><span class="emoji">🌮</span><span class="nombre">Taco</span></li>
+    <li class="tarjeta"><span class="emoji">🍣</span><span class="nombre">Sushi</span></li>
+    <li class="tarjeta"><span class="emoji">🥗</span><span class="nombre">Ensalada</span></li>
+  </ul>
+</main>`,
+      css:
+`body {
+  align-items: center;      /* centra el panel horizontalmente */
+  background: #1b1b1b;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5em;
+}
+
+.panel {
+  background: #fff;
+  border-radius: 6px;
+  max-width: 620px;
+  padding: 1.2em 1.6em 2em;
+  width: 100%;              /* NECESARIO: sin esto, dentro de un flex
+                               column con align-items:center, el panel
+                               se encoge al tamaño de su contenido */
+}
+
+h3 { color: #222; font-size: 1.4rem; margin: .3em 0 1em; }
+
+/* La grilla puede ser el propio <ul> */
+.grilla {
+  display: grid;
+  gap: 1em;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tarjeta {
+  align-items: center;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 1.2em 1em 1em;
+}
+
+.emoji  { font-size: 2.6rem; line-height: 1; }
+.nombre { color: #1b3a63; font-size: .85rem; }`
+    }
+  ]
+},
+
+/* ======================= DOC: ALINEACIÓN Y FILAS ======================= */
+{
+  id: "alineacion",
+  tab: "Alineación y filas",
+  titulo: "Alineación, filas y los errores que cuestan puntos",
+  intro: "Acá está donde más tiempo se pierde en la prueba: centrar cosas, poner algo a la derecha, y que el texto largo no rompa el layout. Al final, el checklist de los errores que salieron en las correcciones.",
+  secciones: [
+    {
+      id: "ali-centrar",
+      titulo: "1 — Las 4 formas de centrar (y cuál usar)",
+      nota: "La confusión número uno de flexbox: cuando flex-direction es column, align-items y justify-content se dan vuelta. align-items pasa a controlar el eje horizontal y justify-content el vertical. Memorizá la tabla que está en el comentario del CSS.",
+      claves: ["margin: 0 auto", "place-items: center", "align-items vs justify-content", "text-align: center"],
+      html:
+`<div class="ejemplos">
+  <div class="caja c1"><span>1. margin: 0 auto<br><em>bloque, horizontal</em></span></div>
+  <div class="caja c2"><span>2. flex row<br><em>justify + align</em></span></div>
+  <div class="caja c3"><span>3. flex column<br><em>align + justify</em></span></div>
+  <div class="caja c4"><span>4. grid<br><em>place-items</em></span></div>
+</div>`,
+      css:
+`.ejemplos { display: grid; gap: 1em; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+
+.caja {
+  background: #e7ecf3;
+  border: 2px solid #9fb3cc;
+  border-radius: 10px;
+  font-size: .82rem;
+  height: 120px;
+  text-align: center;
+}
+.caja em { color: #55637a; font-size: .9em; }
+
+/* 1. Bloque centrado en HORIZONTAL. La que usás para el .marco / la hoja. */
+.c1 span { display: block; margin: 0 auto; max-width: 70%; padding-top: 2.2em; }
+
+/* 2. flex ROW: justify-content = horizontal, align-items = vertical */
+.c2 { align-items: center; display: flex; justify-content: center; }
+
+/* 3. flex COLUMN: SE DAN VUELTA.
+      align-items = horizontal, justify-content = vertical */
+.c3 { align-items: center; display: flex; flex-direction: column; justify-content: center; }
+
+/* 4. grid: place-items centra en los DOS ejes de una sola vez */
+.c4 { display: grid; place-items: center; }
+
+/* ┌──────────┬──────────────────┬───────────────────┐
+   │direction │ align-items      │ justify-content   │
+   ├──────────┼──────────────────┼───────────────────┤
+   │ row      │ eje VERTICAL     │ eje HORIZONTAL    │
+   │ column   │ eje HORIZONTAL   │ eje VERTICAL      │
+   └──────────┴──────────────────┴───────────────────┘ */`
+    },
+    {
+      id: "ali-derecha",
+      titulo: "2 — Poner algo a la derecha: las 3 técnicas",
+      nota: "space-between reparte TODOS los huecos: solo sirve cuando hay exactamente dos elementos, o cuando querés que todos se separen. margin-left:auto empuja un solo elemento. flex:1 en un hermano hace lo mismo desde el otro lado y además fuerza a que el texto largo se corte antes de empujar.",
+      claves: ["justify-content: space-between", "margin-left: auto", "flex: 1"],
+      html:
+`<h4 class="demo-h">A — space-between (bien con 2 elementos)</h4>
+<div class="fila a">
+  <span>Simulacro Prueba 1 DWYM - FIT - UCU</span>
+  <span>26 de Agosto de 2026</span>
+</div>
+
+<h4 class="demo-h">B — space-between con 3 elementos (mal: separa todo)</h4>
+<div class="fila a">
+  <span class="ico">🧠</span>
+  <span>Claude</span>
+  <span class="badge">⭐</span>
+</div>
+
+<h4 class="demo-h">C — margin-left: auto (bien: solo empuja el último)</h4>
+<div class="fila b">
+  <span class="ico">🧠</span>
+  <span>Claude</span>
+  <span class="badge empuja">⭐</span>
+</div>
+
+<h4 class="demo-h">D — flex: 1 en el hermano del medio</h4>
+<div class="fila b">
+  <span class="ico">🧠</span>
+  <span class="crece">Claude</span>
+  <span class="badge">⭐</span>
+</div>`,
+      css:
+`.fila {
+  align-items: center;
+  background: #f4f4f4;
+  border-radius: 8px;
+  display: flex;
+  margin-bottom: .3em;
+  padding: .6em 1em;
+}
+
+/* A y B: reparte TODOS los huecos por igual */
+.fila.a { justify-content: space-between; }
+
+/* C y D: los elementos quedan juntos y se empuja uno solo */
+.fila.b { gap: .7em; }
+
+/* C — empuja SOLO este elemento hacia la derecha */
+.empuja { margin-left: auto; }
+
+/* D — el hermano se come el sobrante, empujando al siguiente */
+.crece { flex: 1; }
+
+.ico { font-size: 1.4em; line-height: 1; }
+.badge { border: 2px solid #f5a623; border-radius: 999px; padding: .1em .6em; }`
+    },
+    {
+      id: "ali-baseline",
+      titulo: "3 — align-items: baseline (cargo / período)",
+      nota: "La cabecera de cada ítem del CV. Cuando los dos textos tienen tamaños de fuente distintos, center los alinea por el centro de sus cajas y quedan visualmente desparejos. baseline los alinea por la línea sobre la que se apoyan las letras, que es lo que el ojo espera.",
+      claves: ["align-items: baseline", "vs center", "white-space: nowrap en el período"],
+      html:
+`<h4 class="demo-h">Con center (los textos quedan desparejos)</h4>
+<div class="cabecera con-center">
+  <h3>Head of Security – IBM</h3>
+  <span class="periodo">1960 – Presente</span>
+</div>
+
+<h4 class="demo-h">Con baseline (apoyados en la misma línea)</h4>
+<div class="cabecera con-baseline">
+  <h3>Head of Security – IBM</h3>
+  <span class="periodo">1960 – Presente</span>
+</div>
+
+<div class="cabecera con-baseline">
+  <h3>Founder &amp; Lead Hacker – Mortífagos Collective</h3>
+  <span class="periodo">1947 – Presente</span>
+</div>`,
+      css:
+`.cabecera {
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  gap: 1em;
+  justify-content: space-between;
+  margin-bottom: .6em;
+  padding-bottom: .4em;
+}
+
+.cabecera h3 { font-size: 1.05rem; margin: 0; }
+
+.periodo {
+  color: #7a7a7a;
+  font-size: .75rem;
+  white-space: nowrap;    /* la fecha nunca se parte */
+}
+
+/* Alinea por el CENTRO de cada caja: con tamaños distintos
+   los textos quedan visualmente desparejos */
+.con-center { align-items: center; }
+
+/* Alinea por la línea sobre la que se apoyan las letras.
+   Es lo que el ojo espera. */
+.con-baseline { align-items: baseline; }`
+    },
+    {
+      id: "ali-ellipsis",
+      titulo: "4 — Que el texto largo no rompa el layout",
+      nota: "El detalle que casi nadie sabe: dentro de un flex, un ítem no se encoge por debajo del ancho de su contenido. Por eso text-overflow:ellipsis parece que no funciona. La solución es min-width:0 en el ítem flex. Las tres propiedades del ellipsis van siempre juntas.",
+      claves: ["min-width: 0", "overflow: hidden", "text-overflow: ellipsis", "white-space: nowrap"],
+      html:
+`<h4 class="demo-h">Sin min-width: 0 (el valor se sale de la caja)</h4>
+<div class="fila">
+  <span class="ico">🔍</span>
+  <div class="texto malo"><h3>Un nombre exageradamente largo que no entra de ninguna manera</h3></div>
+  <span class="valor">🏆 12</span>
+</div>
+
+<h4 class="demo-h">Con min-width: 0 (se corta con «…»)</h4>
+<div class="fila">
+  <span class="ico">🔍</span>
+  <div class="texto bueno"><h3>Un nombre exageradamente largo que no entra de ninguna manera</h3></div>
+  <span class="valor">🏆 12</span>
+</div>
+
+<h4 class="demo-h">Alternativa: dejar que baje de línea</h4>
+<div class="fila">
+  <span class="ico">🔍</span>
+  <div class="texto multilinea"><h3>Un nombre exageradamente largo que no entra de ninguna manera</h3></div>
+  <span class="valor">🏆 12</span>
+</div>`,
+      css:
+`.fila {
+  align-items: center;
+  background: #f4f4f4;
+  border-radius: 8px;
+  display: flex;
+  gap: .8em;
+  margin-bottom: .3em;
+  overflow: hidden;
+  padding: .6em 1em;
+}
+
+.ico { font-size: 1.5em; line-height: 1; }
+.texto { flex: 1; }
+.texto h3 { font-size: .95rem; margin: 0; }
+.valor { font-weight: bold; white-space: nowrap; }
+
+/* ❌ Falta min-width: 0. Por defecto un ítem flex NO se encoge
+   por debajo del ancho de su contenido, así que empuja al vecino. */
+.malo h3 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ✅ min-width: 0 le da permiso para encogerse. Recién ahí
+   el ellipsis puede hacer su trabajo. */
+.bueno { min-width: 0; }
+.bueno h3 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Alternativa sin cortar: dejar que el texto baje de línea */
+.multilinea { min-width: 0; }`
+    },
+    {
+      id: "ali-listas",
+      titulo: "5 — Listas: quitarle al navegador lo que trae puesto",
+      nota: "Un <ul> viene con viñetas, margin vertical y padding-left. Si el diseño no las muestra, hay que sacarle las tres cosas. Y si querés una viñeta propia (el punto gris del CV), se hace con ::before + position absolute.",
+      claves: ["list-style: none", "margin: 0; padding: 0", "li::before { content }", "position: relative + absolute"],
+      html:
+`<h4 class="demo-h">Como viene del navegador</h4>
+<ul class="cruda">
+  <li>Dirección: Dumbledor St 666</li>
+  <li>Email: voldemort@darknet.onion</li>
+</ul>
+
+<h4 class="demo-h">Limpia</h4>
+<ul class="limpia">
+  <li>Dirección: Dumbledor St 666</li>
+  <li>Email: voldemort@darknet.onion</li>
+</ul>
+
+<h4 class="demo-h">Con viñeta propia (::before)</h4>
+<ul class="propia">
+  <li>Dirección: Dumbledor St 666</li>
+  <li>Email: voldemort@darknet.onion</li>
+  <li>Teléfono: +666-MORTIFAGO</li>
+</ul>
+
+<h4 class="demo-h">Con el emoji al final de cada ítem, a la derecha</h4>
+<ul class="tripulacion">
+  <li>Neil Armstrong <span>🧑‍🚀</span></li>
+  <li>Buzz Aldrin <span>🧑‍🚀</span></li>
+</ul>`,
+      css:
+`/* El <ul> viene con TRES cosas puestas por el navegador */
+.limpia, .propia, .tripulacion {
+  list-style: none;   /* 1. las viñetas */
+  margin: 0;          /* 2. el margen vertical */
+  padding: 0;         /* 3. el padding-left que deja lugar a la viñeta */
+}
+
+.cruda, .limpia, .propia, .tripulacion { color: #555; font-size: .88rem; }
+.limpia li, .propia li, .tripulacion li { line-height: 1.8; }
+
+/* Viñeta propia: padding-left deja el hueco,
+   position:relative es el ancla del ::before */
+.propia li {
+  padding-left: 1.2em;
+  position: relative;
+}
+.propia li::before {
+  color: #bbb;
+  content: "•";       /* podés poner cualquier texto o emoji */
+  left: 0;
+  position: absolute;
+}
+
+/* Lista alineada a la derecha (la tripulación del Apollo) */
+.tripulacion { max-width: 260px; text-align: right; }`
+    },
+    {
+      id: "ali-errores",
+      titulo: "6 — Los errores que cuestan puntos",
+      nota: "Todos salieron en correcciones de parciales anteriores. El demo muestra el antes y el después de los cuatro más caros.",
+      claves: ["box-sizing: border-box", "margin: 0 en los títulos", "font-weight: normal", "flex-shrink: 0"],
+      html:
+`<h4 class="demo-h">1 — Sin box-sizing: border-box, el padding se SUMA al width</h4>
+<div class="par">
+  <div class="mitad"><div class="w-mal">width: 200px + padding</div><small>ocupa 240px</small></div>
+  <div class="mitad"><div class="w-bien">width: 200px + padding</div><small>ocupa 200px</small></div>
+</div>
+
+<h4 class="demo-h">2 — Sin margin: 0, el h3 descentra el icono</h4>
+<div class="par">
+  <div class="mitad">
+    <div class="item"><span class="ico">🧠</span><div class="txt-mal"><h3>Claude</h3><p>Anthropic</p></div></div>
+  </div>
+  <div class="mitad">
+    <div class="item"><span class="ico">🧠</span><div class="txt-bien"><h3>Claude</h3><p>Anthropic</p></div></div>
+  </div>
+</div>
+
+<h4 class="demo-h">3 — Un h3 usado de subtítulo sigue en negrita</h4>
+<div class="par">
+  <div class="mitad"><div class="txt-bien"><h3>Claude</h3><h4 class="sub-mal">Anthropic</h4></div></div>
+  <div class="mitad"><div class="txt-bien"><h3>Claude</h3><h4 class="sub-bien">Anthropic</h4></div></div>
+</div>
+
+<h4 class="demo-h">4 — Sin flex-shrink: 0, el icono se aplasta</h4>
+<div class="item angosto"><span class="caja-mal">🧠</span><div class="txt-bien"><h3>Un nombre larguísimo que empuja y aplasta</h3></div></div>
+<div class="item angosto"><span class="caja-bien">🧠</span><div class="txt-bien"><h3>Un nombre larguísimo que empuja y aplasta</h3></div></div>`,
+      css:
+`.par { display: grid; gap: 1em; grid-template-columns: 1fr 1fr; }
+.mitad small { color: #888; font-size: .75rem; }
+.item { align-items: center; display: flex; gap: .8em; margin-bottom: .6em; }
+.ico { font-size: 2em; line-height: 1; }
+.angosto { border: 1px dashed #ccc; border-radius: 8px; max-width: 210px; padding: .5em; }
+
+/* ---------- 1. box-sizing ---------- */
+/* ❌ content-box (el default): el padding y el borde SE SUMAN al width */
+.w-mal  { background: #ffe0e0; border: 2px solid #c66; box-sizing: content-box;
+          padding: .5em 1em; width: 200px; }
+
+/* ✅ border-box: el width INCLUYE padding y borde. Por eso va
+   * { box-sizing: border-box } arriba de todo, siempre. */
+.w-bien { background: #e0ffe6; border: 2px solid #6c6; box-sizing: border-box;
+          padding: .5em 1em; width: 200px; }
+
+/* ---------- 2. margin en los títulos ---------- */
+/* ❌ el h3 y el p traen margin vertical: empujan el bloque hacia abajo
+   y el icono queda descentrado aunque tengas align-items: center */
+.txt-mal h3 { font-size: 1.1em; }
+
+/* ✅ */
+.txt-bien h3, .txt-bien p, .txt-bien h4 { margin: 0; }
+.txt-bien h3 { font-size: 1.1em; }
+.txt-bien p  { color: #666; font-size: .85em; }
+
+/* ---------- 3. peso del subtítulo ---------- */
+/* ❌ un h4 es negrita por defecto: no parece un subtítulo */
+.sub-mal  { color: #666; font-size: .85em; }
+
+/* ✅ */
+.sub-bien { color: #666; font-size: .85em; font-weight: normal; }
+
+/* ---------- 4. flex-shrink ---------- */
+/* ❌ sin flex-shrink: 0, el flex padre achica la cajita
+   para hacerle lugar al texto y deja de ser cuadrada */
+.caja-mal  { align-items: center; border: 2px solid #c66; border-radius: 10px;
+             display: flex; height: 46px; justify-content: center; width: 46px; }
+
+/* ✅ */
+.caja-bien { align-items: center; border: 2px solid #6c6; border-radius: 10px;
+             display: flex; flex-shrink: 0; height: 46px;
+             justify-content: center; width: 46px; }`
+    }
+  ]
+},
+
+];
+
+/* ==========================================================================
+   PARTE 3 — Comparativa (sin código, es una tabla de referencia)
+   ========================================================================== */
+const COMPARATIVA = `
+<h2 class="titulo-doc">Qué se preguntó en cada parcial 1</h2>
+<p class="intro-doc">Todos los parciales 1 que hay en el repo, cruzados por lo que
+pidieron. Sirve para responder la pregunta que importa cuando te sentás a la
+prueba: <em>¿a cuál de los anteriores se parece este?</em></p>
+
+<h3>Estructura de la prueba</h3>
+<table>
+  <thead>
+    <tr><th>Prueba</th><th>Ej01</th><th>Ej02</th><th>Ej03</th><th>Ej04</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Simulacro 2026sem2</strong><br><small>el más reciente</small></td>
+      <td>Observatorio de IA<br><small>grilla + tarjetas</small></td>
+      <td><code>modelosPorCapacidad</code><br><small>con tests</small></td>
+      <td>Arena de Prompts<br><small>DOM + API</small></td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td><strong>Prueba 2026sem1</strong></td>
+      <td>Programa Apollo<br><small>grilla + tarjetas</small></td>
+      <td><code>countriesForCurrency</code><br><small>con tests</small></td>
+      <td>DOM + API</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td><strong>Simulacro 2026sem1</strong></td>
+      <td>Menú Internacional<br><small>grilla + tarjetas</small></td>
+      <td><code>fieldListToObject</code><br><small>con tests</small></td>
+      <td>DOM + API</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td><strong>Parcial 2025sem2</strong><br><small>matutino</small></td>
+      <td>Los Pollos Hermanos<br><small>carta, zigzag</small></td>
+      <td>Biblioteca<br><small>sin tests</small></td>
+      <td>DOM</td>
+      <td>DOM + API</td>
+    </tr>
+    <tr>
+      <td><strong>Parcial 2025sem2</strong><br><small>vespertino</small></td>
+      <td>CV de Voldemort<br><small>dos columnas</small></td>
+      <td>Biblioteca<br><small>sin tests</small></td>
+      <td>DOM</td>
+      <td>DOM + API</td>
+    </tr>
+    <tr>
+      <td><strong>Simulacro 2025sem2</strong></td>
+      <td>Comidas<br><small>grilla de emojis</small></td>
+      <td>función pura</td>
+      <td>DOM</td>
+      <td>DOM + API</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="aviso">
+  <strong>La tendencia 2025 → 2026 es clarísima:</strong> pasaron de 4 ejercicios
+  a 3, el ej02 ahora viene con <strong>tests automáticos</strong> que no podés
+  modificar, y el ej01 dejó de usar imágenes: ahora son
+  <strong>emojis, bordes y grillas responsivas</strong>. Apostá a eso.
+</div>
+
+<h3>Qué técnicas de CSS pidió cada ej01</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Técnica</th>
+      <th>Sim. 26s2</th><th>Pru. 26s1</th><th>Sim. 26s1</th>
+      <th>Par. 25s2 mat</th><th>Par. 25s2 vesp</th><th>Sim. 25s2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Grilla responsiva (<code>auto-fit</code>)</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td>—</td><td>—</td><td class="si">sí</td></tr>
+    <tr><td>Marco / contenedor centrado</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td>—</td><td class="si">sí</td><td class="si">sí</td></tr>
+    <tr><td>Emoji como elemento gráfico</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td>—</td><td>—</td><td class="si">sí</td></tr>
+    <tr><td>Icono + texto de doble fila</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td></tr>
+    <tr><td>Tarjeta destacada (modificadora)</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td>—</td><td>—</td><td>—</td></tr>
+    <tr><td>Fichas / píldoras</td><td class="si">sí</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+    <tr><td>Etiqueta empujada a la derecha</td><td class="si">sí</td><td>—</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td>—</td></tr>
+    <tr><td><code>space-between</code> (pie / cabecera)</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td>—</td></tr>
+    <tr><td>Media queries</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td>—</td></tr>
+    <tr><td>Lista sin viñetas</td><td>—</td><td class="si">sí</td><td>—</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td></tr>
+    <tr><td>Filas alternadas (zigzag)</td><td>—</td><td>—</td><td>—</td><td class="si">sí</td><td>—</td><td>—</td></tr>
+    <tr><td>Dos columnas (<code>1fr 1fr</code>)</td><td>—</td><td>—</td><td>—</td><td>—</td><td class="si">sí</td><td>—</td></tr>
+    <tr><td>Hero / banda de color</td><td>—</td><td>—</td><td>—</td><td class="si">sí</td><td>—</td><td>—</td></tr>
+    <tr><td>Imágenes y fuentes propias</td><td>—</td><td>—</td><td>—</td><td class="si">sí</td><td class="si">sí</td><td>—</td></tr>
+    <tr><td><code>position: absolute</code></td><td class="si">sí</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+    <tr><td><code>::before</code> para viñetas</td><td>—</td><td>—</td><td>—</td><td>—</td><td class="si">sí</td><td>—</td></tr>
+  </tbody>
+</table>
+
+<h3>Lo que se repite siempre: apostá a esto</h3>
+<ul class="lista">
+  <li><strong>Grilla responsiva con <code>auto-fit</code></strong> — en los 3 parciales de 2026.</li>
+  <li><strong>Icono/emoji + texto de doble fila</strong> — en los 6, sin excepción.</li>
+  <li><strong>Marco exterior o contenedor centrado</strong> con <code>margin: 0 auto; max-width</code>.</li>
+  <li><strong>Pie con <code>space-between</code></strong> — texto a la izquierda, fecha a la derecha.</li>
+  <li><strong>Una tarjeta distinta a las demás</strong>, resuelta con clase base + modificadora.</li>
+  <li><strong>Media query</strong> que cambia algo en pantallas chicas.</li>
+</ul>
+
+<h3>Plan de ataque para el ej01 (15-20 min)</h3>
+<ul class="lista">
+  <li><strong>Min 0-3 · Leé el diseño.</strong> ¿Hay marco exterior? ¿Cuántas columnas? ¿Qué se repite? ¿Cuál tarjeta es distinta? ¿Qué hay en el pie?</li>
+  <li><strong>Min 3-6 · Escribí el HTML entero primero</strong>, sin CSS. Semántico: <code>main</code>, <code>section</code>, <code>article</code>, <code>header</code>, <code>footer</code>. Una tarjeta bien y después copiá y pegá.</li>
+  <li><strong>Min 6-8 · El reset y el contenedor.</strong> <code>* { box-sizing: border-box }</code>, <code>body { margin: 0; font-family; padding }</code>, <code>.marco { margin: 0 auto; max-width }</code>.</li>
+  <li><strong>Min 8-12 · La grilla y la tarjeta.</strong> Primero que se acomoden las cajas, después los detalles de adentro.</li>
+  <li><strong>Min 12-16 · Los detalles:</strong> márgenes en cero, tamaños de fuente, pesos, la modificadora de la tarjeta destacada.</li>
+  <li><strong>Min 16-18 · Achicá la ventana</strong> y arreglá lo que se rompa.</li>
+  <li><strong>Min 18-20 · Repasá contra la imagen</strong> elemento por elemento y contá los datos (fichas, ítems) uno por uno.</li>
+</ul>
+
+<h3>Checklist antes de entregar</h3>
+<ul class="lista">
+  <li><code>* { box-sizing: border-box; }</code> arriba de todo.</li>
+  <li><code>margin: 0</code> en todos los <code>h1</code>-<code>h4</code> y <code>p</code> que estén dentro de un flex.</li>
+  <li><code>font-weight: normal</code> en los que son subtítulos.</li>
+  <li><code>flex-wrap: wrap</code> en las filas de fichas.</li>
+  <li><code>flex-shrink: 0</code> en los iconos de tamaño fijo.</li>
+  <li>La grilla se ajusta al achicar la ventana.</li>
+  <li>Nada del HTML ni del CSS de la plantilla quedó sin usar (comentarios, <code>Lorem</code> de ejemplo).</li>
+  <li>Los datos coinciden con la <strong>imagen</strong>, no solo con la tabla del enunciado
+      (en el simulacro 2026sem2 no coinciden entre sí: la imagen le da 3 fichas a Llama y la tabla 2).</li>
+  <li>Etiquetas semánticas en vez de <code>div</code> para todo.</li>
+</ul>
+`;
+
+/* ==========================================================================
+   MOTOR
+   ========================================================================== */
+
+/* ---------- escapado y resaltado ---------- */
+function escapar(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function resaltar(codigo, lenguaje) {
+  let out = escapar(codigo);
+  if (lenguaje === "css") {
+    out = out.replace(/\/\*[\s\S]*?\*\//g, (m) => '<span class="cmt">' + m + "</span>");
+    out = out.split("\n").map((l) =>
+      l.includes("<span") ? l : l.replace(/^(\s*)([a-z-]+)(\s*:)/, '$1<span class="prop">$2</span>$3')
+    ).join("\n");
+  } else {
+    out = out.replace(/&lt;!--[\s\S]*?--&gt;/g, (m) => '<span class="cmt">' + m + "</span>");
+    out = out.split("\n").map((l) => {
+      if (l.includes("<span")) return l;
+      // El orden importa: primero atributos, después nombres de etiqueta.
+      // Al revés, el segundo replace matchearía el class="tag" que insertamos.
+      return l
+        .replace(/([a-zA-Z-]+)="([^"]*)"/g, '<span class="atr">$1</span>=<span class="str">"$2"</span>')
+        .replace(/&lt;(\/?)([a-zA-Z0-9-]+)/g, '&lt;$1<span class="tag">$2</span>');
+    }).join("\n");
+  }
+  return out;
+}
+
+function documentoDemo(css, html) {
+  return '<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">' +
+         '<meta name="viewport" content="width=device-width, initial-scale=1">' +
+         "<style>" + css + "</style></head><body>" + html + "</body></html>";
+}
+
+async function copiar(texto, boton, etiquetaOriginal) {
+  try {
+    await navigator.clipboard.writeText(texto);
+    boton.textContent = "¡copiado!";
+  } catch {
+    boton.textContent = "no se pudo";
+  }
+  setTimeout(() => { boton.textContent = etiquetaOriginal; }, 1200);
+}
+
+/* ---------- vista PARCIALES ---------- */
+const navParciales = document.getElementById("nav-parciales");
+const preview = document.getElementById("preview");
+const pCodigo = document.getElementById("p-codigo");
+let parcialActual = PARCIALES[0];
+let pTab = "html";
+
+function pintarNavParciales() {
+  navParciales.replaceChildren();
+  let grupo = null;
+  for (const caso of PARCIALES) {
+    if (caso.grupo !== grupo) {
+      grupo = caso.grupo;
+      const h = document.createElement("div");
+      h.className = "grupo";
+      h.textContent = grupo;
+      navParciales.append(h);
+    }
+    const b = document.createElement("button");
+    b.textContent = caso.titulo;
+    const n = document.createElement("span");
+    n.className = "n";
+    n.textContent = caso.origen;
+    b.append(n);
+    b.classList.toggle("activo", caso.id === parcialActual.id);
+    b.addEventListener("click", () => mostrarParcial(caso));
+    navParciales.append(b);
+  }
+}
+
+function mostrarParcial(caso) {
+  parcialActual = caso;
+
+  const titulo = document.getElementById("p-titulo");
+  titulo.textContent = caso.titulo;
+  const badge = document.createElement("span");
+  badge.className = "origen";
+  badge.textContent = caso.origen;
+  titulo.append(badge);
+
+  document.getElementById("p-resumen").textContent = caso.resumen;
+  document.getElementById("p-claves").replaceChildren(...caso.claves.map((k) => {
+    const li = document.createElement("li");
+    li.textContent = k;
+    return li;
+  }));
+
+  preview.srcdoc = documentoDemo(caso.css, caso.html);
+  pCodigo.innerHTML = resaltar(pTab === "html" ? caso.html : caso.css, pTab);
+  pintarNavParciales();
+}
+
+document.querySelectorAll("#vista-parciales .tabs button[data-tab]").forEach((b) => {
+  b.addEventListener("click", () => {
+    pTab = b.dataset.tab;
+    document.querySelectorAll("#vista-parciales .tabs button[data-tab]")
+      .forEach((o) => o.classList.toggle("activo", o === b));
+    pCodigo.innerHTML = resaltar(pTab === "html" ? parcialActual.html : parcialActual.css, pTab);
+  });
+});
+
+document.querySelectorAll("#vista-parciales .barra button[data-w]").forEach((b) => {
+  b.addEventListener("click", () => {
+    document.querySelectorAll("#vista-parciales .barra button[data-w]")
+      .forEach((o) => o.classList.toggle("activo", o === b));
+    const w = Number(b.dataset.w);
+    preview.style.width = w ? w + "px" : "100%";
+  });
+});
+
+document.getElementById("p-copiar").addEventListener("click", (e) =>
+  copiar(pTab === "html" ? parcialActual.html : parcialActual.css, e.target, "Copiar"));
+
+/* ---------- vistas de APUNTES ---------- */
+const app = document.getElementById("app");
+const iframesDemo = [];
+
+function ajustarIframe(marco) {
+  try {
+    const doc = marco.contentDocument;
+    if (doc && doc.body) {
+      marco.style.height = Math.max(60, doc.documentElement.scrollHeight) + "px";
+    }
+  } catch { /* si el navegador lo bloquea, queda la altura por defecto */ }
+}
+
+function ajustarTodos() { iframesDemo.forEach(ajustarIframe); }
+
+function construirDocApuntes(doc) {
+  const vista = document.createElement("div");
+  vista.className = "vista vista-apuntes";
+  vista.id = "vista-" + doc.id;
+
+  /* --- columna izquierda: el documento --- */
+  const col = document.createElement("div");
+  col.className = "doc";
+
+  const h2 = document.createElement("h2");
+  h2.className = "titulo-doc";
+  h2.textContent = doc.titulo;
+  const intro = document.createElement("p");
+  intro.className = "intro-doc";
+  intro.textContent = doc.intro;
+  const nota = document.createElement("p");
+  nota.className = "intro-doc";
+  nota.innerHTML = "Cada demo se renderiza aislado. Para que el código de abajo " +
+    "hable solo del patrón, se le inyecta este reset que no se muestra: " +
+    "<code>* { box-sizing: border-box }</code> y un <code>body</code> con " +
+    "<code>font-family: Arial</code>, <code>margin: 0</code> y <code>padding: 14px</code>.";
+  col.append(h2, intro, nota);
+
+  /* --- columna derecha: el panel de código --- */
+  const panel = document.createElement("div");
+  panel.className = "panel-codigo";
+
+  const pcTitulo = document.createElement("span");
+  pcTitulo.className = "t";
+  const btnCerrar = document.createElement("button");
+  btnCerrar.textContent = "✕ cerrar";
+  const pcCab = document.createElement("div");
+  pcCab.className = "pc-cabecera";
+  pcCab.append(pcTitulo, btnCerrar);
+
+  const mitadHtml = crearMitad("HTML");
+  const mitadCss = crearMitad("CSS");
+  panel.append(pcCab, mitadHtml.nodo, mitadCss.nodo);
+
+  let abierta = null;   /* el botón "Ver código" que está abierto */
+
+  function cerrar() {
+    vista.classList.remove("con-codigo");
+    if (abierta) {
+      abierta.boton.classList.remove("abierto");
+      abierta.boton.textContent = "Ver código";
+      abierta.seccion.classList.remove("resaltada");
+      abierta = null;
+    }
+    setTimeout(ajustarTodos, 260);
+  }
+
+  function abrir(sec, boton, nodoSeccion) {
+    if (abierta && abierta.boton === boton) { cerrar(); return; }
+    /* si había otra abierta, se cierra sola y se cambia el contenido */
+    if (abierta) {
+      abierta.boton.classList.remove("abierto");
+      abierta.boton.textContent = "Ver código";
+      abierta.seccion.classList.remove("resaltada");
+    }
+    abierta = { boton, seccion: nodoSeccion };
+    boton.classList.add("abierto");
+    boton.textContent = "Ocultar código";
+    nodoSeccion.classList.add("resaltada");
+
+    pcTitulo.textContent = sec.titulo;
+    mitadHtml.pintar(sec.html, "html");
+    mitadCss.pintar(sec.css, "css");
+    vista.classList.add("con-codigo");
+    setTimeout(ajustarTodos, 260);
+  }
+
+  btnCerrar.addEventListener("click", cerrar);
+
+  /* --- las secciones --- */
+  for (const sec of doc.secciones) {
+    const nodo = document.createElement("section");
+    nodo.className = "seccion";
+
+    const cab = document.createElement("div");
+    cab.className = "sec-cabecera";
+    const h3 = document.createElement("h3");
+    h3.textContent = sec.titulo;
+    const p = document.createElement("p");
+    p.className = "nota";
+    p.textContent = sec.nota;
+    cab.append(h3, p);
+
+    if (sec.claves) {
+      const ul = document.createElement("ul");
+      ul.className = "claves";
+      ul.append(...sec.claves.map((k) => {
+        const li = document.createElement("li");
+        li.textContent = k;
+        return li;
+      }));
+      cab.append(ul);
+    }
+
+    const acciones = document.createElement("div");
+    acciones.className = "sec-acciones";
+    const btn = document.createElement("button");
+    btn.className = "ver-codigo";
+    btn.textContent = "Ver código";
+    btn.addEventListener("click", () => abrir(sec, btn, nodo));
+    acciones.append(btn);
+    cab.append(acciones);
+
+    const demo = document.createElement("div");
+    demo.className = "sec-demo";
+    const marco = document.createElement("iframe");
+    marco.title = sec.titulo;
+    marco.setAttribute("scrolling", "no");
+    marco.style.height = "120px";
+    marco.srcdoc = documentoDemo(BASE_DEMO + "\n" + sec.css, sec.html);
+    marco.addEventListener("load", () => {
+      ajustarIframe(marco);
+      setTimeout(() => ajustarIframe(marco), 120);   /* tras cargar los emojis */
+    });
+    iframesDemo.push(marco);
+    demo.append(marco);
+
+    nodo.append(cab, demo);
+    col.append(nodo);
+  }
+
+  vista.append(col, panel);
+  return vista;
+}
+
+function crearMitad(etiqueta) {
+  const nodo = document.createElement("div");
+  nodo.className = "pc-mitad";
+
+  const etq = document.createElement("div");
+  etq.className = "pc-etq";
+  const txt = document.createElement("span");
+  txt.textContent = etiqueta;
+  const sep = document.createElement("span");
+  sep.className = "sep";
+  const btn = document.createElement("button");
+  btn.textContent = "copiar";
+  etq.append(txt, sep, btn);
+
+  const pre = document.createElement("pre");
+  const code = document.createElement("code");
+  pre.append(code);
+  nodo.append(etq, pre);
+
+  let crudo = "";
+  btn.addEventListener("click", () => copiar(crudo, btn, "copiar"));
+
+  return {
+    nodo,
+    pintar(codigo, lenguaje) {
+      crudo = codigo;
+      code.innerHTML = resaltar(codigo, lenguaje);
+      pre.scrollTop = 0;
+    },
+  };
+}
+
+/* ---------- vista COMPARATIVA ---------- */
+function construirComparativa() {
+  const vista = document.createElement("div");
+  vista.className = "vista vista-apuntes";
+  vista.id = "vista-comparativa";
+  const col = document.createElement("div");
+  col.className = "doc";
+  col.innerHTML = COMPARATIVA;
+  vista.append(col);
+  return vista;
+}
+
+/* ---------- pestañas ---------- */
+const tabsNav = document.getElementById("tabs");
+const VISTAS = [{ id: "parciales", tab: "Parciales" }];
+
+for (const doc of APUNTES) {
+  app.append(construirDocApuntes(doc));
+  VISTAS.push({ id: doc.id, tab: doc.tab });
+}
+app.append(construirComparativa());
+VISTAS.push({ id: "comparativa", tab: "Comparativa" });
+
+function activarVista(id) {
+  document.querySelectorAll(".vista").forEach((v) => v.classList.toggle("activa", v.id === "vista-" + id));
+  tabsNav.querySelectorAll("button").forEach((b) => b.classList.toggle("activo", b.dataset.id === id));
+  setTimeout(ajustarTodos, 60);
+}
+
+for (const v of VISTAS) {
+  const b = document.createElement("button");
+  b.textContent = v.tab;
+  b.dataset.id = v.id;
+  b.addEventListener("click", () => activarVista(v.id));
+  tabsNav.append(b);
+}
+
+window.addEventListener("resize", () => {
+  clearTimeout(window.__t);
+  window.__t = setTimeout(ajustarTodos, 150);
+});
+
+mostrarParcial(PARCIALES[0]);
+activarVista("parciales");
+</script>
+</body>
+</html>

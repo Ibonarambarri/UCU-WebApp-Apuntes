@@ -1,0 +1,3238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parcial 1 · DWYM — Apuntes de JavaScript</title>
+<style>
+  * { box-sizing: border-box; }
+  :root {
+    --bg: #f6f7f9;
+    --panel: #fff;
+    --linea: #e2e5ea;
+    --texto: #1b1f24;
+    --tenue: #6a7280;
+    --acento: #1b4f9c;
+    --verde: #1f7a3d;
+    --rojo: #b3261e;
+    --amarillo: #fff6e0;
+    --amarillo-b: #f0d79a;
+    --code-bg: #1b1f24;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg); color: var(--texto); display: flex; flex-direction: column;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    margin: 0; overflow: hidden;
+  }
+
+  /* ---------------- header ---------------- */
+  header {
+    align-items: center; background: var(--panel); border-bottom: 1px solid var(--linea);
+    display: flex; flex-shrink: 0; gap: 1.4em; height: 52px; padding: 0 1.2em;
+  }
+  .marca { font-size: .82rem; font-weight: 700; white-space: nowrap; }
+  .marca span { color: var(--tenue); font-weight: 400; }
+  #tabs { display: flex; gap: .2em; overflow-x: auto; }
+  #tabs button {
+    background: none; border: none; border-radius: 7px; color: var(--tenue); cursor: pointer;
+    font: inherit; font-size: .85rem; padding: .45em .85em; white-space: nowrap;
+  }
+  #tabs button:hover { background: #eef1f5; color: var(--texto); }
+  #tabs button.activo { background: var(--acento); color: #fff; }
+
+  #app { flex: 1; overflow: hidden; }
+  .vista { display: none; height: 100%; }
+  .vista.activa { display: grid; grid-template-columns: 250px minmax(300px, 1fr) minmax(340px, 1.15fr); }
+
+  /* ---------------- columna 1: lista ---------------- */
+  .lista {
+    background: var(--panel); border-right: 1px solid var(--linea);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .lista .cab { border-bottom: 1px solid var(--linea); padding: .85em 1.1em; }
+  .lista .cab p { color: var(--tenue); font-size: .76rem; line-height: 1.45; margin: 0; }
+  .lista nav { flex: 1; overflow-y: auto; padding: .6em .55em 2em; }
+  .grupo {
+    color: var(--tenue); font-size: .65rem; font-weight: 700; letter-spacing: .09em;
+    margin: 1em 0 .3em; padding: 0 .5em; text-transform: uppercase;
+  }
+  .grupo:first-child { margin-top: .2em; }
+  .lista nav button {
+    background: none; border: none; border-radius: 7px; color: var(--texto); cursor: pointer;
+    display: block; font: inherit; font-size: .83rem; line-height: 1.3; padding: .48em .6em;
+    text-align: left; width: 100%;
+  }
+  .lista nav button:hover { background: #eef1f5; }
+  .lista nav button.activo { background: var(--acento); color: #fff; }
+  .lista nav button .n { display: block; font-size: .67rem; opacity: .65; }
+
+  /* ---------------- columna 2: descripción ---------------- */
+  .desc { border-right: 1px solid var(--linea); overflow-y: auto; padding: 1.3em 1.5em 4em; }
+  .desc h2 { font-size: 1.15rem; margin: 0 0 .25em; }
+  .origen {
+    background: #eef1f5; border-radius: 999px; color: var(--tenue); font-family: var(--mono);
+    font-size: .68rem; padding: .2em .7em; vertical-align: middle; white-space: nowrap;
+  }
+  .desc .firma {
+    background: var(--code-bg); border-radius: 8px; color: #ffcb6b; display: block;
+    font-family: var(--mono); font-size: .78rem; margin: .9em 0; overflow-x: auto;
+    padding: .7em .9em; white-space: pre;
+  }
+  .desc .resumen { color: #3c4450; font-size: .88rem; line-height: 1.65; margin: .7em 0 0; }
+  .desc h3 {
+    border-top: 1px solid var(--linea); color: var(--tenue); font-size: .7rem;
+    letter-spacing: .09em; margin: 1.6em 0 .8em; padding-top: 1em; text-transform: uppercase;
+  }
+  .punto {
+    background: var(--panel); border: 1px solid var(--linea); border-left: 3px solid var(--acento);
+    border-radius: 8px; margin-bottom: .7em; padding: .7em .9em;
+  }
+  .punto.trampa { border-left-color: #e0a72e; background: var(--amarillo); border-color: var(--amarillo-b); }
+  .punto.error  { border-left-color: var(--rojo); }
+  .punto .t { display: block; font-size: .85rem; font-weight: 700; margin-bottom: .25em; }
+  .punto .d { color: #3c4450; font-size: .84rem; line-height: 1.6; margin: 0; }
+  .punto code, .desc .resumen code, .desc li code {
+    background: #eef1f5; border-radius: 3px; font-family: var(--mono); font-size: .88em; padding: 1px 4px;
+  }
+  .punto.trampa code { background: #fdeec6; }
+
+  /* ---------------- columna 3: editor ---------------- */
+  .editor { display: flex; flex-direction: column; overflow: hidden; }
+  .barra-arch {
+    align-items: center; background: var(--panel); border-bottom: 1px solid var(--linea);
+    display: flex; gap: .2em; overflow-x: auto; padding: .35em .8em;
+  }
+  .barra-arch button.arch {
+    background: none; border: none; border-radius: 6px; color: var(--tenue); cursor: pointer;
+    font-family: var(--mono); font-size: .76rem; padding: .35em .7em; white-space: nowrap;
+  }
+  .barra-arch button.arch:hover { background: #eef1f5; }
+  .barra-arch button.arch.activo { background: #eef1f5; color: var(--texto); font-weight: 700; }
+  .barra-arch .sep { flex: 1; }
+  .barra-arch .accion {
+    background: #fff; border: 1px solid var(--linea); border-radius: 6px; cursor: pointer;
+    font: inherit; font-size: .74rem; padding: .28em .65em; white-space: nowrap;
+  }
+  .barra-arch .accion:hover { border-color: var(--acento); color: var(--acento); }
+  .barra-arch .accion.correr { border-color: var(--verde); color: var(--verde); font-weight: 700; }
+
+  .editor pre {
+    background: var(--code-bg); color: #e6e9ef; flex: 1; font-family: var(--mono);
+    font-size: 12.5px; line-height: 1.6; margin: 0; overflow: auto; padding: .9em 1.1em 2em; tab-size: 2;
+  }
+  .editor pre code { background: none; color: inherit; display: block; font-size: inherit; padding: 0; }
+  pre .cmt { color: #7f8c99; font-style: italic; }
+  pre .str { color: #a5d6a7; }
+  pre .kw  { color: #c792ea; }
+  pre .num { color: #f78c6c; }
+  pre .fn  { color: #82aaff; }
+
+  .consola {
+    background: #11141a; border-top: 2px solid #2b313b; color: #cfd6e4; display: none;
+    flex-shrink: 0; font-family: var(--mono); font-size: 12px; line-height: 1.55;
+    max-height: 40%; overflow: auto; padding: .6em 1.1em .9em; white-space: pre-wrap;
+  }
+  .consola.visible { display: block; }
+  .consola .ok   { color: #7ee2a8; }
+  .consola .fail { color: #ff8f85; }
+  .consola .tit  { color: #7f8c99; }
+
+  @media (max-width: 1000px) {
+    body { overflow: auto; }
+    .vista.activa { grid-template-columns: 1fr; grid-template-rows: auto auto 60vh; }
+    .lista, .desc { border-right: none; border-bottom: 1px solid var(--linea); }
+    .lista nav { max-height: 180px; }
+    .desc { max-height: 320px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="marca">Parcial 1 · DWYM <span>— JavaScript</span></div>
+  <nav id="tabs"></nav>
+</header>
+
+<div id="app"></div>
+
+<script>
+/* ==========================================================================
+   Apuntes de JavaScript para el ej02 del Parcial 1.
+   Todo el contenido es data; el motor está al final del archivo.
+   ========================================================================== */
+
+/* --- datos reales de los parciales, para poder correr los tests acá --- */
+
+const MODELOS_JSON = `[
+  { "sigla": "GPT", "nombre": "ChatGPT",    "empresa": "OpenAI",        "contexto":  400000, "capacidades": ["texto", "imagen", "web"] },
+  { "sigla": "CLD", "nombre": "Claude",     "empresa": "Anthropic",     "contexto": 1000000, "capacidades": ["texto", "codigo", "razonamiento"] },
+  { "sigla": "GEM", "nombre": "Gemini",     "empresa": "Google",        "contexto": 2000000, "capacidades": ["texto", "imagen", "audio", "video"] },
+  { "sigla": "CPL", "nombre": "Copilot",    "empresa": "Microsoft",     "contexto":  128000, "capacidades": ["texto", "codigo"] },
+  { "sigla": "LLM", "nombre": "Llama",      "empresa": "Meta",          "contexto":  128000, "capacidades": ["texto", "codigo"] },
+  { "sigla": "DSK", "nombre": "DeepSeek",   "empresa": "DeepSeek",      "contexto":  128000, "capacidades": ["texto", "razonamiento", "codigo"] },
+  { "sigla": "MST", "nombre": "Mistral",    "empresa": "Mistral AI",    "contexto":  128000, "capacidades": ["texto", "codigo"] },
+  { "sigla": "GRK", "nombre": "Grok",       "empresa": "xAI",           "contexto":  256000, "capacidades": ["texto", "imagen", "web"] },
+  { "sigla": "QWN", "nombre": "Qwen",       "empresa": "Alibaba",       "contexto":  131072, "capacidades": ["texto", "razonamiento"] },
+  { "sigla": "PPX", "nombre": "Perplexity", "empresa": "Perplexity AI", "contexto":  127000, "capacidades": ["texto", "web"] },
+  { "sigla": "NVA", "nombre": "Nova",       "empresa": "Amazon",        "contexto":  300000, "capacidades": ["texto", "imagen", "video"] },
+  { "sigla": "SUN", "nombre": "Suno",       "empresa": "Suno AI",       "contexto":    8000, "capacidades": ["audio"] }
+]`;
+
+const AMERICAS_JSON = `[
+  { "cca2": "BL", "currencies": { "EUR": { "name": "euro", "symbol": "€" } } },
+  { "cca2": "AW", "currencies": { "AWG": { "name": "Aruban florin", "symbol": "ƒ" } } },
+  { "cca2": "KN", "currencies": { "XCD": { "name": "Eastern Caribbean dollar", "symbol": "$" } } },
+  { "cca2": "NI", "currencies": { "NIO": { "name": "Nicaraguan córdoba", "symbol": "C$" } } },
+  { "cca2": "GF", "currencies": { "EUR": { "name": "euro", "symbol": "€" } } },
+  { "cca2": "CL", "currencies": { "CLP": { "name": "Chilean peso", "symbol": "$" } } },
+  { "cca2": "BR", "currencies": { "BRL": { "name": "Brazilian real", "symbol": "R$" } } },
+  { "cca2": "CO", "currencies": { "COP": { "name": "Colombian peso", "symbol": "$" } } },
+  { "cca2": "BB", "currencies": { "BBD": { "name": "Barbadian dollar", "symbol": "$" } } },
+  { "cca2": "MS", "currencies": { "XCD": { "name": "Eastern Caribbean dollar", "symbol": "$" } } },
+  { "cca2": "SX", "currencies": { "ANG": { "name": "Netherlands Antillean guilder", "symbol": "ƒ" } } },
+  { "cca2": "AI", "currencies": { "XCD": { "name": "Eastern Caribbean dollar", "symbol": "$" } } },
+  { "cca2": "US", "currencies": { "USD": { "name": "United States dollar", "symbol": "$" } } },
+  { "cca2": "GL", "currencies": { "DKK": { "name": "krone", "symbol": "kr." } } },
+  { "cca2": "BQ", "currencies": { "USD": { "name": "United States dollar", "symbol": "$" } } },
+  { "cca2": "MF", "currencies": { "EUR": { "name": "euro", "symbol": "€" } } },
+  { "cca2": "GP", "currencies": { "EUR": { "name": "euro", "symbol": "€" } } },
+  { "cca2": "PY", "currencies": { "PYG": { "name": "Paraguayan guaraní", "symbol": "₲" } } },
+  { "cca2": "CW", "currencies": { "ANG": { "name": "Netherlands Antillean guilder", "symbol": "ƒ" } } },
+  { "cca2": "SV", "currencies": { "USD": { "name": "United States dollar", "symbol": "$" } } },
+  { "cca2": "DM", "currencies": { "XCD": { "name": "Eastern Caribbean dollar", "symbol": "$" } } },
+  { "cca2": "PM", "currencies": { "EUR": { "name": "euro", "symbol": "€" } } },
+  { "cca2": "MQ", "currencies": { "EUR": { "name": "euro", "symbol": "€" } } },
+  { "cca2": "PA", "currencies": { "PAB": { "name": "Panamanian balboa", "symbol": "B/." }, "USD": { "name": "United States dollar", "symbol": "$" } } },
+  { "cca2": "MX", "currencies": { "MXN": { "name": "Mexican peso", "symbol": "$" } } },
+  { "cca2": "GD", "currencies": { "XCD": { "name": "Eastern Caribbean dollar", "symbol": "$" } } },
+  { "cca2": "GY", "currencies": { "GYD": { "name": "Guyanese dollar", "symbol": "$" } } },
+  { "cca2": "BS", "currencies": { "BSD": { "name": "Bahamian dollar", "symbol": "$" }, "USD": { "name": "United States dollar", "symbol": "$" } } },
+  { "cca2": "VE", "currencies": { "VES": { "name": "Venezuelan bolívar soberano", "symbol": "Bs.S." } } },
+  { "cca2": "AR", "currencies": { "ARS": { "name": "Argentine peso", "symbol": "$" } } },
+  { "cca2": "CU", "currencies": { "CUC": { "name": "Cuban convertible peso", "symbol": "$" }, "CUP": { "name": "Cuban peso", "symbol": "$" } } },
+  { "cca2": "KY", "currencies": { "KYD": { "name": "Cayman Islands dollar", "symbol": "$" } } },
+  { "cca2": "PE", "currencies": { "PEN": { "name": "Peruvian sol", "symbol": "S/ " } } },
+  { "cca2": "BO", "currencies": { "BOB": { "name": "Bolivian boliviano", "symbol": "Bs." } } },
+  { "cca2": "TC", "currencies": { "USD": { "name": "United States dollar", "symbol": "$" } } },
+  { "cca2": "BZ", "currencies": { "BZD": { "name": "Belize dollar", "symbol": "$" } } },
+  { "cca2": "LC", "currencies": { "XCD": { "name": "Eastern Caribbean dollar", "symbol": "$" } } },
+  { "cca2": "EC", "currencies": { "USD": { "name": "United States dollar", "symbol": "$" } } },
+  { "cca2": "VG", "currencies": { "USD": { "name": "United States dollar", "symbol": "$" } } },
+  { "cca2": "VI", "currencies": { "USD": { "name": "United States dollar", "symbol": "$" } } },
+  { "cca2": "PR", "currencies": { "USD": { "name": "United States dollar", "symbol": "$" } } },
+  { "cca2": "JM", "currencies": { "JMD": { "name": "Jamaican dollar", "symbol": "$" } } },
+  { "cca2": "GT", "currencies": { "GTQ": { "name": "Guatemalan quetzal", "symbol": "Q" } } },
+  { "cca2": "FK", "currencies": { "FKP": { "name": "Falkland Islands pound", "symbol": "£" } } },
+  { "cca2": "VC", "currencies": { "XCD": { "name": "Eastern Caribbean dollar", "symbol": "$" } } },
+  { "cca2": "SR", "currencies": { "SRD": { "name": "Surinamese dollar", "symbol": "$" } } },
+  { "cca2": "UM", "currencies": { "USD": { "name": "United States dollar", "symbol": "$" } } },
+  { "cca2": "UY", "currencies": { "UYU": { "name": "Uruguayan peso", "symbol": "$" } } },
+  { "cca2": "DO", "currencies": { "DOP": { "name": "Dominican peso", "symbol": "$" } } },
+  { "cca2": "CA", "currencies": { "CAD": { "name": "Canadian dollar", "symbol": "$" } } },
+  { "cca2": "AG", "currencies": { "XCD": { "name": "Eastern Caribbean dollar", "symbol": "$" } } },
+  { "cca2": "TT", "currencies": { "TTD": { "name": "Trinidad and Tobago dollar", "symbol": "$" } } },
+  { "cca2": "CR", "currencies": { "CRC": { "name": "Costa Rican colón", "symbol": "₡" } } },
+  { "cca2": "HT", "currencies": { "HTG": { "name": "Haitian gourde", "symbol": "G" } } },
+  { "cca2": "HN", "currencies": { "HNL": { "name": "Honduran lempira", "symbol": "L" } } },
+  { "cca2": "BM", "currencies": { "BMD": { "name": "Bermudian dollar", "symbol": "$" } } }
+]`;
+
+const BIBLIOTECA_JSON = `{
+  "libros": [
+    { "id": 1, "titulo": "JavaScript Avanzado", "autor": "John Doe", "disponible": true,
+      "categoria": "Programación", "añoPublicacion": 2022, "prestamos": [] },
+    { "id": 2, "titulo": "Diseño Web Responsive", "autor": "Jane Smith", "disponible": false,
+      "categoria": "Diseño", "añoPublicacion": 2021, "prestamos": [
+        { "estudiante": "Ana García", "fechaPrestamo": "2025-08-15", "fechaDevolucion": null }
+      ] },
+    { "id": 3, "titulo": "Node.js para Principiantes", "autor": "Carlos López", "disponible": true,
+      "categoria": "Programación", "añoPublicacion": 2023, "prestamos": [
+        { "estudiante": "Pedro Gomez", "fechaPrestamo": "2025-07-10", "fechaDevolucion": "2025-07-30" }
+      ] },
+    { "id": 4, "titulo": "UX/UI Fundamentals", "autor": "Laura Torres", "disponible": true,
+      "categoria": "Diseño", "añoPublicacion": 2020, "prestamos": [] },
+    { "id": 5, "titulo": "Algoritmos y Estructuras de Datos", "autor": "John Doe", "disponible": false,
+      "categoria": "Programación", "añoPublicacion": 2019, "prestamos": [
+        { "estudiante": "Lucía Fernández", "fechaPrestamo": "2025-09-01", "fechaDevolucion": null }
+      ] }
+  ],
+  "estudiantes": [
+    { "id": 1, "nombre": "Ana García", "carrera": "Ingeniería", "librosActuales": [2] },
+    { "id": 2, "nombre": "Pedro Gomez", "carrera": "Diseño", "librosActuales": [] },
+    { "id": 3, "nombre": "Lucía Fernández", "carrera": "Ingeniería", "librosActuales": [5] },
+    { "id": 4, "nombre": "Martín Suárez", "carrera": "Arquitectura", "librosActuales": [] }
+  ]
+}`;
+
+/* ==========================================================================
+   TAB 1 — Los parciales
+   ========================================================================== */
+const PARCIALES = {
+  id: "parciales",
+  tab: "Parciales",
+  ayuda: "El segundo ejercicio de todas las pruebas. Elegí uno: en el medio tenés qué pide y qué mirar, a la derecha los archivos tal cual vienen.",
+  items: [
+
+/* ---------------------------------------------------------------- */
+{
+  grupo: "2026sem2 · el más reciente",
+  id: "modelos",
+  titulo: "modelosPorCapacidad",
+  origen: "simulacro 2026sem2 · ej02",
+  firma: "modelosPorCapacidad(data, capacidad) → string[]",
+  resumen: "Te dan un array de modelos de IA (modelos.json) y una capacidad. Tenés que devolver las siglas de los modelos que soportan esa capacidad, en el mismo orden en el que vienen. Si un elemento no tiene las propiedades requeridas, hay que arrojar un error.",
+  puntos: [
+    { t: "El patrón es filtrar + mapear", d: "Recorrés el array, te quedás con los que tienen la capacidad en su array <code>capacidades</code>, y devolvés solo la <code>sigla</code>. Dos operaciones, no una." },
+    { t: "El orden importa", d: "El test usa <code>assert.deepEqual</code> contra <code>[\"GPT\", \"GRK\", \"PPX\"]</code>. Recorré el array en su orden original y no ordenes nada." },
+    { tipo: "trampa", t: "Sin segundo argumento NO se tira error", d: "El test pide <code>modelosPorCapacidad(modelos)</code> → <code>[]</code>, pero <code>modelosPorCapacidad(undefined, \"texto\")</code> → error. Son dos comportamientos distintos ante «falta un dato». Si validás <code>capacidad</code> con un throw, rompés el test." },
+    { t: "Dos niveles de validación", d: "Primero el contenedor (<code>Array.isArray(data)</code>), después cada elemento (que sea objeto, que <code>sigla</code> sea string y <code>capacidades</code> sea array). El test manda <code>[{}]</code> justamente para eso." },
+    { t: "includes sobre el sub-array", d: "<code>modelo.capacidades.includes(capacidad)</code>. Con <code>capacidad === undefined</code> devuelve <code>false</code>, que es exactamente lo que hace falta para el caso de arriba." },
+  ],
+  archivos: [
+    { nombre: "ej02.js", codigo:
+`/*
+# Ejercicio 02.
+
+Implementar la función que toma una lista de datos de modelos de IA como los del
+archivo \`modelos.json\` y retorna las siglas de los modelos que soportan una
+capacidad dada. Por ejemplo:
+
+    modelosPorCapacidad(modelos, "web")  // Búsqueda web
+
+debería devolver:
+
+    ["GPT", "GRK", "PPX"]
+
+Si un elemento no tiene alguna de las propiedades requeridas, se debe arrojar un
+error.
+*/
+
+export function modelosPorCapacidad(data, capacidad) {
+  // 1. VALIDAR EL CONTENEDOR.
+  //    Cubre los casos undefined y null de una sola vez.
+  if (!Array.isArray(data)) {
+    throw new TypeError("El primer argumento debe ser un array de modelos.");
+  }
+
+  const siglas = [];
+
+  for (const modelo of data) {
+    // 2. VALIDAR CADA ELEMENTO.
+    //    typeof null === "object", por eso hace falta el !== null.
+    if (
+      typeof modelo !== "object" || modelo === null ||
+      typeof modelo.sigla !== "string" || !Array.isArray(modelo.capacidades)
+    ) {
+      throw new TypeError("Cada modelo debe tener sigla y capacidades.");
+    }
+
+    // 3. FILTRAR. Con capacidad === undefined, includes da false:
+    //    por eso modelosPorCapacidad(modelos) devuelve [] y no explota.
+    if (modelo.capacidades.includes(capacidad)) {
+      siglas.push(modelo.sigla);
+    }
+  }
+
+  return siglas;
+}
+
+/* --- La misma función con métodos de array (equivalente) ---
+
+export function modelosPorCapacidad(data, capacidad) {
+  if (!Array.isArray(data)) throw new TypeError("...");
+  return data
+    .filter((m) => {
+      if (typeof m?.sigla !== "string" || !Array.isArray(m?.capacidades)) {
+        throw new TypeError("...");
+      }
+      return m.capacidades.includes(capacidad);
+    })
+    .map((m) => m.sigla);
+}
+*/` },
+    { nombre: "ej02.test.js", codigo:
+`// Tests automáticos, por favor no modificar.
+// Ejecutar con \`node ej02/ej02.test.js\` para correr los tests.
+import assert from "node:assert";
+import { modelosPorCapacidad } from "./ej02.js";
+import modelos from "./modelos.json" with { type: "json" };
+
+console.log('Ejecutando tests para modelosPorCapacidad...');
+
+assert.ok(
+  typeof modelosPorCapacidad === "function",
+  "El código debe exportar una función llamada modelosPorCapacidad.",
+);
+assert.ok(
+  Array.isArray(modelos) && modelos.every((item) => (
+    typeof item === "object" && item !== null
+    && typeof item.sigla === "string"
+    && Array.isArray(item.capacidades)
+  )),
+  "El archivo modelos.json debe tener el formato correcto.",
+);
+
+assert.deepEqual(
+  modelosPorCapacidad([], "x"),
+  [],
+  "Para el arreglo vacío debe devolver un arreglo vacío.",
+);
+assert.deepEqual(
+  modelosPorCapacidad(modelos, "web"),
+  ["GPT", "GRK", "PPX"],
+  "Para la capacidad web debe devolver las siglas correctas.",
+);
+assert.deepEqual(
+  modelosPorCapacidad(modelos, "razonamiento"),
+  ["CLD", "DSK", "QWN"],
+  "Para la capacidad razonamiento debe devolver las siglas correctas.",
+);
+assert.deepEqual(
+  modelosPorCapacidad(modelos, "video"),
+  ["GEM", "NVA"],
+  "Para la capacidad video debe devolver las siglas correctas.",
+);
+assert.deepEqual(
+  modelosPorCapacidad(modelos, "audio"),
+  ["GEM", "SUN"],
+  "Para la capacidad audio debe devolver las siglas correctas.",
+);
+assert.deepEqual(
+  modelosPorCapacidad(modelos, "traduccion"),
+  [],
+  "Para una capacidad que ningún modelo soporta debe devolver un arreglo vacío.",
+);
+assert.deepEqual(
+  modelosPorCapacidad(modelos),
+  [],
+  "Debe devolver un arreglo vacío cuando no se pasa la capacidad.",
+);
+
+assert.throws(
+  () => {
+    modelosPorCapacidad(undefined, "texto");
+    modelosPorCapacidad(null, "texto");
+  },
+  "Se debe fallar si el primer argumento es undefined o null.",
+);
+
+assert.throws(
+  () => { modelosPorCapacidad([{}], "texto") },
+  "Se debe fallar si los datos no son del formato esperado.",
+);
+
+console.log('Tests para modelosPorCapacidad finalizados correctamente.');` },
+    { nombre: "modelos.json", lenguaje: "json", codigo: MODELOS_JSON },
+  ],
+  ejecutar:
+`const modelos = ${MODELOS_JSON};
+
+function modelosPorCapacidad(data, capacidad) {
+  if (!Array.isArray(data)) throw new TypeError("El primer argumento debe ser un array.");
+  const siglas = [];
+  for (const m of data) {
+    if (typeof m !== "object" || m === null ||
+        typeof m.sigla !== "string" || !Array.isArray(m.capacidades)) {
+      throw new TypeError("Cada modelo debe tener sigla y capacidades.");
+    }
+    if (m.capacidades.includes(capacidad)) siglas.push(m.sigla);
+  }
+  return siglas;
+}
+
+log('Ejecutando tests para modelosPorCapacidad...');
+assert.ok(typeof modelosPorCapacidad === "function", "debe exportar la función");
+assert.deepEqual(modelosPorCapacidad([], "x"), [], "arreglo vacío");
+assert.deepEqual(modelosPorCapacidad(modelos, "web"), ["GPT","GRK","PPX"], "capacidad web");
+assert.deepEqual(modelosPorCapacidad(modelos, "razonamiento"), ["CLD","DSK","QWN"], "capacidad razonamiento");
+assert.deepEqual(modelosPorCapacidad(modelos, "video"), ["GEM","NVA"], "capacidad video");
+assert.deepEqual(modelosPorCapacidad(modelos, "audio"), ["GEM","SUN"], "capacidad audio");
+assert.deepEqual(modelosPorCapacidad(modelos, "traduccion"), [], "capacidad inexistente");
+assert.deepEqual(modelosPorCapacidad(modelos), [], "sin capacidad");
+assert.throws(() => modelosPorCapacidad(undefined, "texto"), "undefined debe fallar");
+assert.throws(() => modelosPorCapacidad([{}], "texto"), "formato malo debe fallar");
+log('Tests para modelosPorCapacidad finalizados correctamente.');`
+},
+
+/* ---------------------------------------------------------------- */
+{
+  grupo: "2026sem1 · prueba y simulacro",
+  id: "paises",
+  titulo: "countriesForCurrency",
+  origen: "prueba 2026sem1 · ej02",
+  firma: "countriesForCurrency(data, currency) → string[]",
+  resumen: "Casi idéntico al de 2026sem2, pero con una diferencia clave: acá lo que hay que buscar NO está en un array sino en las CLAVES de un objeto. Cada país tiene currencies: { \"UYU\": { name, symbol } }, así que no sirve includes: hay que preguntar si el objeto tiene esa clave.",
+  puntos: [
+    { t: "Buscar en las claves de un objeto", d: "<code>Object.hasOwn(pais.currencies, currency)</code>, o <code>currency in pais.currencies</code>. Ambas devuelven <code>false</code> con <code>undefined</code>, que es lo que pide el test cuando no pasás la moneda." },
+    { tipo: "trampa", t: "El JSON real es enorme", d: "<code>americas.json</code> trae 56 países con decenas de propiedades cada uno. No lo leas entero: buscá en el test qué propiedades valida (<code>cca2</code> y <code>currencies</code>) y ocupate solo de esas. El archivo de acá está recortado a esas dos." },
+    { t: "El test te da el formato exacto", d: "El segundo <code>assert.ok</code> del test enumera literalmente lo que tiene que cumplir cada elemento: objeto, <code>cca2</code> string, <code>currencies</code> objeto no nulo. Copiá esa condición en tu validación y listo." },
+    { t: "Podés dejar que explote solo", d: "Si <code>data</code> es <code>undefined</code>, <code>data.filter(...)</code> ya tira <code>TypeError</code>, que es lo que <code>assert.throws</code> necesita. Es válido, aunque validar explícitamente se lee mejor." },
+  ],
+  archivos: [
+    { nombre: "ej02.js", codigo:
+`/*
+# Ejercicio 02.
+
+Implementar la función que toma una lista de datos de países como los del
+archivo \`americas.json\` y retorna los códigos CCA2 de los países que usan una
+moneda dada. Por ejemplo:
+
+    countriesForCurrency(americas, "EUR")  // Euro
+
+debería devolver:
+
+    ["BL", "GF", "MF", "GP", "PM", "MQ"]
+
+Si un elemento no tiene alguna de las propiedades requeridas, se debe arrojar un
+error.
+*/
+
+export function countriesForCurrency(data, currency) {
+  // Si \`data\` es undefined o null, \`.filter\` ya lanza un TypeError, que es
+  // exactamente lo que pide el test (assert.throws).
+  return data
+    .filter((country) => {
+      // La condición es la MISMA que el assert.ok del test.
+      if (
+        typeof country !== "object" || country === null
+        || typeof country.cca2 !== "string"
+        || typeof country.currencies !== "object" || country.currencies === null
+      ) {
+        throw new TypeError(
+          \`Formato inválido: se esperaba { cca2, currencies }, se recibió \${JSON.stringify(country)}.\`,
+        );
+      }
+      // Acá la moneda es una CLAVE del objeto, no un elemento de un array:
+      // includes no sirve. Con currency === undefined, hasOwn da false.
+      return Object.hasOwn(country.currencies, currency);
+    })
+    .map((country) => country.cca2);
+}
+
+/* Alternativas para preguntar por una clave:
+
+     currency in country.currencies              // también hereda del prototipo
+     country.currencies[currency] !== undefined  // falla si el valor ES undefined
+     Object.keys(country.currencies).includes(currency)
+
+   Object.hasOwn es la más precisa y la más nueva. */` },
+    { nombre: "ej02.test.js", codigo:
+`// Tests automáticos, por favor no modificar.
+import assert from "node:assert";
+import { countriesForCurrency } from "./ej02.js";
+import americas from "./americas.json" with { type: "json" };
+
+console.log('Ejecutando tests para countriesForCurrency...');
+
+assert.ok(
+  typeof countriesForCurrency === "function",
+  "El código debe exportar una función llamada countriesForCurrency.",
+);
+assert.ok(
+  Array.isArray(americas) && americas.every((item) => (
+    typeof item === "object" && item !== null
+    && typeof item.cca2 === "string"
+    && typeof item.currencies === "object" && item.currencies !== null
+  )),
+  "El archivo americas.json debe tener el formato correcto.",
+)
+
+assert.deepEqual(
+  countriesForCurrency([], "x"),
+  [],
+  "Para el arreglo vacío debe devolver un arreglo vacío.",
+);
+assert.deepEqual(
+  countriesForCurrency(americas, "EUR"),
+  ['BL', 'GF', 'MF', 'GP', 'PM', 'MQ'],
+  "Para la moneda EUR debe devolver los códigos CCA2 correctos.",
+);
+assert.deepEqual(
+  countriesForCurrency(americas, "USD"),
+  ['US', 'BQ', 'SV', 'PA', 'BS', 'TC', 'EC', 'VG', 'VI', 'PR', 'UM'],
+  "Para la moneda USD debe devolver los códigos CCA2 correctos.",
+);
+assert.deepEqual(
+  countriesForCurrency(americas, "UYU"),
+  ['UY'],
+  "Para la moneda UYU debe devolver los códigos CCA2 correctos.",
+);
+assert.deepEqual(
+  countriesForCurrency(americas, "UYN"),
+  [],
+  "Para una moneda inexistente debe devolver un arreglo vacío.",
+);
+assert.deepEqual(
+  countriesForCurrency(americas),
+  [],
+  "Debe devolver un arreglo vacío cuando no se pasa la moneda.",
+);
+
+assert.throws(
+  () => {
+    countriesForCurrency(undefined, 'ARS');
+    countriesForCurrency(null, 'BRL');
+  },
+  "Se debe fallar si el primer argumento es undefined o null.",
+);
+
+assert.throws(
+  () => { countriesForCurrency([{}], "CLP") },
+  "Se debe fallar si los datos no son del formato esperado.",
+);
+
+console.log('Tests para countriesForCurrency finalizados correctamente.');` },
+    { nombre: "americas.json", lenguaje: "json", codigo:
+"// Recorte: el archivo real trae 56 países con decenas de propiedades cada uno\n" +
+"// (nombres, banderas, idiomas, fronteras...). Acá quedan solo las dos que\n" +
+"// el ejercicio usa. Es exactamente lo que tenés que hacer al leerlo en la prueba.\n" +
+AMERICAS_JSON },
+  ],
+  ejecutar:
+`const americas = ${AMERICAS_JSON};
+
+function countriesForCurrency(data, currency) {
+  return data
+    .filter((country) => {
+      if (typeof country !== "object" || country === null
+          || typeof country.cca2 !== "string"
+          || typeof country.currencies !== "object" || country.currencies === null) {
+        throw new TypeError("Formato inválido.");
+      }
+      return Object.hasOwn(country.currencies, currency);
+    })
+    .map((country) => country.cca2);
+}
+
+log('Ejecutando tests para countriesForCurrency...');
+assert.deepEqual(countriesForCurrency([], "x"), [], "arreglo vacío");
+assert.deepEqual(countriesForCurrency(americas, "EUR"), ['BL','GF','MF','GP','PM','MQ'], "EUR");
+assert.deepEqual(countriesForCurrency(americas, "USD"), ['US','BQ','SV','PA','BS','TC','EC','VG','VI','PR','UM'], "USD");
+assert.deepEqual(countriesForCurrency(americas, "UYU"), ['UY'], "UYU");
+assert.deepEqual(countriesForCurrency(americas, "UYN"), [], "moneda inexistente");
+assert.deepEqual(countriesForCurrency(americas), [], "sin moneda");
+assert.throws(() => countriesForCurrency(undefined, 'ARS'), "undefined debe fallar");
+assert.throws(() => countriesForCurrency([{}], "CLP"), "formato malo debe fallar");
+log('Tests para countriesForCurrency finalizados correctamente.');`
+},
+
+/* ---------------------------------------------------------------- */
+{
+  grupo: "2026sem1 · prueba y simulacro",
+  id: "fieldlist",
+  titulo: "fieldListToObject",
+  origen: "simulacro 2026sem1 · ej02",
+  firma: "fieldListToObject([{ field, value }]) → object",
+  resumen: "El único de la serie que no devuelve un array: convierte una lista de pares { field, value } en un objeto con una propiedad por cada field. Es el más corto de escribir, pero el que más casos borde tiene, y todos están dictados por el test.",
+  puntos: [
+    { t: "Cinco reglas, todas del test", d: "Sin <code>field</code> → se descarta. Sin <code>value</code> → se incluye con <code>undefined</code>. Otras propiedades → se ignoran. <code>field</code> repetido → gana el último. Lista vacía → objeto vacío." },
+    { tipo: "trampa", t: "«Sin field» y «sin value» hacen cosas OPUESTAS", d: "<code>[{ filed: \"no\", value: 1 }]</code> → <code>{}</code>, pero <code>[{ field: \"yes\", valeu: 1 }]</code> → <code>{ yes: undefined }</code>. Fijate el typo a propósito en el test. Si validás las dos propiedades igual, fallás." },
+    { t: "«Gana el último» sale gratis", d: "Si asignás en orden con <code>result[item.field] = item.value</code>, el segundo pisa al primero solo. No hace falta código extra." },
+    { t: "Preguntar si existe la propiedad", d: "<code>\"field\" in item</code>. No uses <code>item.field !== undefined</code>: si alguien pasa <code>{ field: undefined }</code> se comportan distinto (acá no lo testean, pero es el hábito correcto)." },
+    { t: "Acá SÍ hay que validar el argumento", d: "<code>fieldListToObject()</code> y <code>fieldListToObject(null)</code> tienen que tirar error. Distinto del de los modelos, donde la falta del SEGUNDO argumento no era un error." },
+  ],
+  archivos: [
+    { nombre: "ej02.js", codigo:
+`/*
+# Ejercicio 02.
+
+Toma una secuencia de objetos \`{ field: string, value: any }\` y devuelve un
+objeto con una propiedad por cada \`field\` con el valor \`value\`.
+*/
+
+export function fieldListToObject(fieldList) {
+  if (fieldList === undefined || fieldList === null) {
+    throw new Error("El argumento no puede ser undefined o null.");
+  }
+
+  const result = {};
+
+  for (const item of fieldList) {
+    // Solo se incluyen los objetos que TENGAN la propiedad \`field\`.
+    // Si no tienen \`value\`, item.value da undefined, que es justo
+    // lo que pide el test. Por eso no se valida \`value\`.
+    if (item !== null && item !== undefined && "field" in item) {
+      result[item.field] = item.value;
+    }
+  }
+
+  return result;
+}
+
+/* --- Versión con reduce (misma lógica) ---
+
+export function fieldListToObject(fieldList) {
+  if (fieldList == null) throw new Error("...");
+  return fieldList.reduce((acc, item) => {
+    if (item != null && "field" in item) acc[item.field] = item.value;
+    return acc;                 // ← devolver el acumulador SIEMPRE
+  }, {});
+}
+
+   --- Versión con Object.fromEntries (si no hubiera que filtrar) ---
+
+   Object.fromEntries(fieldList.map((it) => [it.field, it.value]))
+*/` },
+    { nombre: "ej02.test.js", codigo:
+`// Tests automáticos, por favor no modificar.
+import assert from "node:assert";
+import { fieldListToObject } from "./ej02.js";
+
+console.log('Ejecutando tests para fieldListToObject...');
+
+assert.equal(
+  typeof fieldListToObject,
+  "function",
+  "El código debe exportar una función llamada fieldListToObject.",
+);
+
+assert.deepEqual(
+  fieldListToObject([]),
+  {},
+  "Para la lista vacía debe devolver un objeto vacío.",
+);
+assert.deepEqual(
+  fieldListToObject([{ field: "uno", value: 1 }]),
+  { uno: 1 },
+);
+assert.deepEqual(
+  fieldListToObject([{ field: "x", value: 1 }, { field: "y", value: 2 }]),
+  { x: 1, y: 2 },
+);
+
+assert.deepEqual(
+  fieldListToObject([{ filed: "no", value: 1 }]),
+  {},
+  "Objeto sin 'field' no se deben incluir en el resultado.",
+);
+assert.deepEqual(
+  fieldListToObject([{ field: "yes", valeu: 1 }]),
+  { yes: undefined },
+  "Objeto sin 'value' se deben incluir con valor undefined.",
+);
+assert.deepEqual(
+  fieldListToObject([{ field: "vale", value: true, other: 'does not matter' }]),
+  { vale: true },
+  "No deben importar otros campos que no sean 'field' y 'value'.",
+);
+assert.deepEqual(
+  fieldListToObject([{ field: "same", value: 7 }, { field: "same", value: 77 }]),
+  { same: 77 },
+  "Ante valores repetidos, se debe tomar el último.",
+);
+
+assert.throws(
+  () => fieldListToObject(),
+  "Se debe fallar si el argumento es undefined."
+);
+assert.throws(
+  () => fieldListToObject(null),
+  "Se debe fallar si el argumento es null."
+);
+
+console.log('Tests para fieldListToObject finalizados correctamente.');` },
+  ],
+  ejecutar:
+`function fieldListToObject(fieldList) {
+  if (fieldList === undefined || fieldList === null) {
+    throw new Error("El argumento no puede ser undefined o null.");
+  }
+  const result = {};
+  for (const item of fieldList) {
+    if (item !== null && item !== undefined && "field" in item) {
+      result[item.field] = item.value;
+    }
+  }
+  return result;
+}
+
+log('Ejecutando tests para fieldListToObject...');
+assert.equal(typeof fieldListToObject, "function", "debe exportar la función");
+assert.deepEqual(fieldListToObject([]), {}, "lista vacía");
+assert.deepEqual(fieldListToObject([{ field: "uno", value: 1 }]), { uno: 1 }, "un par");
+assert.deepEqual(fieldListToObject([{ field: "x", value: 1 }, { field: "y", value: 2 }]), { x: 1, y: 2 }, "dos pares");
+assert.deepEqual(fieldListToObject([{ filed: "no", value: 1 }]), {}, "sin 'field' se descarta");
+assert.deepEqual(fieldListToObject([{ field: "yes", valeu: 1 }]), { yes: undefined }, "sin 'value' queda undefined");
+assert.deepEqual(fieldListToObject([{ field: "vale", value: true, other: 'x' }]), { vale: true }, "otros campos no importan");
+assert.deepEqual(fieldListToObject([{ field: "same", value: 7 }, { field: "same", value: 77 }]), { same: 77 }, "gana el último");
+assert.throws(() => fieldListToObject(), "undefined debe fallar");
+assert.throws(() => fieldListToObject(null), "null debe fallar");
+log('Tests para fieldListToObject finalizados correctamente.');`
+},
+
+/* ---------------------------------------------------------------- */
+{
+  grupo: "2025sem2 · otro tipo de ejercicio",
+  id: "biblio-mat",
+  titulo: "prestarLibro / buscarLibros",
+  origen: "parcial 2025sem2 matutino · ej2",
+  firma: "prestarLibro(idLibro, idEstudiante, fecha) → true | string\nbuscarLibros(criterios) → libro[]",
+  resumen: "OJO: en 2025sem2 el segundo ejercicio NO era una función pura con tests. Era un sistema con estado (una biblioteca) donde las funciones MUTAN los datos, devuelven mensajes de error en vez de arrojarlos, y se verifican corriendo el archivo con node y mirando la salida por consola. Es un formato distinto y conviene tenerlo visto por si vuelve.",
+  puntos: [
+    { tipo: "trampa", t: "Acá NO se arrojan errores: se devuelven", d: "La firma es <code>boolean | string</code>: <code>true</code> si salió bien, o un string con el mensaje si no. Nada de <code>throw</code>. Es lo opuesto a los ej02 de 2026." },
+    { t: "Validá en cascada y salí temprano", d: "Existe el libro → existe el estudiante → está disponible → la fecha tiene formato → no lo tiene ya. Cada chequeo con su propio <code>return</code>. No anides ifs." },
+    { t: "find para buscar por id", d: "<code>biblioteca.libros.find((l) =&gt; l.id === idLibro)</code> devuelve el objeto o <code>undefined</code>. El <code>if (!libro)</code> de después es obligatorio." },
+    { t: "Mutar es intencional acá", d: "<code>libro.disponible = false</code>, <code>libro.prestamos.push(...)</code>, <code>estudiante.librosActuales.push(idLibro)</code>. Hay que actualizar los TRES registros, no solo uno. Es el error típico." },
+    { t: "Búsqueda por criterios opcionales", d: "El patrón es <code>criterio === undefined || coincide(...)</code>: si no te pasaron ese criterio, esa condición vale <code>true</code> y no filtra nada. Así una sola función sirve para cualquier combinación." },
+    { t: "Comparar texto sin distinguir mayúsculas", d: "<code>String(a).toLowerCase().includes(String(b).toLowerCase())</code>. El <code>String()</code> te protege de números y de <code>undefined</code>." },
+  ],
+  archivos: [
+    { nombre: "ejercicio_biblioteca.js", codigo:
+`/**
+ * EJERCICIO DE PARCIAL: SISTEMA DE GESTIÓN DE BIBLIOTECA UNIVERSITARIA
+ *
+ * Ejecutar con: node ejercicio_biblioteca.js
+ */
+
+// En Node moderno el atributo correcto es \`with\` (antes era \`assert\`).
+import bibliotecaData from './datos_biblioteca.json' with { type: 'json' };
+
+// Copia (superficial) de los datos para trabajar con ellos.
+const biblioteca = { ...bibliotecaData };
+
+/**
+ * 1. Función para prestar un libro
+ *
+ * @param {number} idLibro - ID del libro a prestar
+ * @param {number} idEstudiante - ID del estudiante que pide prestado
+ * @param {string} fechaPrestamo - Fecha del préstamo (formato YYYY-MM-DD)
+ * @return {boolean|string} - true si se prestó, mensaje de error si no
+ */
+function prestarLibro(idLibro, idEstudiante, fechaPrestamo) {
+  // VALIDACIONES EN CASCADA: cada una con su propio return.
+  const libro = biblioteca.libros.find((l) => l.id === idLibro);
+  if (!libro) {
+    return \`Error: no existe un libro con id \${idLibro}.\`;
+  }
+
+  const estudiante = biblioteca.estudiantes.find((e) => e.id === idEstudiante);
+  if (!estudiante) {
+    return \`Error: no existe un estudiante con id \${idEstudiante}.\`;
+  }
+
+  if (!libro.disponible) {
+    return \`Error: el libro "\${libro.titulo}" no está disponible.\`;
+  }
+
+  // Formato de fecha con expresión regular: 4 dígitos - 2 dígitos - 2 dígitos
+  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(fechaPrestamo)) {
+    return \`Error: la fecha "\${fechaPrestamo}" no tiene el formato YYYY-MM-DD.\`;
+  }
+
+  if (estudiante.librosActuales.includes(idLibro)) {
+    return \`Error: \${estudiante.nombre} ya tiene prestado "\${libro.titulo}".\`;
+  }
+
+  // ACTUALIZAR LOS TRES REGISTROS. Olvidarse de uno es el error típico.
+  libro.disponible = false;
+  libro.prestamos.push({
+    estudiante: estudiante.nombre,
+    fechaPrestamo,
+    fechaDevolucion: null,      // null = préstamo todavía abierto
+  });
+  estudiante.librosActuales.push(idLibro);
+
+  return true;
+}
+
+/**
+ * 2. Función para buscar libros
+ *
+ * Criterios soportados: titulo, autor, categoria (subcadena, sin distinguir
+ * mayúsculas), disponible (booleano) y añoPublicacion (número exacto).
+ *
+ * @param {object} criterios - Objeto con los criterios de búsqueda
+ * @return {array} - Array con los libros que cumplen los criterios
+ */
+function buscarLibros(criterios = {}) {
+  const contiene = (valor, buscado) =>
+    String(valor).toLowerCase().includes(String(buscado).toLowerCase());
+
+  // EL PATRÓN: "no me pasaron el criterio" O "el criterio coincide".
+  // Si no te lo pasaron, esa condición vale true y no filtra nada.
+  return biblioteca.libros.filter((libro) => (
+    (criterios.titulo === undefined || contiene(libro.titulo, criterios.titulo))
+    && (criterios.autor === undefined || contiene(libro.autor, criterios.autor))
+    && (criterios.categoria === undefined || contiene(libro.categoria, criterios.categoria))
+    && (criterios.disponible === undefined || libro.disponible === criterios.disponible)
+    && (criterios.añoPublicacion === undefined || libro.añoPublicacion === criterios.añoPublicacion)
+  ));
+}
+
+// ALGUNOS CASOS DE PRUEBA
+console.log("Probando préstamo de libro:");
+console.log(prestarLibro(1, 3, "2025-09-13"));    // true
+console.log(prestarLibro(1, 3, "2025-09-13"));    // ya no está disponible
+console.log(prestarLibro(99, 3, "2025-09-13"));   // libro inexistente
+console.log(prestarLibro(4, 1, "13/09/2025"));    // fecha inválida
+
+console.log("\\nBuscando libros de programación disponibles:");
+console.log(buscarLibros({ categoria: "Programación", disponible: true }));
+
+console.log("\\nBuscando por autor:");
+console.log(buscarLibros({ autor: "john doe" }).map((l) => l.titulo));` },
+    { nombre: "datos_biblioteca.json", lenguaje: "json", codigo: BIBLIOTECA_JSON },
+  ],
+  ejecutar:
+`const biblioteca = ${BIBLIOTECA_JSON};
+
+function prestarLibro(idLibro, idEstudiante, fechaPrestamo) {
+  const libro = biblioteca.libros.find((l) => l.id === idLibro);
+  if (!libro) return \`Error: no existe un libro con id \${idLibro}.\`;
+
+  const estudiante = biblioteca.estudiantes.find((e) => e.id === idEstudiante);
+  if (!estudiante) return \`Error: no existe un estudiante con id \${idEstudiante}.\`;
+
+  if (!libro.disponible) return \`Error: el libro "\${libro.titulo}" no está disponible.\`;
+  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(fechaPrestamo))
+    return \`Error: la fecha "\${fechaPrestamo}" no tiene el formato YYYY-MM-DD.\`;
+  if (estudiante.librosActuales.includes(idLibro))
+    return \`Error: \${estudiante.nombre} ya tiene prestado "\${libro.titulo}".\`;
+
+  libro.disponible = false;
+  libro.prestamos.push({ estudiante: estudiante.nombre, fechaPrestamo, fechaDevolucion: null });
+  estudiante.librosActuales.push(idLibro);
+  return true;
+}
+
+function buscarLibros(criterios = {}) {
+  const contiene = (v, b) => String(v).toLowerCase().includes(String(b).toLowerCase());
+  return biblioteca.libros.filter((libro) => (
+    (criterios.titulo === undefined || contiene(libro.titulo, criterios.titulo))
+    && (criterios.autor === undefined || contiene(libro.autor, criterios.autor))
+    && (criterios.categoria === undefined || contiene(libro.categoria, criterios.categoria))
+    && (criterios.disponible === undefined || libro.disponible === criterios.disponible)
+  ));
+}
+
+log("Probando préstamo de libro:");
+log(prestarLibro(1, 3, "2025-09-13"));    // true
+log(prestarLibro(1, 3, "2025-09-13"));    // ya no está disponible
+log(prestarLibro(99, 3, "2025-09-13"));   // libro inexistente
+log(prestarLibro(4, 1, "13/09/2025"));    // fecha inválida
+
+log("\\nLibros de Programación disponibles:");
+log(buscarLibros({ categoria: "Programación", disponible: true }).map((l) => l.titulo));
+
+log("\\nBuscando por autor 'john doe' (sin distinguir mayúsculas):");
+log(buscarLibros({ autor: "john doe" }).map((l) => l.titulo));
+
+log("\\nSin criterios: devuelve todos");
+log(buscarLibros().length + " libros");`
+},
+
+/* ---------------------------------------------------------------- */
+{
+  grupo: "2025sem2 · otro tipo de ejercicio",
+  id: "biblio-vesp",
+  titulo: "devolverLibro / listarLibrosPrestados",
+  origen: "parcial 2025sem2 vespertino · ej2",
+  firma: "devolverLibro(idLibro, idEstudiante, fecha) → true | string\nlistarLibrosPrestados(conDetalles) → object[]",
+  resumen: "La otra mitad del mismo sistema. Interesante por dos cosas: cómo se identifica un préstamo abierto (el que tiene fechaDevolucion en null) y cómo flatMap sirve para filtrar y transformar en una sola pasada.",
+  puntos: [
+    { t: "Un préstamo abierto es el que tiene fechaDevolucion en null", d: "<code>libro.prestamos.find((p) =&gt; p.estudiante === nombre &amp;&amp; p.fechaDevolucion === null)</code>. Un libro puede tener varios préstamos históricos: el abierto es uno solo." },
+    { t: "flatMap = filtrar y transformar de una", d: "Devolvés <code>[]</code> para descartar el elemento y <code>[algo]</code> para incluirlo transformado. Evita hacer <code>.filter().map()</code> repitiendo el <code>find</code> dos veces." },
+    { t: "Comparar fechas ISO como strings funciona", d: "<code>\"2025-09-13\" &lt; \"2025-10-01\"</code> es <code>true</code>. El formato YYYY-MM-DD está pensado para eso. No hace falta <code>new Date()</code>." },
+    { t: "Quitar de un array sin mutar", d: "<code>estudiante.librosActuales = estudiante.librosActuales.filter((id) =&gt; id !== idLibro)</code>. Reasignás en vez de usar <code>splice</code>: más simple y sin índices." },
+    { t: "Parámetro opcional con valor por defecto", d: "<code>function listar(conDetalles = false)</code>. Así <code>listar()</code> y <code>listar(false)</code> hacen lo mismo." },
+  ],
+  archivos: [
+    { nombre: "ejercicio_biblioteca.js", codigo:
+`import bibliotecaData from './datos_biblioteca.json' with { type: 'json' };
+
+const biblioteca = { ...bibliotecaData };
+
+/**
+ * 1. Función para devolver un libro
+ * @return {boolean|string} - true si se devolvió, mensaje de error si no
+ */
+function devolverLibro(idLibro, idEstudiante, fechaDevolucion) {
+  const libro = biblioteca.libros.find((l) => l.id === idLibro);
+  if (!libro) {
+    return \`Error: no existe un libro con id \${idLibro}.\`;
+  }
+
+  const estudiante = biblioteca.estudiantes.find((e) => e.id === idEstudiante);
+  if (!estudiante) {
+    return \`Error: no existe un estudiante con id \${idEstudiante}.\`;
+  }
+
+  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(fechaDevolucion)) {
+    return \`Error: la fecha "\${fechaDevolucion}" no tiene el formato YYYY-MM-DD.\`;
+  }
+
+  // EL PRÉSTAMO ABIERTO es el que tiene fechaDevolucion en null.
+  // Un libro puede tener varios préstamos históricos; el abierto es uno solo.
+  const prestamo = libro.prestamos.find((p) => (
+    p.estudiante === estudiante.nombre && p.fechaDevolucion === null
+  ));
+  if (!prestamo) {
+    return \`Error: \${estudiante.nombre} no tiene prestado "\${libro.titulo}".\`;
+  }
+
+  // Las fechas ISO (YYYY-MM-DD) se comparan como strings sin problema.
+  if (fechaDevolucion < prestamo.fechaPrestamo) {
+    return \`Error: la devolución no puede ser anterior al préstamo (\${prestamo.fechaPrestamo}).\`;
+  }
+
+  prestamo.fechaDevolucion = fechaDevolucion;
+  libro.disponible = true;
+  // Quitar del array reasignando el filtrado: más simple que splice.
+  estudiante.librosActuales = estudiante.librosActuales.filter((id) => id !== idLibro);
+
+  return true;
+}
+
+/**
+ * 2. Función para listar libros prestados actualmente
+ * @param {boolean} incluirDetallesEstudiante - Si es true, incluir datos del estudiante
+ * @return {array} - Lista de libros prestados
+ */
+function listarLibrosPrestados(incluirDetallesEstudiante = false) {
+  // flatMap: devolver [] descarta el elemento, devolver [x] lo incluye.
+  // Filtra y transforma en UNA sola pasada.
+  return biblioteca.libros
+    .flatMap((libro) => {
+      const prestamo = libro.prestamos.find((p) => p.fechaDevolucion === null);
+      if (!prestamo) {
+        return [];              // este libro no está prestado: fuera
+      }
+
+      const info = {
+        id: libro.id,
+        titulo: libro.titulo,
+        autor: libro.autor,
+        categoria: libro.categoria,
+        fechaPrestamo: prestamo.fechaPrestamo,
+      };
+
+      if (!incluirDetallesEstudiante) {
+        return [info];
+      }
+
+      const estudiante = biblioteca.estudiantes
+        .find((e) => e.nombre === prestamo.estudiante);
+
+      return [{
+        ...info,                // spread: copia todo lo de info y agrega más
+        estudiante: estudiante
+          ? { id: estudiante.id, nombre: estudiante.nombre, carrera: estudiante.carrera }
+          : { nombre: prestamo.estudiante },
+      }];
+    });
+}
+
+console.log("Listando libros prestados (sin detalles):");
+console.log(listarLibrosPrestados());
+
+console.log("\\nProbando devolución de libro:");
+console.log(devolverLibro(2, 1, "2025-09-13"));   // true
+console.log(devolverLibro(2, 1, "2025-09-13"));   // ya fue devuelto
+console.log(devolverLibro(5, 2, "2025-09-13"));   // no lo tiene ese estudiante` },
+    { nombre: "datos_biblioteca.json", lenguaje: "json", codigo: BIBLIOTECA_JSON },
+  ],
+  ejecutar:
+`const biblioteca = ${BIBLIOTECA_JSON};
+
+function devolverLibro(idLibro, idEstudiante, fechaDevolucion) {
+  const libro = biblioteca.libros.find((l) => l.id === idLibro);
+  if (!libro) return \`Error: no existe un libro con id \${idLibro}.\`;
+  const estudiante = biblioteca.estudiantes.find((e) => e.id === idEstudiante);
+  if (!estudiante) return \`Error: no existe un estudiante con id \${idEstudiante}.\`;
+  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(fechaDevolucion))
+    return \`Error: la fecha "\${fechaDevolucion}" no tiene el formato YYYY-MM-DD.\`;
+
+  const prestamo = libro.prestamos.find((p) =>
+    p.estudiante === estudiante.nombre && p.fechaDevolucion === null);
+  if (!prestamo) return \`Error: \${estudiante.nombre} no tiene prestado "\${libro.titulo}".\`;
+  if (fechaDevolucion < prestamo.fechaPrestamo)
+    return \`Error: la devolución no puede ser anterior al préstamo (\${prestamo.fechaPrestamo}).\`;
+
+  prestamo.fechaDevolucion = fechaDevolucion;
+  libro.disponible = true;
+  estudiante.librosActuales = estudiante.librosActuales.filter((id) => id !== idLibro);
+  return true;
+}
+
+function listarLibrosPrestados(conDetalles = false) {
+  return biblioteca.libros.flatMap((libro) => {
+    const prestamo = libro.prestamos.find((p) => p.fechaDevolucion === null);
+    if (!prestamo) return [];
+    const info = { id: libro.id, titulo: libro.titulo, fechaPrestamo: prestamo.fechaPrestamo };
+    if (!conDetalles) return [info];
+    const est = biblioteca.estudiantes.find((e) => e.nombre === prestamo.estudiante);
+    return [{ ...info, estudiante: est ? { nombre: est.nombre, carrera: est.carrera } : { nombre: prestamo.estudiante } }];
+  });
+}
+
+log("Libros prestados ahora mismo:");
+log(listarLibrosPrestados());
+
+log("\\nCon detalles del estudiante:");
+log(listarLibrosPrestados(true));
+
+log("\\nDevoluciones:");
+log(devolverLibro(2, 1, "2025-09-13"));   // true
+log(devolverLibro(2, 1, "2025-09-13"));   // ya fue devuelto
+log(devolverLibro(5, 2, "2025-09-13"));   // no lo tiene ese estudiante
+log(devolverLibro(5, 3, "2025-01-01"));   // fecha anterior al préstamo
+
+log("\\nDespués de devolver, quedan prestados:");
+log(listarLibrosPrestados().map((l) => l.titulo));`
+},
+
+/* ---------------------------------------------------------------- */
+{
+  grupo: "2025sem2 · otro tipo de ejercicio",
+  id: "genexp",
+  titulo: "genExp",
+  origen: "simulacro 2025sem2 · ej02",
+  firma: "genExp(result) → { operator, left, right }",
+  resumen: "El más raro de todos: hay que GENERAR datos, no filtrarlos. Dado un resultado, devolver una expresión aritmética aleatoria que dé ese resultado. No traía tests (es aleatorio), pero se testea igual: en vez de comparar la salida exacta, comprobás una PROPIEDAD (que la expresión evaluada dé el número pedido), muchas veces.",
+  puntos: [
+    { t: "Invertí la operación", d: "Para que <code>left + right = result</code>: elegís <code>left</code> al azar y <code>right = result - left</code>. Para la resta: elegís <code>right</code> y <code>left = result + right</code>. Para la división: elegís <code>right</code> y <code>left = result * right</code>. Siempre despejás." },
+    { tipo: "trampa", t: "La multiplicación necesita divisores", d: "Para <code>left * right = result</code> con enteros, <code>left</code> tiene que ser un DIVISOR de <code>result</code>. Si elegís al azar te salen decimales. Y con <code>result = 0</code> todo número es divisor: hay que descartar <code>*</code> y <code>/</code> en ese caso." },
+    { t: "Random en un rango", d: "<code>min + Math.floor(Math.random() * (max - min + 1))</code> da un entero entre min y max, ambos incluidos. <code>Math.random()</code> devuelve [0, 1), nunca llega a 1." },
+    { t: "Elegir un elemento al azar de un array", d: "<code>arr[Math.floor(Math.random() * arr.length)]</code>. Es el mismo cálculo, con <code>min = 0</code> y <code>max = length - 1</code>." },
+    { t: "Testear algo aleatorio", d: "No podés comparar con un valor esperado. Testeás la propiedad: generás 200 veces y verificás que <code>evalExp(genExp(n)) === n</code> siempre. Es un buen hábito aunque no te lo pidan." },
+  ],
+  archivos: [
+    { nombre: "ej02.js", codigo:
+`/*
+# Ejercicio 02.
+
+Se necesita generar expresiones aritméticas simples aleatorias para una app web
+de matemáticas. Las expresiones pueden ser sumas, restas, multiplicaciones o
+divisiones entre números.
+
+Se debe implementar la función de generación genExp, que toma un resultado y
+retorna una expresión aleatoria. Por ejemplo:
+
++ genExp(5)  = { operator: '+', left: 2,  right: 3 }
++ genExp(6)  = { operator: '*', left: 2,  right: 3 }
++ genExp(11) = { operator: '-', left: 20, right: 9 }
++ genExp(2)  = { operator: '/', left: 8,  right: 4 }
+
+Sugerencia: Usar \`Math.random()\` para generar números aleatorios.
+*/
+
+const OPERATORS = ['+', '-', '*', '/'];
+
+/* Entero aleatorio en [min, max] (ambos incluidos). */
+function randomInt(min, max) {
+  return min + Math.floor(Math.random() * (max - min + 1));
+}
+
+/* Divisores de n: necesarios para que la multiplicación dé exacta. */
+function divisors(n) {
+  const result = [];
+  for (let i = 1; i <= Math.abs(n); i += 1) {
+    if (n % i === 0) {
+      result.push(i);
+    }
+  }
+  return result;
+}
+
+export function genExp(result) {
+  if (!Number.isInteger(result)) {
+    throw new TypeError('genExp espera un número entero.');
+  }
+
+  // Con 0 no se puede usar * ni / de forma interesante: se descartan.
+  const candidates = result === 0 ? ['+', '-'] : OPERATORS;
+  const operator = candidates[randomInt(0, candidates.length - 1)];
+
+  // EN TODOS LOS CASOS: se elige un operando al azar y se DESPEJA el otro.
+  switch (operator) {
+    case '+': {
+      // left + right = result  =>  right = result - left
+      const left = randomInt(1, Math.max(1, Math.abs(result)) * 2);
+      return { operator, left, right: result - left };
+    }
+    case '-': {
+      // left - right = result  =>  left = result + right
+      const right = randomInt(1, 20);
+      return { operator, left: result + right, right };
+    }
+    case '*': {
+      // left * right = result  =>  left tiene que ser DIVISOR de result
+      const divs = divisors(result);
+      const left = divs[randomInt(0, divs.length - 1)];
+      return { operator, left, right: result / left };
+    }
+    default: {
+      // left / right = result  =>  left = result * right (división exacta)
+      const right = randomInt(1, 10);
+      return { operator: '/', left: result * right, right };
+    }
+  }
+}
+
+/* Evalúa la expresión. Sirve para verificar lo generado. */
+export function evalExp({ operator, left, right }) {
+  switch (operator) {
+    case '+': return left + right;
+    case '-': return left - right;
+    case '*': return left * right;
+    case '/': return left / right;
+    default: throw new Error(\`Operador desconocido: \${operator}\`);
+  }
+}` },
+    { nombre: "ej02.test.js", codigo:
+`// El ejercicio original no traía tests: estos son propios.
+// Con algo aleatorio no podés comparar la salida exacta contra un valor
+// esperado. Lo que testeás es una PROPIEDAD, muchas veces.
+import assert from 'node:assert';
+import { genExp, evalExp } from './ej02.js';
+
+console.log('Ejecutando tests para genExp...');
+
+for (const target of [0, 1, 2, 5, 6, 7, 11, 24, 100]) {
+  const vistos = new Set();
+
+  for (let i = 0; i < 200; i += 1) {
+    const exp = genExp(target);
+
+    assert.ok(['+', '-', '*', '/'].includes(exp.operator), 'operador válido');
+    assert.equal(Number.isInteger(exp.left), true, 'left entero');
+    assert.equal(Number.isInteger(exp.right), true, 'right entero');
+
+    // LA PROPIEDAD: evaluar lo generado tiene que dar el número pedido.
+    assert.equal(
+      evalExp(exp),
+      target,
+      \`\${exp.left} \${exp.operator} \${exp.right} debe dar \${target}\`,
+    );
+
+    vistos.add(exp.operator);
+  }
+
+  console.log(\`  \${target}: operadores generados -> \${[...vistos].sort().join(' ')}\`);
+}
+
+assert.throws(() => genExp('x'), 'debe fallar con un argumento no entero');
+
+console.log('Tests para genExp finalizados correctamente.');` },
+  ],
+  ejecutar:
+`const OPERATORS = ['+', '-', '*', '/'];
+function randomInt(min, max) { return min + Math.floor(Math.random() * (max - min + 1)); }
+function divisors(n) {
+  const r = [];
+  for (let i = 1; i <= Math.abs(n); i += 1) if (n % i === 0) r.push(i);
+  return r;
+}
+function genExp(result) {
+  if (!Number.isInteger(result)) throw new TypeError('genExp espera un número entero.');
+  const candidates = result === 0 ? ['+', '-'] : OPERATORS;
+  const operator = candidates[randomInt(0, candidates.length - 1)];
+  switch (operator) {
+    case '+': { const left = randomInt(1, Math.max(1, Math.abs(result)) * 2);
+                return { operator, left, right: result - left }; }
+    case '-': { const right = randomInt(1, 20);
+                return { operator, left: result + right, right }; }
+    case '*': { const divs = divisors(result); const left = divs[randomInt(0, divs.length - 1)];
+                return { operator, left, right: result / left }; }
+    default:  { const right = randomInt(1, 10);
+                return { operator: '/', left: result * right, right }; }
+  }
+}
+function evalExp({ operator, left, right }) {
+  switch (operator) {
+    case '+': return left + right;
+    case '-': return left - right;
+    case '*': return left * right;
+    case '/': return left / right;
+    default: throw new Error('Operador desconocido: ' + operator);
+  }
+}
+
+log('Ejecutando tests para genExp...');
+for (const target of [0, 1, 2, 5, 6, 7, 11, 24, 100]) {
+  const vistos = new Set();
+  const muestra = [];
+  for (let i = 0; i < 200; i += 1) {
+    const exp = genExp(target);
+    assert.ok(['+','-','*','/'].includes(exp.operator), 'operador válido');
+    assert.equal(Number.isInteger(exp.left), true, 'left entero');
+    assert.equal(Number.isInteger(exp.right), true, 'right entero');
+    assert.equal(evalExp(exp), target, exp.left + ' ' + exp.operator + ' ' + exp.right + ' debe dar ' + target);
+    vistos.add(exp.operator);
+    if (muestra.length < 3) muestra.push(exp.left + ' ' + exp.operator + ' ' + exp.right);
+  }
+  log('  ' + target + ': ' + [...vistos].sort().join(' ') + '   ej: ' + muestra.join(' | '));
+}
+assert.throws(() => genExp('x'), 'debe fallar con un argumento no entero');
+log('Tests para genExp finalizados correctamente.');
+log('(volvé a ejecutar: los números cambian, la propiedad se sigue cumpliendo)');`
+},
+
+  ],
+};
+
+/* ==========================================================================
+   TAB 2 — Validación de datos
+   ========================================================================== */
+const VALIDACION = {
+  id: "validacion",
+  tab: "Validación de datos",
+  ayuda: "Los tests te mandan basura a propósito para ver si tu función se rompe. Acá está qué validar y, sobre todo, CUÁNDO tirar error y cuándo no.",
+  items: [
+
+{
+  id: "val-cuando",
+  titulo: "Lo primero: ¿error o valor vacío?",
+  resumen: "La decisión que más gente falla. Los tests distinguen dos situaciones que parecen la misma: «el dato está mal formado» (→ arrojar error) y «el dato no existe / no coincide con nada» (→ devolver vacío). Si tratás las dos igual, fallás sí o sí.",
+  puntos: [
+    { tipo: "error", t: "Error: validar el segundo argumento", d: "En <code>modelosPorCapacidad</code> y <code>countriesForCurrency</code>, el test pide explícitamente que llamar SIN el segundo argumento devuelva <code>[]</code>. Si le ponés un <code>if (!capacidad) throw</code>, ese test falla." },
+    { t: "La regla práctica", d: "Arrojá error solo por el CONTENEDOR y por la FORMA de los elementos. Todo lo demás (que no haya coincidencias, que falte un criterio) es un resultado vacío legítimo." },
+    { t: "En 2025sem2 era al revés", d: "En el ejercicio de la biblioteca no se arrojaba nada: los errores se DEVOLVÍAN como string. Leé la firma que te dan en el comentario antes de decidir." },
+  ],
+  archivos: [
+    { nombre: "cuando-fallar.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   CUÁNDO ARROJAR ERROR Y CUÁNDO DEVOLVER VACÍO
+   ══════════════════════════════════════════════════════════════ */
+
+export function modelosPorCapacidad(data, capacidad) {
+
+  // ✅ ERROR: el contenedor no es lo que dijeron que iba a ser.
+  if (!Array.isArray(data)) {
+    throw new TypeError("El primer argumento debe ser un array.");
+  }
+
+  const siglas = [];
+
+  for (const modelo of data) {
+    // ✅ ERROR: un elemento no tiene la forma prometida.
+    if (typeof modelo?.sigla !== "string" || !Array.isArray(modelo?.capacidades)) {
+      throw new TypeError("Cada modelo debe tener sigla y capacidades.");
+    }
+
+    // ✅ VACÍO: si la capacidad es undefined, includes da false
+    //    y simplemente no entra ninguno. Eso es un resultado válido.
+    if (modelo.capacidades.includes(capacidad)) {
+      siglas.push(modelo.sigla);
+    }
+  }
+
+  return siglas;
+}
+
+/* ❌ EL ERROR QUE ROMPE EL TEST:
+
+     if (typeof capacidad !== "string") {
+       throw new TypeError("Falta la capacidad.");    // ← NO
+     }
+
+   Porque el test pide exactamente esto:
+
+     assert.deepEqual(modelosPorCapacidad(modelos), []);
+
+   "No me pasaron con qué filtrar" NO es un dato mal formado:
+   es un filtro que no matchea nada. Resultado: arreglo vacío.  */` },
+    { nombre: "resumen.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   TABLA DE DECISIÓN
+   ══════════════════════════════════════════════════════════════
+
+   ┌───────────────────────────────────┬──────────────────────┐
+   │ Situación                         │ Qué hacer            │
+   ├───────────────────────────────────┼──────────────────────┤
+   │ data es undefined / null          │ throw                │
+   │ data no es un array               │ throw                │
+   │ un elemento no es objeto          │ throw                │
+   │ a un elemento le falta una prop.  │ throw                │
+   │   requerida por el enunciado      │                      │
+   ├───────────────────────────────────┼──────────────────────┤
+   │ data es [] (array vacío)          │ devolver [] o {}     │
+   │ no pasaron el 2º argumento        │ devolver [] o {}     │
+   │ ningún elemento coincide          │ devolver []          │
+   └───────────────────────────────────┴──────────────────────┘
+
+   Y el caso raro que apareció en fieldListToObject:
+
+   ┌───────────────────────────────────┬──────────────────────┐
+   │ al elemento le falta 'field'      │ SALTEARLO (no throw) │
+   │ al elemento le falta 'value'      │ INCLUIRLO undefined  │
+   └───────────────────────────────────┴──────────────────────┘
+
+   → No hay una regla universal. La regla es: LEÉ EL TEST.        */` },
+  ],
+  ejecutar:
+`function malo(data, capacidad) {
+  if (!Array.isArray(data)) throw new TypeError("array!");
+  if (typeof capacidad !== "string") throw new TypeError("capacidad!");   // ← el error
+  return data.filter((m) => m.capacidades.includes(capacidad)).map((m) => m.sigla);
+}
+
+function bueno(data, capacidad) {
+  if (!Array.isArray(data)) throw new TypeError("array!");
+  return data.filter((m) => m.capacidades.includes(capacidad)).map((m) => m.sigla);
+}
+
+const modelos = [{ sigla: "GPT", capacidades: ["texto"] }];
+
+log("— versión que valida el 2º argumento —");
+try {
+  log("sin capacidad: " + JSON.stringify(malo(modelos)));
+} catch (e) {
+  log("sin capacidad: EXPLOTÓ -> " + e.message + "   ❌ el test esperaba []");
+}
+
+log("");
+log("— versión correcta —");
+log("sin capacidad: " + JSON.stringify(bueno(modelos)) + "   ✔");
+log("con capacidad: " + JSON.stringify(bueno(modelos, "texto")) + "   ✔");
+
+log("");
+assert.deepEqual(bueno(modelos), [], "sin 2º argumento debe dar []");
+assert.throws(() => bueno(undefined, "texto"), "data inválida debe fallar");
+log("Los dos asserts del test pasan.");`
+},
+
+{
+  id: "val-tipos",
+  titulo: "Validar tipos: el catálogo completo",
+  resumen: "Todas las comprobaciones que vas a necesitar, con las trampas de cada una. La más importante: typeof null devuelve \"object\", así que preguntar solo por typeof nunca alcanza.",
+  puntos: [
+    { tipo: "trampa", t: "typeof null === \"object\"", d: "Es el bug histórico de JavaScript. Toda comprobación de objeto tiene que ser <code>typeof x === \"object\" && x !== null</code>, o usar <code>x?.prop</code>." },
+    { tipo: "trampa", t: "typeof [] también es \"object\"", d: "Para arrays hay una función específica: <code>Array.isArray(x)</code>. No existe un <code>typeof</code> que te diga «array»." },
+    { t: "El encadenamiento opcional te ahorra la mitad", d: "<code>typeof item?.sigla !== \"string\"</code> cubre a la vez que <code>item</code> sea null/undefined y que <code>sigla</code> no sea string. Si <code>item</code> es null, <code>item?.sigla</code> da <code>undefined</code> y no explota." },
+    { t: "== null cubre null y undefined", d: "<code>x == null</code> (dos iguales) es <code>true</code> para <code>null</code> y para <code>undefined</code>, y para nada más. Es el único caso donde conviene <code>==</code>." },
+  ],
+  archivos: [
+    { nombre: "validaciones.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   CATÁLOGO DE VALIDACIONES
+   ══════════════════════════════════════════════════════════════ */
+
+// ── ¿Es un array? ───────────────────────────────────────────────
+Array.isArray(data)                 // ✅ la única forma correcta
+typeof data === "object"            // ❌ los arrays también son "object"
+
+// ── ¿Es un objeto de verdad? ───────────────────────────────────
+typeof x === "object" && x !== null // ✅
+typeof x === "object"               // ❌ typeof null === "object"
+
+// ── ¿Es un string / número / booleano? ─────────────────────────
+typeof x === "string"
+typeof x === "number"               // OJO: NaN también es "number"
+typeof x === "boolean"
+Number.isInteger(x)                 // entero de verdad
+Number.isFinite(x)                  // número y no NaN ni Infinity
+
+// ── ¿Es null o undefined? ──────────────────────────────────────
+x === null || x === undefined       // explícito
+x == null                           // ✅ equivalente, con == a propósito
+!x                                  // ❌ también es true para 0, "" y false
+
+// ── ¿Tiene la propiedad? ───────────────────────────────────────
+"field" in item                     // incluye las heredadas del prototipo
+Object.hasOwn(item, "field")        // ✅ solo las propias (lo más preciso)
+item.field !== undefined            // ❌ falla si el valor ES undefined
+
+// ── Encadenamiento opcional: dos chequeos en uno ───────────────
+typeof item?.sigla !== "string"
+//         ↑ si item es null o undefined, esto da undefined
+//           en vez de explotar con "cannot read property of null"
+
+// ── La validación completa de un elemento del parcial ──────────
+if (
+  typeof item !== "object" || item === null
+  || typeof item.sigla !== "string"
+  || !Array.isArray(item.capacidades)
+) {
+  throw new TypeError("Formato inválido.");
+}
+
+// La misma, corta:
+if (typeof item?.sigla !== "string" || !Array.isArray(item?.capacidades)) {
+  throw new TypeError("Formato inválido.");
+}` },
+    { nombre: "trampas.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   LOS VALORES QUE ENGAÑAN
+   ══════════════════════════════════════════════════════════════ */
+
+typeof null          // "object"   ← el bug histórico de JS
+typeof []            // "object"
+typeof {}            // "object"
+typeof undefined     // "undefined"
+typeof NaN           // "number"
+typeof function(){}  // "function"
+
+// ── Los 8 valores "falsy": !x es true para TODOS ──────────────
+false, 0, -0, 0n, "", null, undefined, NaN
+
+// Por eso esto es peligroso:
+if (!cantidad) { ... }       // ❌ entra también con cantidad = 0
+if (cantidad == null) { ... } // ✅ solo con null/undefined
+
+// ── NaN no es igual a nada, ni a sí mismo ────────────────────
+NaN === NaN          // false
+Number.isNaN(NaN)    // true   ← la forma correcta
+
+// ── Comparar arrays u objetos con === NO funciona ────────────
+[1, 2] === [1, 2]    // false: son dos objetos distintos en memoria
+// Por eso los tests usan assert.deepEqual y no assert.equal.
+
+// ── Coerción con == (por eso se usa === siempre) ─────────────
+0 == ""              // true
+0 == "0"             // true
+"" == "0"            // false
+null == undefined    // true    ← la ÚNICA excepción útil
+null === undefined   // false` },
+  ],
+  ejecutar:
+`log("typeof null          -> " + typeof null + "     ← por esto siempre va el !== null");
+log("typeof []            -> " + typeof [] + "     ← por esto existe Array.isArray");
+log("Array.isArray([])    -> " + Array.isArray([]));
+log("Array.isArray(null)  -> " + Array.isArray(null));
+log("typeof NaN           -> " + typeof NaN);
+log("NaN === NaN          -> " + (NaN === NaN));
+log("[1,2] === [1,2]      -> " + ([1,2] === [1,2]) + "  ← por esto los tests usan deepEqual");
+log("");
+log("== null cubre los dos casos y nada más:");
+for (const v of [null, undefined, 0, "", false, NaN, [], {}]) {
+  log("  " + String(JSON.stringify(v)).padEnd(10) + " == null  -> " + (v == null));
+}
+log("");
+log("!x en cambio es true para todos los falsy:");
+for (const v of [null, undefined, 0, "", false, NaN]) {
+  log("  " + String(JSON.stringify(v)).padEnd(10) + " !x        -> " + (!v));
+}
+log("");
+const item = null;
+log("Encadenamiento opcional sobre null:");
+log("  item?.sigla  -> " + item?.sigla + "   (no explota)");
+try { log("  item.sigla   -> " + item.sigla); }
+catch (e) { log("  item.sigla   -> EXPLOTA: " + e.message); }`
+},
+
+{
+  id: "val-propiedad",
+  titulo: "¿Tiene la propiedad? Las 4 formas y cuál usar",
+  resumen: "Aparece en dos parciales seguidos, y en cada uno la respuesta correcta es distinta: en fieldListToObject hay que preguntar si existe la clave, y en countriesForCurrency hay que buscar una clave dentro de un objeto de datos.",
+  puntos: [
+    { t: "in — la más directa", d: "<code>\"field\" in item</code>. Devuelve <code>true</code> aunque el valor sea <code>undefined</code>. Es la que resuelve <code>fieldListToObject</code>." },
+    { t: "Object.hasOwn — la más precisa", d: "<code>Object.hasOwn(obj, clave)</code>. Igual que <code>in</code> pero ignora lo heredado del prototipo. Es la que usa la solución de <code>countriesForCurrency</code>." },
+    { tipo: "trampa", t: "!== undefined no es equivalente", d: "<code>{ field: undefined }</code> tiene la propiedad <code>field</code>, pero <code>obj.field !== undefined</code> da <code>false</code>. En el test de <code>fieldListToObject</code> esa diferencia importa." },
+    { t: "Object.keys(...).includes(...) funciona pero es caro", d: "Construye un array entero solo para preguntar por una clave. Sirve, pero preferí <code>in</code> o <code>hasOwn</code>." },
+  ],
+  archivos: [
+    { nombre: "tener-propiedad.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   ¿EL OBJETO TIENE ESTA PROPIEDAD?
+   ══════════════════════════════════════════════════════════════ */
+
+const obj = { a: 1, b: undefined };
+
+"a" in obj                        // true
+"b" in obj                        // true   ← existe, aunque valga undefined
+"c" in obj                        // false
+
+Object.hasOwn(obj, "b")           // true   (lo mismo, sin el prototipo)
+obj.b !== undefined               // false  ← ¡DISTINTO!
+Object.keys(obj).includes("b")    // true   (funciona, pero crea un array)
+
+/* ══════════════════════════════════════════════════════════════
+   DÓNDE IMPORTÓ ESTO EN LOS PARCIALES
+   ══════════════════════════════════════════════════════════════ */
+
+// ── fieldListToObject (simulacro 2026sem1) ──────────────────────
+// El test manda { field: "yes", valeu: 1 } (typo a propósito)
+// y espera { yes: undefined }.
+//
+// Es decir: hay que preguntar por 'field' pero NO por 'value'.
+
+if (item !== null && item !== undefined && "field" in item) {
+  result[item.field] = item.value;   // si no hay value, queda undefined ✔
+}
+
+// ── countriesForCurrency (prueba 2026sem1) ──────────────────────
+// currencies es un OBJETO cuyas claves son los códigos de moneda:
+//    { "UYU": { name: "Uruguayan peso", symbol: "$" } }
+//
+// includes NO sirve: no es un array.
+
+Object.hasOwn(country.currencies, currency)   // ✅
+currency in country.currencies                // ✅ equivalente acá
+country.currencies.includes(currency)         // ❌ TypeError: no es función
+
+// ── modelosPorCapacidad (simulacro 2026sem2) ────────────────────
+// capacidades SÍ es un array de strings:
+//    ["texto", "codigo", "razonamiento"]
+
+modelo.capacidades.includes(capacidad)        // ✅ acá sí` },
+  ],
+  ejecutar:
+`const obj = { a: 1, b: undefined };
+log('const obj = { a: 1, b: undefined }');
+log('');
+log('"b" in obj                     -> ' + ("b" in obj));
+log('Object.hasOwn(obj, "b")        -> ' + Object.hasOwn(obj, "b"));
+log('obj.b !== undefined            -> ' + (obj.b !== undefined) + '   ← ¡distinto!');
+log('Object.keys(obj).includes("b") -> ' + Object.keys(obj).includes("b"));
+log('');
+log('Por eso el test de fieldListToObject distingue:');
+const conField = { field: "yes", valeu: 1 };   // typo a propósito
+const sinField = { filed: "no", value: 1 };    // typo a propósito
+log('  { field: "yes", valeu: 1 }  ->  "field" in item = ' + ("field" in conField) + '  -> se incluye');
+log('  { filed: "no",  value: 1 }  ->  "field" in item = ' + ("field" in sinField) + ' -> se descarta');
+log('');
+const currencies = { UYU: { name: "Uruguayan peso" } };
+log('currencies = { UYU: {...} }   ← es un OBJETO, no un array');
+log('Object.hasOwn(currencies, "UYU") -> ' + Object.hasOwn(currencies, "UYU"));
+log('"UYU" in currencies              -> ' + ("UYU" in currencies));
+try { currencies.includes("UYU"); }
+catch (e) { log('currencies.includes("UYU")       -> ' + e.message); }
+log('');
+const capacidades = ["texto", "codigo"];
+log('capacidades = ["texto", "codigo"]   ← esto SÍ es un array');
+log('capacidades.includes("codigo")   -> ' + capacidades.includes("codigo"));`
+},
+
+{
+  id: "val-explotar",
+  titulo: "Dejar que explote solo vs. validar explícito",
+  resumen: "assert.throws no mira QUÉ error tirás, solo que tires alguno. Eso abre una puerta: muchas veces JavaScript ya explota por vos. Saber cuándo pasa te ahorra código, pero conviene entender el riesgo.",
+  puntos: [
+    { t: "assert.throws acepta cualquier error", d: "<code>Error</code>, <code>TypeError</code>, <code>RangeError</code>, el que sea. Incluso el que tira el motor solo. El segundo argumento del assert es solo el mensaje que se imprime si falla." },
+    { t: "Qué explota solo", d: "<code>undefined.filter(...)</code> tira <code>TypeError</code>. <code>null.x</code> también. <code>for (const x of undefined)</code> también. Ahí no hace falta que valides." },
+    { tipo: "trampa", t: "Qué NO explota solo", d: "<code>[].filter(...)</code> sobre un array vacío devuelve <code>[]</code> tranquilamente. Y <code>({}).sigla</code> da <code>undefined</code> sin quejarse. Los elementos mal formados NO explotan solos: esos SÍ hay que validarlos." },
+    { t: "Recomendación", d: "Validá explícito. Se lee mejor, el mensaje de error sirve para debuggear, y no dependés de que un método concreto explote. La solución oficial de <code>countriesForCurrency</code> usa las dos técnicas mezcladas." },
+  ],
+  archivos: [
+    { nombre: "explota-solo.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   ¿QUÉ EXPLOTA SOLO Y QUÉ NO?
+   ══════════════════════════════════════════════════════════════ */
+
+// ── SÍ explota solo ────────────────────────────────────────────
+undefined.filter((x) => x)     // TypeError: Cannot read properties of undefined
+null.length                    // TypeError
+for (const x of undefined) {}  // TypeError: undefined is not iterable
+undefined.capacidades.includes // TypeError
+
+// → Si data es undefined o null, data.filter(...) YA tira TypeError.
+//   assert.throws se da por satisfecho.
+
+// ── NO explota solo ────────────────────────────────────────────
+[].filter((x) => x)            // []           ← array vacío, todo bien
+({}).sigla                     // undefined    ← no se queja
+({}).capacidades               // undefined
+[{}].map((x) => x.sigla)       // [undefined]  ← ¡pasa sin error!
+
+// → Por eso el test manda [{}]: es un array VÁLIDO con un elemento
+//   INVÁLIDO. Nada explota solo. Esa validación la tenés que escribir vos.
+
+/* ══════════════════════════════════════════════════════════════
+   LAS DOS ESTRATEGIAS
+   ══════════════════════════════════════════════════════════════ */
+
+// ── A. Dejar que explote (lo que hace la solución oficial) ─────
+export function countriesForCurrency(data, currency) {
+  return data                       // ← si data es null/undefined, explota acá
+    .filter((country) => {
+      if (typeof country?.cca2 !== "string") {
+        throw new TypeError("...");  // ← esto SÍ hay que escribirlo
+      }
+      return Object.hasOwn(country.currencies, currency);
+    })
+    .map((country) => country.cca2);
+}
+
+// ── B. Validar todo explícito (más claro) ──────────────────────
+export function countriesForCurrency(data, currency) {
+  if (!Array.isArray(data)) {
+    throw new TypeError("El primer argumento debe ser un array de países.");
+  }
+  ...
+}
+
+// Las dos pasan los tests. B se lee mejor y te da mejores mensajes
+// cuando algo falla de verdad.` },
+  ],
+  ejecutar:
+`log("— cosas que explotan solas —");
+for (const [txt, fn] of [
+  ["undefined.filter(x => x)", () => undefined.filter((x) => x)],
+  ["null.length",              () => null.length],
+  ["for (const x of undefined)", () => { for (const x of undefined) {} }],
+]) {
+  try { fn(); log("  " + txt.padEnd(28) + " -> no explotó (?)"); }
+  catch (e) { log("  " + txt.padEnd(28) + " -> " + e.constructor.name); }
+}
+
+log("");
+log("— cosas que NO explotan (y por eso hay que validarlas) —");
+log("  [].filter(x => x)            -> " + JSON.stringify([].filter((x) => x)));
+log("  ({}).sigla                   -> " + ({}).sigla);
+log("  [{}].map(x => x.sigla)       -> " + JSON.stringify([{}].map((x) => x.sigla)));
+
+log("");
+log("Por eso el test manda [{}]: array válido, elemento inválido.");
+log("Nada explota solo, la validación la escribís vos.");
+
+log("");
+const sinValidar = (data) => data.map((m) => m.sigla);
+assert.throws(() => sinValidar(undefined), "undefined explota solo");
+log("assert.throws(() => sinValidar(undefined))  -> pasa ✔  (explotó solo)");
+try {
+  assert.throws(() => sinValidar([{}]), "elemento inválido");
+  log("assert.throws(() => sinValidar([{}]))      -> pasa");
+} catch (e) {
+  log("assert.throws(() => sinValidar([{}]))      -> FALLA ❌  " + e.message);
+}`
+},
+
+  ],
+};
+
+/* ==========================================================================
+   TAB 3 — Recorrer y filtrar listas
+   ========================================================================== */
+const RECORRER = {
+  id: "recorrer",
+  tab: "Recorrer y filtrar",
+  ayuda: "El núcleo del ejercicio: recorrer un array buscando los elementos que cumplen algo y quedarte con una parte de cada uno.",
+  items: [
+
+{
+  id: "rec-patron",
+  titulo: "El patrón: filtrar y después quedarse con una parte",
+  resumen: "Los tres ej02 de 2026 son la misma frase: «de esta lista, dame la propiedad X de los elementos que cumplen Y». Son SIEMPRE dos operaciones: una que decide quién entra y otra que decide qué se devuelve de cada uno.",
+  puntos: [
+    { t: "filter decide quién, map decide qué", d: "<code>data.filter(cumple).map(sacarLaParte)</code>. Si lo hacés todo en un <code>map</code> te quedan <code>undefined</code> en el resultado; si lo hacés todo en un <code>filter</code> devolvés los objetos enteros." },
+    { t: "for...of hace lo mismo en una pasada", d: "Recorrés, y si cumple hacés <code>push</code> de la parte que querés. Más largo, pero más fácil de debuggear y de meterle validaciones en el medio." },
+    { t: "El orden se conserva solo", d: "Tanto <code>filter</code> como <code>map</code> como <code>for...of</code> respetan el orden original. Como el test usa <code>deepEqual</code>, no ordenes nada que no te hayan pedido." },
+    { tipo: "trampa", t: "map NO filtra", d: "<code>data.map((m) =&gt; m.ok ? m.sigla : null)</code> devuelve un array del mismo largo con <code>null</code> adentro. Si querés filtrar y transformar en una sola pasada, eso es <code>flatMap</code>." },
+  ],
+  archivos: [
+    { nombre: "el-patron.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   «DE ESTA LISTA, DAME LA PROPIEDAD X DE LOS QUE CUMPLEN Y»
+   ══════════════════════════════════════════════════════════════ */
+
+// ── Versión con métodos (la más corta) ─────────────────────────
+export function modelosPorCapacidad(data, capacidad) {
+  return data
+    .filter((m) => m.capacidades.includes(capacidad))   // quién entra
+    .map((m) => m.sigla);                               // qué se devuelve
+}
+
+// ── Versión con for...of (la más fácil de debuggear) ───────────
+export function modelosPorCapacidad(data, capacidad) {
+  const siglas = [];
+  for (const m of data) {
+    if (m.capacidades.includes(capacidad)) {
+      siglas.push(m.sigla);
+    }
+  }
+  return siglas;
+}
+
+// ── Versión con flatMap (una sola pasada) ──────────────────────
+export function modelosPorCapacidad(data, capacidad) {
+  return data.flatMap((m) =>
+    m.capacidades.includes(capacidad) ? [m.sigla] : []
+  );
+}
+
+/* ❌ EL ERROR: hacerlo todo en un map
+
+     data.map((m) => m.capacidades.includes(capacidad) ? m.sigla : null)
+     // -> ["GPT", null, null, null, "GRK", ...]
+
+   map SIEMPRE devuelve un array del MISMO LARGO que el original.
+   No sirve para filtrar.                                          */
+
+/* ❌ EL OTRO ERROR: quedarse solo con el filter
+
+     data.filter((m) => m.capacidades.includes(capacidad))
+     // -> [{sigla: "GPT", nombre: "ChatGPT", ...}, ...]
+
+   Devuelve los objetos enteros. El test espera solo las siglas.   */` },
+    { nombre: "elegir-metodo.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   QUÉ MÉTODO USAR SEGÚN LO QUE PIDAN
+   ══════════════════════════════════════════════════════════════
+
+   ┌──────────────────────────────────┬─────────────┬────────────┐
+   │ "dame..."                        │ método      │ devuelve   │
+   ├──────────────────────────────────┼─────────────┼────────────┤
+   │ los que cumplen                  │ filter      │ array      │
+   │ una parte de cada uno            │ map         │ array      │
+   │ los que cumplen, transformados   │ filter+map  │ array      │
+   │   o flatMap                      │             │            │
+   │ el primero que cumple            │ find        │ elem/undef │
+   │ la posición del primero          │ findIndex   │ nº o -1    │
+   │ ¿hay alguno que cumpla?          │ some        │ boolean    │
+   │ ¿cumplen todos?                  │ every       │ boolean    │
+   │ ¿está este valor?                │ includes    │ boolean    │
+   │ un total / un objeto / lo que sea│ reduce      │ cualquiera │
+   │ cuántos cumplen                  │ filter+length│ número    │
+   │ ordenados                        │ [...a].sort │ array      │
+   └──────────────────────────────────┴─────────────┴────────────┘
+
+   Todos menos sort/reverse/push/splice devuelven un array NUEVO
+   y no tocan el original.                                        */
+
+// Ejemplos con los datos del parcial:
+modelos.filter((m) => m.contexto > 200000)          // los grandes
+modelos.map((m) => m.sigla)                         // solo las siglas
+modelos.find((m) => m.sigla === "CLD")              // el objeto de Claude
+modelos.some((m) => m.capacidades.includes("audio"))// ¿alguno hace audio?
+modelos.every((m) => m.capacidades.includes("texto"))// ¿todos hacen texto?
+modelos.filter((m) => m.empresa === "Google").length // cuántos son de Google` },
+  ],
+  ejecutar:
+`const modelos = ${MODELOS_JSON};
+log("filter + map (correcto):");
+log(JSON.stringify(modelos.filter((m) => m.capacidades.includes("web")).map((m) => m.sigla)));
+log("");
+log("solo map (mal: mismo largo, con nulls):");
+log(JSON.stringify(modelos.map((m) => m.capacidades.includes("web") ? m.sigla : null)));
+log("");
+log("solo filter (mal: devuelve los objetos enteros):");
+log(JSON.stringify(modelos.filter((m) => m.capacidades.includes("web")).map((m) => Object.keys(m))[0]));
+log("");
+log("flatMap (correcto, una sola pasada):");
+log(JSON.stringify(modelos.flatMap((m) => m.capacidades.includes("web") ? [m.sigla] : [])));
+log("");
+log("— otros métodos sobre los mismos datos —");
+log("find CLD          -> " + modelos.find((m) => m.sigla === "CLD").nombre);
+log("find inexistente  -> " + modelos.find((m) => m.sigla === "XXX"));
+log("some audio        -> " + modelos.some((m) => m.capacidades.includes("audio")));
+log("every texto       -> " + modelos.every((m) => m.capacidades.includes("texto")));
+log("cuántos de texto  -> " + modelos.filter((m) => m.capacidades.includes("texto")).length);
+log("contexto > 200k   -> " + JSON.stringify(modelos.filter((m) => m.contexto > 200000).map((m) => m.sigla)));`
+},
+
+{
+  id: "rec-buscar",
+  titulo: "Buscar uno solo: find y el guard obligatorio",
+  resumen: "El patrón de la biblioteca 2025sem2 y de cualquier ejercicio con ids. find devuelve el elemento o undefined, y ese undefined es el que te rompe la línea siguiente si no lo chequeás.",
+  puntos: [
+    { t: "find devuelve el elemento o undefined", d: "Nunca <code>null</code>, nunca <code>-1</code>. El <code>if (!libro) return ...</code> inmediatamente después es obligatorio." },
+    { t: "Buscá por id con ===", d: "<code>libros.find((l) =&gt; l.id === idLibro)</code>. Con <code>==</code>, el id <code>3</code> y el string <code>\"3\"</code> matchean, y eso a veces es un bug escondido." },
+    { t: "findIndex si necesitás la posición", d: "Devuelve <code>-1</code> si no encuentra (no <code>undefined</code>). Sirve para <code>splice</code>, aunque casi siempre es mejor reasignar con <code>filter</code>." },
+    { t: "Buscar dentro de un sub-array", d: "En la biblioteca, el préstamo abierto se busca DENTRO del libro: <code>libro.prestamos.find((p) =&gt; p.fechaDevolucion === null)</code>. Dos <code>find</code> anidados es normal." },
+  ],
+  archivos: [
+    { nombre: "buscar.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   BUSCAR UN ELEMENTO POR ID
+   ══════════════════════════════════════════════════════════════ */
+
+const libro = biblioteca.libros.find((l) => l.id === idLibro);
+
+// EL GUARD ES OBLIGATORIO: si no encontró, libro es undefined
+// y la línea siguiente explota con "cannot read properties of undefined".
+if (!libro) {
+  return \`Error: no existe un libro con id \${idLibro}.\`;
+}
+
+// A partir de acá ya podés usar libro.titulo tranquilo.
+
+/* ══════════════════════════════════════════════════════════════
+   VALORES DE "NO ENCONTRÉ" SEGÚN EL MÉTODO
+   ══════════════════════════════════════════════════════════════
+
+   find        -> undefined
+   findIndex   -> -1
+   indexOf     -> -1
+   filter      -> []           (array vacío, nunca undefined)
+   includes    -> false
+
+   Cada uno se chequea distinto:                                   */
+
+if (!libro) { ... }                    // find
+if (indice === -1) { ... }             // findIndex / indexOf
+if (resultados.length === 0) { ... }   // filter
+
+/* ══════════════════════════════════════════════════════════════
+   BUSCAR DENTRO DE UN SUB-ARRAY (biblioteca 2025sem2)
+   ══════════════════════════════════════════════════════════════ */
+
+// Un libro tiene varios préstamos históricos.
+// El préstamo ABIERTO es el que todavía no tiene fecha de devolución.
+const prestamo = libro.prestamos.find((p) => (
+  p.estudiante === estudiante.nombre && p.fechaDevolucion === null
+));
+if (!prestamo) {
+  return \`Error: \${estudiante.nombre} no tiene prestado "\${libro.titulo}".\`;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   QUITAR UN ELEMENTO DE UN ARRAY
+   ══════════════════════════════════════════════════════════════ */
+
+// ✅ Reasignar el filtrado: simple, sin índices, sin mutar.
+estudiante.librosActuales = estudiante.librosActuales.filter((id) => id !== idLibro);
+
+// Alternativa con splice (muta, hay que buscar el índice primero):
+const i = estudiante.librosActuales.indexOf(idLibro);
+if (i !== -1) estudiante.librosActuales.splice(i, 1);` },
+  ],
+  ejecutar:
+`const biblioteca = ${BIBLIOTECA_JSON};
+
+log("find por id:");
+const libro = biblioteca.libros.find((l) => l.id === 3);
+log("  id 3  -> " + libro.titulo);
+const noExiste = biblioteca.libros.find((l) => l.id === 99);
+log("  id 99 -> " + noExiste);
+log("");
+log("Sin el guard, la línea siguiente explota:");
+try { log("  " + noExiste.titulo); }
+catch (e) { log("  " + e.message); }
+log("");
+log("Valores de 'no encontré':");
+log("  find      -> " + biblioteca.libros.find((l) => l.id === 99));
+log("  findIndex -> " + biblioteca.libros.findIndex((l) => l.id === 99));
+log("  filter    -> " + JSON.stringify(biblioteca.libros.filter((l) => l.id === 99)));
+log("  includes  -> " + [1,2,3].includes(99));
+log("");
+log("Buscar el préstamo abierto dentro de cada libro:");
+for (const l of biblioteca.libros) {
+  const p = l.prestamos.find((x) => x.fechaDevolucion === null);
+  log("  " + l.titulo.padEnd(34) + (p ? "prestado a " + p.estudiante : "libre"));
+}
+log("");
+log("Quitar un id de un array:");
+let ids = [2, 5, 7];
+log("  antes:   " + JSON.stringify(ids));
+ids = ids.filter((id) => id !== 5);
+log("  después: " + JSON.stringify(ids));`
+},
+
+{
+  id: "rec-orden",
+  titulo: "El orden importa (y sort muta)",
+  resumen: "assert.deepEqual compara arrays elemento por elemento en orden. Si tu resultado tiene los mismos elementos pero en otro orden, el test falla. Y si decidís ordenar, cuidado: sort modifica el array original.",
+  puntos: [
+    { tipo: "trampa", t: "sort() y reverse() MUTAN", d: "Son de los pocos métodos de array que modifican el original en vez de devolver uno nuevo. Si el enunciado dice «no modificar los datos de entrada», usá <code>[...arr].sort(...)</code>." },
+    { tipo: "trampa", t: "sort() sin comparador ordena como texto", d: "<code>[10, 9, 100].sort()</code> da <code>[10, 100, 9]</code>, porque compara strings. Para números siempre <code>sort((a, b) =&gt; a - b)</code>." },
+    { t: "Ordenar por texto", d: "<code>sort((a, b) =&gt; a.nombre.localeCompare(b.nombre))</code>. Maneja bien los acentos y la ñ, cosa que <code>&lt;</code> no." },
+    { t: "En el parcial, casi nunca hay que ordenar", d: "Los tres ej02 de 2026 esperan el orden original. Ordenar «por las dudas» te rompe el test." },
+  ],
+  archivos: [
+    { nombre: "orden.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   EL ORDEN IMPORTA
+   ══════════════════════════════════════════════════════════════ */
+
+// El test compara elemento por elemento, EN ORDEN:
+assert.deepEqual(modelosPorCapacidad(modelos, "web"), ["GPT", "GRK", "PPX"]);
+
+// filter y map conservan el orden original. No toques nada.
+
+/* ══════════════════════════════════════════════════════════════
+   SI TENÉS QUE ORDENAR
+   ══════════════════════════════════════════════════════════════ */
+
+// ❌ sort() sin comparador ordena como TEXTO
+[10, 9, 100].sort()                  // [10, 100, 9]
+
+// ✅ números
+[10, 9, 100].sort((a, b) => a - b)   // [9, 10, 100]      ascendente
+[10, 9, 100].sort((a, b) => b - a)   // [100, 10, 9]      descendente
+
+// ✅ texto (localeCompare maneja acentos y ñ)
+nombres.sort((a, b) => a.localeCompare(b))
+
+// ✅ por una propiedad
+modelos.sort((a, b) => b.contexto - a.contexto)           // por número
+modelos.sort((a, b) => a.nombre.localeCompare(b.nombre))  // por texto
+
+// ✅ por dos criterios (si empatan, desempatás con el segundo)
+modelos.sort((a, b) =>
+  a.empresa.localeCompare(b.empresa) || b.contexto - a.contexto
+);
+
+/* ══════════════════════════════════════════════════════════════
+   sort Y reverse MUTAN EL ORIGINAL
+   ══════════════════════════════════════════════════════════════ */
+
+const original = [3, 1, 2];
+const ordenado = original.sort((a, b) => a - b);
+// original  -> [1, 2, 3]   ← ¡SE MODIFICÓ!
+// ordenado  -> [1, 2, 3]   (es el MISMO array, no una copia)
+
+// ✅ copiar primero con spread
+const ordenado2 = [...original].sort((a, b) => a - b);
+
+// Los que MUTAN:     sort, reverse, push, pop, shift, unshift, splice, fill
+// Los que NO mutan:  filter, map, slice, concat, flat, flatMap, reduce,
+//                    find, some, every, includes, join, [...spread]` },
+  ],
+  ejecutar:
+`log("sort() sin comparador ordena como TEXTO:");
+log("  [10, 9, 100].sort()              -> " + JSON.stringify([10, 9, 100].sort()));
+log("  [10, 9, 100].sort((a,b) => a-b)  -> " + JSON.stringify([10, 9, 100].sort((a, b) => a - b)));
+log("");
+log("sort MUTA el array original:");
+const original = [3, 1, 2];
+log("  const original = " + JSON.stringify([3, 1, 2]));
+const ordenado = original.sort((a, b) => a - b);
+log("  después de original.sort(...)");
+log("    original -> " + JSON.stringify(original) + "   ← se modificó");
+log("    ordenado -> " + JSON.stringify(ordenado) + "   (es el MISMO array)");
+log("");
+const original2 = [3, 1, 2];
+const copia = [...original2].sort((a, b) => a - b);
+log("  con [...original].sort(...)");
+log("    original -> " + JSON.stringify(original2) + "   ← intacto ✔");
+log("    copia    -> " + JSON.stringify(copia));
+log("");
+log("localeCompare vs < con acentos:");
+const nombres = ["Ñandú", "Zorro", "Ánade", "abeja"];
+log("  sort()                       -> " + JSON.stringify([...nombres].sort()));
+log("  sort(localeCompare)          -> " + JSON.stringify([...nombres].sort((a, b) => a.localeCompare(b))));
+log("");
+log("Y el recordatorio: el test espera el orden ORIGINAL.");
+const modelos = ${MODELOS_JSON};
+const web = modelos.filter((m) => m.capacidades.includes("web")).map((m) => m.sigla);
+log("  resultado correcto  -> " + JSON.stringify(web));
+log("  si ordenás alfabéticamente -> " + JSON.stringify([...web].sort()) + "  ❌ el test falla");`
+},
+
+  ],
+};
+
+/* ==========================================================================
+   TAB 4 — Transformar, agrupar y acumular
+   ========================================================================== */
+const TRANSFORMAR = {
+  id: "transformar",
+  tab: "Transformar y agrupar",
+  ayuda: "Cuando el resultado no es un array filtrado sino un objeto, un total, o los datos reorganizados. Todo esto es reduce, o alguno de sus atajos.",
+  items: [
+
+{
+  id: "tr-objeto",
+  titulo: "De array a objeto (el caso fieldListToObject)",
+  resumen: "Cuando el resultado es un objeto y no un array. Hay tres formas: for...of con asignación, reduce, y Object.fromEntries. La primera es la más clara y la que conviene usar en la prueba.",
+  puntos: [
+    { t: "Asignar con corchetes crea la propiedad", d: "<code>result[item.field] = item.value</code>. Los corchetes permiten una clave DINÁMICA (el valor de una variable). Con punto (<code>result.field</code>) crearías una propiedad literalmente llamada «field»." },
+    { t: "«Gana el último» sale gratis", d: "Si asignás en orden, el segundo <code>same</code> pisa al primero solo. No hace falta escribir nada extra: es cómo funcionan los objetos." },
+    { tipo: "trampa", t: "En reduce hay que devolver el acumulador", d: "<code>arr.reduce((acc, x) =&gt; { acc[x.k] = x.v; return acc; }, {})</code>. Si te olvidás el <code>return acc</code>, la siguiente vuelta recibe <code>undefined</code> y explota." },
+    { t: "Object.fromEntries si no hay que filtrar", d: "<code>Object.fromEntries(lista.map((it) =&gt; [it.field, it.value]))</code>. Elegante, pero no te deja saltear elementos: para eso volvés a <code>filter</code> antes o a <code>for...of</code>." },
+  ],
+  archivos: [
+    { nombre: "array-a-objeto.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   ARRAY DE PARES  ->  OBJETO
+   ══════════════════════════════════════════════════════════════ */
+
+// ── A. for...of (la más clara, la que conviene en la prueba) ───
+export function fieldListToObject(fieldList) {
+  if (fieldList == null) throw new Error("...");
+
+  const result = {};
+  for (const item of fieldList) {
+    if (item != null && "field" in item) {
+      result[item.field] = item.value;
+      //     ↑ CORCHETES: la clave es el VALOR de item.field.
+      //       Con punto (result.field) crearías la propiedad "field".
+    }
+  }
+  return result;
+}
+
+// ── B. reduce ──────────────────────────────────────────────────
+export function fieldListToObject(fieldList) {
+  if (fieldList == null) throw new Error("...");
+
+  return fieldList.reduce((acc, item) => {
+    if (item != null && "field" in item) {
+      acc[item.field] = item.value;
+    }
+    return acc;          // ← SIN ESTO, la vuelta siguiente recibe undefined
+  }, {});                //   ↑ el valor inicial del acumulador
+}
+
+// ── C. Object.fromEntries (no permite saltear elementos) ───────
+Object.fromEntries(
+  fieldList
+    .filter((it) => it != null && "field" in it)
+    .map((it) => [it.field, it.value])       // pares [clave, valor]
+);
+
+/* ══════════════════════════════════════════════════════════════
+   "GANA EL ÚLTIMO" SALE GRATIS
+   ══════════════════════════════════════════════════════════════ */
+
+const r = {};
+r["same"] = 7;
+r["same"] = 77;      // simplemente pisa al anterior
+// r -> { same: 77 }
+
+// Por eso el test pasa sin código extra:
+//   fieldListToObject([{field:"same",value:7},{field:"same",value:77}])
+//   -> { same: 77 }` },
+    { nombre: "claves-dinamicas.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   ACCEDER Y CREAR PROPIEDADES CON UNA CLAVE VARIABLE
+   ══════════════════════════════════════════════════════════════ */
+
+const clave = "sigla";
+const modelo = { sigla: "CLD", nombre: "Claude" };
+
+modelo.clave       // undefined  ← busca la propiedad LLAMADA "clave"
+modelo[clave]      // "CLD"      ← busca la propiedad llamada "sigla" ✔
+
+// Lo mismo para crear:
+const obj = {};
+obj[clave] = "CLD";        // { sigla: "CLD" }
+obj["otra-con-guion"] = 1; // los corchetes admiten cualquier string
+
+// En un literal, con corchetes también:
+const k = "sigla";
+const nuevo = { [k]: "CLD" };   // { sigla: "CLD" }
+
+/* ══════════════════════════════════════════════════════════════
+   ORDENAR / TRANSFORMAR UN OBJETO ENTERO
+   ══════════════════════════════════════════════════════════════ */
+
+const precios = { pan: 50, leche: 80, queso: 200 };
+
+// objeto -> array de pares -> transformar -> objeto de nuevo
+Object.fromEntries(
+  Object.entries(precios).map(([k, v]) => [k, v * 1.1])
+);
+// { pan: 55, leche: 88, queso: 220 }
+
+// filtrar un objeto
+Object.fromEntries(
+  Object.entries(precios).filter(([, v]) => v > 60)
+);
+// { leche: 80, queso: 200 }
+//              ↑ el hueco vacío: no me interesa la clave` },
+  ],
+  ejecutar:
+`function conForOf(lista) {
+  const result = {};
+  for (const item of lista) {
+    if (item != null && "field" in item) result[item.field] = item.value;
+  }
+  return result;
+}
+function conReduce(lista) {
+  return lista.reduce((acc, item) => {
+    if (item != null && "field" in item) acc[item.field] = item.value;
+    return acc;
+  }, {});
+}
+function sinReturn(lista) {
+  return lista.reduce((acc, item) => { acc[item.field] = item.value; }, {});
+}
+
+const lista = [{ field: "x", value: 1 }, { field: "y", value: 2 }, { field: "x", value: 99 }];
+log("entrada: " + JSON.stringify(lista));
+log("");
+log("for...of -> " + JSON.stringify(conForOf(lista)));
+log("reduce   -> " + JSON.stringify(conReduce(lista)));
+log("         (fijate que 'x' quedó en 99: gana el último, gratis)");
+log("");
+log("reduce SIN return acc:");
+try { log("  -> " + JSON.stringify(sinReturn(lista))); }
+catch (e) { log("  -> EXPLOTA: " + e.message); }
+log("");
+log("Object.fromEntries -> " + JSON.stringify(
+  Object.fromEntries(lista.map((it) => [it.field, it.value]))));
+log("");
+log("— claves dinámicas —");
+const clave = "sigla";
+const modelo = { sigla: "CLD", nombre: "Claude" };
+log("modelo.clave    -> " + modelo.clave + "   ← busca la propiedad 'clave'");
+log("modelo[clave]   -> " + modelo[clave] + "   ← busca la propiedad 'sigla' ✔");
+log("{ [clave]: 1 }  -> " + JSON.stringify({ [clave]: 1 }));`
+},
+
+{
+  id: "tr-agrupar",
+  titulo: "Agrupar y contar",
+  resumen: "«Dame los modelos agrupados por empresa» o «contá cuántos hay de cada capacidad». No salió todavía en un ej02, pero es la variante más probable de la misma familia y se resuelve con el mismo reduce.",
+  puntos: [
+    { t: "Agrupar: un objeto de arrays", d: "El acumulador arranca en <code>{}</code> y para cada elemento hacés <code>(acc[clave] ??= []).push(x)</code>. El <code>??=</code> crea el array la primera vez y lo reusa después." },
+    { t: "Contar: un objeto de números", d: "<code>acc[clave] = (acc[clave] ?? 0) + 1</code>. El <code>?? 0</code> resuelve el arranque de cada clave nueva." },
+    { tipo: "trampa", t: "?? no es lo mismo que ||", d: "<code>0 || 5</code> da <code>5</code>; <code>0 ?? 5</code> da <code>0</code>. Con contadores, <code>||</code> te rompe el conteo cuando llega a 0. Usá siempre <code>??</code> para valores por defecto numéricos." },
+    { t: "Object.groupBy existe pero es muy nuevo", d: "<code>Object.groupBy(arr, (x) =&gt; x.empresa)</code> hace el agrupado solo. Está en Node 21+. Escribí el <code>reduce</code>: funciona en cualquier lado." },
+  ],
+  archivos: [
+    { nombre: "agrupar.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   AGRUPAR POR UNA PROPIEDAD
+   ══════════════════════════════════════════════════════════════ */
+
+// { "OpenAI": [modelo, ...], "Google": [modelo, ...] }
+const porEmpresa = modelos.reduce((acc, m) => {
+  (acc[m.empresa] ??= []).push(m);
+  //    ↑ ??= : "si no existe, asignale []". Devuelve el array
+  //      (nuevo o el que ya había) y encima le hacés push.
+  return acc;
+}, {});
+
+// La versión larga, si el ??= te resulta críptico:
+const porEmpresa2 = modelos.reduce((acc, m) => {
+  if (acc[m.empresa] === undefined) {
+    acc[m.empresa] = [];
+  }
+  acc[m.empresa].push(m);
+  return acc;
+}, {});
+
+/* ══════════════════════════════════════════════════════════════
+   CONTAR OCURRENCIAS
+   ══════════════════════════════════════════════════════════════ */
+
+// { "texto": 12, "codigo": 5, ... }
+const conteo = modelos
+  .flatMap((m) => m.capacidades)          // aplana todas las capacidades
+  .reduce((acc, cap) => {
+    acc[cap] = (acc[cap] ?? 0) + 1;
+    //              ↑ ?? y NO ||: con || el 0 se reemplazaría por el default
+    return acc;
+  }, {});
+
+/* ══════════════════════════════════════════════════════════════
+   ACUMULAR UN TOTAL
+   ══════════════════════════════════════════════════════════════ */
+
+modelos.reduce((total, m) => total + m.contexto, 0)     // suma
+modelos.reduce((max, m) => m.contexto > max.contexto ? m : max)  // el mayor
+//                                                    ↑ sin valor inicial:
+//                                    arranca con el primer elemento
+
+/* ══════════════════════════════════════════════════════════════
+   QUITAR DUPLICADOS
+   ══════════════════════════════════════════════════════════════ */
+
+[...new Set(modelos.flatMap((m) => m.capacidades))]
+// Set guarda valores únicos; el spread lo pasa a array de nuevo.` },
+    { nombre: "reduce.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   ENTENDER reduce DE UNA VEZ
+   ══════════════════════════════════════════════════════════════
+
+   arr.reduce((acumulador, elemento) => nuevoAcumulador, valorInicial)
+
+   Recorre el array llevando un valor entre vuelta y vuelta.
+   Lo que DEVOLVÉS es el acumulador de la vuelta siguiente.
+   Lo que devuelve la última vuelta es el resultado final.        */
+
+[1, 2, 3].reduce((acc, n) => acc + n, 0);
+
+//  vuelta   acc   n    devuelve
+//    1       0    1       1
+//    2       1    2       3
+//    3       3    3       6      ← resultado
+
+/* El acumulador puede ser CUALQUIER COSA:
+
+   número  -> sumas, máximos, conteos
+   objeto  -> agrupar, contar por clave, array->objeto
+   array   -> lo que hace map/filter (pero para eso usá map/filter)
+   string  -> concatenar
+
+   Las 3 reglas:
+     1. SIEMPRE devolvé el acumulador.
+     2. Poné el valor inicial (2º argumento) salvo que sepas por qué no.
+     3. Sin valor inicial, sobre un array vacío, reduce EXPLOTA.   */
+
+[].reduce((a, b) => a + b)      // TypeError: Reduce of empty array
+[].reduce((a, b) => a + b, 0)   // 0   ✔` },
+  ],
+  ejecutar:
+`const modelos = ${MODELOS_JSON};
+
+log("— agrupar por empresa —");
+const porEmpresa = modelos.reduce((acc, m) => { (acc[m.empresa] ??= []).push(m.sigla); return acc; }, {});
+for (const [emp, sig] of Object.entries(porEmpresa)) log("  " + emp.padEnd(14) + JSON.stringify(sig));
+
+log("");
+log("— contar capacidades —");
+const conteo = modelos.flatMap((m) => m.capacidades).reduce((acc, c) => { acc[c] = (acc[c] ?? 0) + 1; return acc; }, {});
+for (const [cap, n] of Object.entries(conteo).sort((a, b) => b[1] - a[1])) log("  " + cap.padEnd(14) + n);
+
+log("");
+log("— totales —");
+log("  suma de contextos -> " + modelos.reduce((t, m) => t + m.contexto, 0).toLocaleString("es"));
+log("  el de más contexto -> " + modelos.reduce((max, m) => m.contexto > max.contexto ? m : max).nombre);
+log("  capacidades únicas -> " + JSON.stringify([...new Set(modelos.flatMap((m) => m.capacidades))]));
+
+log("");
+log("— ?? vs || con contadores —");
+log("  0 || 5  -> " + (0 || 5) + "   ← rompe el conteo al llegar a 0");
+log("  0 ?? 5  -> " + (0 ?? 5) + "   ← correcto");
+
+log("");
+log("— reduce sobre array vacío —");
+try { log("  [].reduce((a,b) => a+b)    -> " + [].reduce((a, b) => a + b)); }
+catch (e) { log("  [].reduce((a,b) => a+b)    -> " + e.message); }
+log("  [].reduce((a,b) => a+b, 0) -> " + [].reduce((a, b) => a + b, 0));`
+},
+
+{
+  id: "tr-flatmap",
+  titulo: "flatMap: filtrar y transformar en una pasada",
+  resumen: "El método que usó la solución de listarLibrosPrestados. Devolvés [] para descartar un elemento y [algo] para incluirlo transformado. Evita repetir el mismo find dos veces (una en el filter y otra en el map).",
+  puntos: [
+    { t: "flatMap = map + flat(1)", d: "Mapea cada elemento a un array y después aplana un nivel. Devolver <code>[]</code> hace que ese elemento desaparezca del resultado." },
+    { t: "Por qué no filter().map()", d: "Si la condición del filter necesita un cálculo (un <code>find</code>, por ejemplo) y el map necesita ESE mismo resultado, con <code>filter().map()</code> lo calculás dos veces. Con <code>flatMap</code>, una." },
+    { t: "flat() aplana arrays anidados", d: "<code>[[1,2],[3]].flat()</code> → <code>[1,2,3]</code>. <code>flat(Infinity)</code> aplana todos los niveles. Sirve para juntar los sub-arrays de todos los elementos." },
+    { t: "Spread para agregar propiedades a un objeto", d: "<code>{ ...info, estudiante: {...} }</code> copia todo lo de <code>info</code> y suma una propiedad más. Es cómo se arma un objeto de salida sin repetir campos." },
+  ],
+  archivos: [
+    { nombre: "flatmap.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   flatMap: DESCARTAR O TRANSFORMAR, EN UNA SOLA PASADA
+   ══════════════════════════════════════════════════════════════ */
+
+function listarLibrosPrestados(conDetalles = false) {
+  return biblioteca.libros.flatMap((libro) => {
+    const prestamo = libro.prestamos.find((p) => p.fechaDevolucion === null);
+
+    if (!prestamo) {
+      return [];          // ← array vacío: este libro NO aparece
+    }
+
+    const info = {
+      id: libro.id,
+      titulo: libro.titulo,
+      fechaPrestamo: prestamo.fechaPrestamo,   // ← usa el mismo 'prestamo'
+    };
+
+    if (!conDetalles) {
+      return [info];      // ← un elemento: aparece así
+    }
+
+    const est = biblioteca.estudiantes.find((e) => e.nombre === prestamo.estudiante);
+    return [{
+      ...info,            // spread: copia todo lo de info...
+      estudiante: est ? { nombre: est.nombre, carrera: est.carrera } : null,
+    }];                   // ...y le suma una propiedad
+  });
+}
+
+/* ── Lo mismo con filter().map(): el find se hace DOS veces ────
+
+   biblioteca.libros
+     .filter((l) => l.prestamos.find((p) => p.fechaDevolucion === null))
+     .map((l) => {
+       const prestamo = l.prestamos.find((p) => p.fechaDevolucion === null);
+       //                ↑ otra vez lo mismo
+       return { id: l.id, titulo: l.titulo, fechaPrestamo: prestamo.fechaPrestamo };
+     });                                                        */
+
+/* ══════════════════════════════════════════════════════════════
+   flat: JUNTAR LOS SUB-ARRAYS DE TODOS LOS ELEMENTOS
+   ══════════════════════════════════════════════════════════════ */
+
+[[1, 2], [3], []].flat()          // [1, 2, 3]
+[[1, [2]], [3]].flat()            // [1, [2], 3]   ← un solo nivel
+[[1, [2]], [3]].flat(Infinity)    // [1, 2, 3]
+
+// Todas las capacidades de todos los modelos, en una sola lista:
+modelos.flatMap((m) => m.capacidades)
+// ["texto","imagen","web","texto","codigo","razonamiento", ...]
+
+// Todos los préstamos de toda la biblioteca:
+biblioteca.libros.flatMap((l) => l.prestamos)` },
+  ],
+  ejecutar:
+`const biblioteca = ${BIBLIOTECA_JSON};
+const modelos = ${MODELOS_JSON};
+
+log("— flatMap: [] descarta, [x] incluye —");
+const prestados = biblioteca.libros.flatMap((libro) => {
+  const p = libro.prestamos.find((x) => x.fechaDevolucion === null);
+  if (!p) return [];
+  return [{ titulo: libro.titulo, desde: p.fechaPrestamo, a: p.estudiante }];
+});
+log("  de " + biblioteca.libros.length + " libros quedan " + prestados.length + ":");
+for (const p of prestados) log("    " + p.titulo.padEnd(34) + p.a + "  (" + p.desde + ")");
+
+log("");
+log("— spread para agregar propiedades —");
+const info = { titulo: "Diseño Web Responsive", desde: "2025-08-15" };
+log("  info                      -> " + JSON.stringify(info));
+log("  { ...info, extra: true }  -> " + JSON.stringify({ ...info, extra: true }));
+
+log("");
+log("— flat —");
+log("  [[1,2],[3],[]].flat()       -> " + JSON.stringify([[1, 2], [3], []].flat()));
+log("  [[1,[2]],[3]].flat()        -> " + JSON.stringify([[1, [2]], [3]].flat()));
+log("  [[1,[2]],[3]].flat(Infinity)-> " + JSON.stringify([[1, [2]], [3]].flat(Infinity)));
+
+log("");
+log("todas las capacidades juntas:");
+log("  " + JSON.stringify(modelos.flatMap((m) => m.capacidades)));
+log("sin repetir:");
+log("  " + JSON.stringify([...new Set(modelos.flatMap((m) => m.capacidades))]));`
+},
+
+  ],
+};
+
+/* ==========================================================================
+   TAB 5 — Leer los tests
+   ========================================================================== */
+const TESTS = {
+  id: "tests",
+  tab: "Leer los tests",
+  ayuda: "El archivo de tests es el enunciado real: te dice exactamente qué tiene que hacer tu función. Aprender a leerlo vale más que cualquier truco de JavaScript.",
+  items: [
+
+{
+  id: "test-anatomia",
+  titulo: "Anatomía del archivo de tests",
+  resumen: "Los tres ej02 de 2026 traen el mismo esqueleto. Abrilo ANTES de escribir una línea de código y hacé la lista de lo que te pide. Cada assert es un requisito.",
+  puntos: [
+    { t: "Se corre con node, sin instalar nada", d: "<code>node ej02/ej02.test.js</code> desde la raíz del ejercicio. No hay jest, ni npm test: es el módulo <code>node:assert</code> que viene con Node." },
+    { t: "Si pasa, no dice nada; si falla, tira", d: "Los <code>assert</code> no imprimen nada cuando pasan. El <code>console.log</code> del final solo se ejecuta si TODOS pasaron. Si uno falla, el proceso corta ahí." },
+    { t: "El primer assert valida que exportaste bien", d: "<code>typeof miFuncion === \"function\"</code>. Si te olvidás el <code>export</code> o escribís mal el nombre, falla el primero y no llegás a nada más." },
+    { t: "El segundo suele validar el JSON", d: "Comprueba que el archivo de datos tenga el formato esperado. Es GRATIS: te está diciendo textualmente qué propiedades tiene que tener cada elemento. Copiá esa condición para tu validación." },
+    { tipo: "trampa", t: "«por favor no modificar»", d: "El archivo de tests no se toca. Si te tienta cambiarlo para que pase, estás resolviendo el ejercicio al revés." },
+  ],
+  archivos: [
+    { nombre: "anatomia.js", codigo:
+`// Tests automáticos, por favor no modificar.
+// Ejecutar con \`node ej02/ej02.test.js\` para correr los tests.
+import assert from "node:assert";                              // ①
+import { modelosPorCapacidad } from "./ej02.js";               // ②
+import modelos from "./modelos.json" with { type: "json" };    // ③
+
+console.log('Ejecutando tests para modelosPorCapacidad...');
+
+// ④ ¿EXPORTASTE LA FUNCIÓN CON EL NOMBRE CORRECTO?
+assert.ok(
+  typeof modelosPorCapacidad === "function",
+  "El código debe exportar una función llamada modelosPorCapacidad.",
+);
+
+// ⑤ ¿EL JSON TIENE EL FORMATO ESPERADO?
+//    Este assert te REGALA la validación que tenés que escribir vos.
+assert.ok(
+  Array.isArray(modelos) && modelos.every((item) => (
+    typeof item === "object" && item !== null
+    && typeof item.sigla === "string"
+    && Array.isArray(item.capacidades)
+  )),
+  "El archivo modelos.json debe tener el formato correcto.",
+);
+
+// ⑥ LOS CASOS. Cada uno es un requisito de tu función.
+assert.deepEqual(modelosPorCapacidad([], "x"), []);
+assert.deepEqual(modelosPorCapacidad(modelos, "web"), ["GPT", "GRK", "PPX"]);
+assert.deepEqual(modelosPorCapacidad(modelos), []);
+
+// ⑦ LOS CASOS DE ERROR.
+assert.throws(() => modelosPorCapacidad(undefined, "texto"));
+assert.throws(() => modelosPorCapacidad([{}], "texto"));
+
+// ⑧ SOLO SE IMPRIME SI TODOS LOS ANTERIORES PASARON.
+console.log('Tests para modelosPorCapacidad finalizados correctamente.');
+
+/*  ① el módulo assert de Node, sin instalar nada
+    ② TU archivo. La extensión .js es obligatoria en ES modules.
+    ③ los datos. \`with { type: "json" }\` es la sintaxis nueva
+       (antes era \`assert { type: "json" }\`).
+    ④ si esto falla, revisá el export y el nombre exacto
+    ⑤ copiá esta condición en tu validación de elementos
+    ⑥ cada assert.deepEqual = un caso que tenés que cubrir
+    ⑦ cada assert.throws = un caso donde tenés que arrojar
+    ⑧ si no ves este mensaje, algo falló antes                    */` },
+  ],
+  ejecutar:
+`log("Así se ve un test que pasa:");
+log("");
+log("$ node ej02/ej02.test.js");
+log("Ejecutando tests para modelosPorCapacidad...");
+log("Tests para modelosPorCapacidad finalizados correctamente.", "ok");
+log("");
+log("Y así uno que falla:");
+log("");
+log("$ node ej02/ej02.test.js");
+log("Ejecutando tests para modelosPorCapacidad...");
+log("node:internal/assert: AssertionError [ERR_ASSERTION]:", "fail");
+log("  Expected values to be loosely deep-equal:", "fail");
+log("  [ 'GPT', 'GRK', 'PPX' ]", "fail");
+log("  should loosely deep-equal", "fail");
+log("  []", "fail");
+log("");
+log("→ el mensaje te dice qué esperaba y qué devolviste.");
+log("→ el proceso CORTA en el primer assert que falla: arreglá");
+log("  ese y volvé a correr para ver el siguiente.");`
+},
+
+{
+  id: "test-asserts",
+  titulo: "Qué hace cada assert",
+  resumen: "Solo hacen falta cuatro. Lo importante es la diferencia entre equal y deepEqual, y saber que throws no mira qué error tiraste.",
+  puntos: [
+    { tipo: "trampa", t: "equal usa ===, deepEqual compara contenido", d: "<code>assert.equal([1,2], [1,2])</code> FALLA: son dos objetos distintos en memoria. Por eso todos los tests de arrays y objetos usan <code>deepEqual</code>." },
+    { t: "deepEqual compara el orden", d: "<code>[\"A\",\"B\"]</code> y <code>[\"B\",\"A\"]</code> no son iguales para <code>deepEqual</code>. En objetos, en cambio, el orden de las claves NO importa." },
+    { t: "throws solo comprueba que tires algo", d: "Cualquier <code>Error</code> sirve. El string que le pasás como segundo argumento es el mensaje que se imprime si NO tiraste, no una condición sobre el error." },
+    { tipo: "trampa", t: "En throws, el argumento es una FUNCIÓN", d: "<code>assert.throws(() =&gt; f(x))</code>, con la flecha. Si escribís <code>assert.throws(f(x))</code>, la llamás vos y el error explota antes de llegar al assert." },
+    { t: "deepEqual (loose) vs deepStrictEqual", d: "El <code>deepEqual</code> de los parciales es el flojo: compara con <code>==</code>, así que <code>1</code> y <code>\"1\"</code> le parecen iguales. No te confíes: devolvé el tipo correcto igual." },
+  ],
+  archivos: [
+    { nombre: "asserts.js", codigo:
+`import assert from "node:assert";
+
+/* ══════════════════════════════════════════════════════════════
+   LOS CUATRO QUE VAS A VER
+   ══════════════════════════════════════════════════════════════ */
+
+// ── ok: el valor tiene que ser truthy ──────────────────────────
+assert.ok(typeof f === "function", "mensaje si falla");
+
+// ── equal: compara con == (para primitivos) ───────────────────
+assert.equal(typeof f, "function");
+assert.equal(1 + 1, 2);
+
+// ── deepEqual: compara CONTENIDO (para arrays y objetos) ──────
+assert.deepEqual([1, 2], [1, 2]);              // ✔
+assert.deepEqual({ a: 1 }, { a: 1 });          // ✔
+assert.equal([1, 2], [1, 2]);                  // ✘ objetos distintos
+
+// ── throws: la función tiene que arrojar ──────────────────────
+assert.throws(() => f(undefined));             // ✔ con flecha
+assert.throws(f(undefined));                   // ✘ la llamás vos
+
+/* ══════════════════════════════════════════════════════════════
+   DETALLES QUE IMPORTAN
+   ══════════════════════════════════════════════════════════════ */
+
+// El ORDEN importa en arrays:
+assert.deepEqual(["A", "B"], ["B", "A"]);      // ✘ falla
+
+// El orden NO importa en objetos:
+assert.deepEqual({ a: 1, b: 2 }, { b: 2, a: 1 });  // ✔ pasa
+
+// deepEqual es FLOJO (usa ==). deepStrictEqual usa ===:
+assert.deepEqual([1], ["1"]);                  // ✔ pasa (!)
+assert.deepStrictEqual([1], ["1"]);            // ✘ falla
+
+// throws no mira QUÉ error:
+assert.throws(() => { throw new Error("x"); });      // ✔
+assert.throws(() => { throw new TypeError("y"); });  // ✔
+assert.throws(() => { throw new RangeError("z"); }); // ✔
+assert.throws(() => undefined.foo);                  // ✔ el del motor
+
+// Varias llamadas dentro de un throws: alcanza con que UNA arroje,
+// porque la primera que arroje corta el bloque.
+assert.throws(() => {
+  f(undefined, "texto");    // si esta arroja...
+  f(null, "texto");         // ...esta nunca se ejecuta
+});` },
+  ],
+  ejecutar:
+`log("— equal vs deepEqual —");
+try { assert.equal([1,2], [1,2]); log("  assert.equal([1,2],[1,2])      -> pasa"); }
+catch (e) { log("  assert.equal([1,2],[1,2])      -> FALLA (objetos distintos)", "fail"); }
+assert.deepEqual([1,2], [1,2]);
+log("  assert.deepEqual([1,2],[1,2])  -> pasa ✔", "ok");
+
+log("");
+log("— el orden en arrays —");
+try { assert.deepEqual(["A","B"], ["B","A"]); log("  ['A','B'] vs ['B','A'] -> pasa"); }
+catch (e) { log("  ['A','B'] vs ['B','A'] -> FALLA: el orden importa", "fail"); }
+assert.deepEqual({ a: 1, b: 2 }, { b: 2, a: 1 });
+log("  {a:1,b:2} vs {b:2,a:1} -> pasa ✔ (en objetos no importa)", "ok");
+
+log("");
+log("— throws acepta cualquier error —");
+for (const [txt, fn] of [
+  ["new Error", () => { throw new Error("x"); }],
+  ["new TypeError", () => { throw new TypeError("y"); }],
+  ["undefined.foo (del motor)", () => undefined.foo],
+]) {
+  assert.throws(fn, txt);
+  log("  " + txt.padEnd(28) + " -> pasa ✔", "ok");
+}
+
+log("");
+log("— sin la flecha, el error escapa del assert —");
+const rompe = () => { throw new Error("boom"); };
+try { assert.throws(rompe()); }
+catch (e) { log("  assert.throws(rompe())   -> el error sale antes: " + e.message, "fail"); }
+assert.throws(rompe);
+log("  assert.throws(rompe)     -> pasa ✔", "ok");`
+},
+
+{
+  id: "test-checklist",
+  titulo: "Tu checklist a partir del test",
+  resumen: "El método: abrís el test, escribís en una hoja una línea por cada assert, y esa lista es tu especificación. Después escribís la función mirando la lista, no el enunciado.",
+  puntos: [
+    { t: "1. Anotá el nombre y la firma", d: "Del <code>import</code> sacás el nombre exacto de la función y del primer <code>assert</code> confirmás que va exportada." },
+    { t: "2. Anotá el formato de los datos", d: "Del <code>assert.ok</code> del JSON sacás qué propiedades tiene cada elemento y de qué tipo. Esa misma condición es tu validación." },
+    { t: "3. Anotá cada caso", d: "Entrada → salida esperada. Incluyendo los raros: array vacío, sin segundo argumento, valor que no matchea nada." },
+    { t: "4. Anotá cada throws", d: "Qué entradas tienen que arrojar. Y fijate qué entradas NO están en la lista de throws: esas tienen que devolver algo." },
+    { t: "5. Recién ahí escribí la función", d: "Y corré el test después de cada cambio. El primer assert que falla te dice exactamente dónde estás." },
+  ],
+  archivos: [
+    { nombre: "checklist.md", lenguaje: "texto", codigo:
+`═══════════════════════════════════════════════════════════════
+ CHECKLIST SACADO DEL TEST DE modelosPorCapacidad
+═══════════════════════════════════════════════════════════════
+
+ NOMBRE Y FIRMA
+   [ ] export function modelosPorCapacidad(data, capacidad)
+   [ ] devuelve un array de strings
+
+ FORMATO DE LOS DATOS (del assert.ok del JSON)
+   [ ] data es un array
+   [ ] cada item es un objeto, no null
+   [ ] item.sigla es string
+   [ ] item.capacidades es array
+
+ CASOS QUE TIENEN QUE DEVOLVER
+   [ ] ([], "x")                  -> []
+   [ ] (modelos, "web")           -> ["GPT","GRK","PPX"]   (¡en ese orden!)
+   [ ] (modelos, "razonamiento")  -> ["CLD","DSK","QWN"]
+   [ ] (modelos, "video")         -> ["GEM","NVA"]
+   [ ] (modelos, "audio")         -> ["GEM","SUN"]
+   [ ] (modelos, "traduccion")    -> []
+   [ ] (modelos)                  -> []      ← ¡sin 2º argumento NO es error!
+
+ CASOS QUE TIENEN QUE ARROJAR
+   [ ] (undefined, "texto")
+   [ ] (null, "texto")
+   [ ] ([{}], "texto")            ← array válido, elemento inválido
+
+ CONCLUSIONES
+   → validar SOLO data y los elementos, nunca 'capacidad'
+   → conservar el orden original
+   → filtrar con capacidades.includes(capacidad)
+   → devolver solo la sigla
+
+═══════════════════════════════════════════════════════════════
+ CÓMO CORRERLO
+═══════════════════════════════════════════════════════════════
+
+   node ej02/ej02.test.js          desde la raíz del ejercicio
+
+   Sin salida de error + el mensaje "finalizados correctamente"
+   = todo bien.
+
+   Si falla, el AssertionError te muestra:
+      Expected values to be loosely deep-equal:
+      <lo que esperaba>
+      should loosely deep-equal
+      <lo que devolviste>` },
+  ],
+  ejecutar:
+`log("Simulación: escribimos la función siguiendo el checklist,");
+log("y vamos corriendo los asserts uno por uno.");
+log("");
+const modelos = ${MODELOS_JSON};
+
+function f(data, capacidad) {
+  if (!Array.isArray(data)) throw new TypeError("array!");
+  const out = [];
+  for (const m of data) {
+    if (typeof m?.sigla !== "string" || !Array.isArray(m?.capacidades)) {
+      throw new TypeError("formato!");
+    }
+    if (m.capacidades.includes(capacidad)) out.push(m.sigla);
+  }
+  return out;
+}
+
+const casos = [
+  ["([], 'x')",                 () => f([], "x"),                []],
+  ["(modelos, 'web')",          () => f(modelos, "web"),         ["GPT","GRK","PPX"]],
+  ["(modelos, 'razonamiento')", () => f(modelos, "razonamiento"),["CLD","DSK","QWN"]],
+  ["(modelos, 'video')",        () => f(modelos, "video"),       ["GEM","NVA"]],
+  ["(modelos, 'audio')",        () => f(modelos, "audio"),       ["GEM","SUN"]],
+  ["(modelos, 'traduccion')",   () => f(modelos, "traduccion"),  []],
+  ["(modelos)",                 () => f(modelos),                []],
+];
+for (const [txt, fn, esperado] of casos) {
+  assert.deepEqual(fn(), esperado, txt);
+  log("  ✔ " + txt.padEnd(26) + "-> " + JSON.stringify(fn()), "ok");
+}
+for (const [txt, fn] of [
+  ["(undefined, 'texto')", () => f(undefined, "texto")],
+  ["(null, 'texto')",      () => f(null, "texto")],
+  ["([{}], 'texto')",      () => f([{}], "texto")],
+]) {
+  assert.throws(fn, txt);
+  log("  ✔ " + txt.padEnd(26) + "-> arroja", "ok");
+}
+log("");
+log("10 de 10. Tests finalizados correctamente.", "ok");`
+},
+
+  ],
+};
+
+/* ==========================================================================
+   TAB 6 — Comparativa y chuleta
+   ========================================================================== */
+const CHULETA = {
+  id: "chuleta",
+  tab: "Comparativa y chuleta",
+  ayuda: "Qué salió en cada prueba, cómo se importa y exporta, y la lista de errores que hacen fallar los tests.",
+  items: [
+
+{
+  id: "chu-comparativa",
+  titulo: "Qué salió en cada prueba",
+  resumen: "Revisé los 6 parciales/pruebas 1 del repo. El ejercicio de «escribí una función» SIEMPRE fue el SEGUNDO, pero no siempre fue del mismo tipo: en 2025sem2 no había tests automáticos y las funciones mutaban un estado en vez de ser puras. El giro a «función pura + tests» pasó en 2026.",
+  puntos: [
+    { t: "Siempre es el ejercicio 2", d: "En las 6 pruebas. En 2026 se llama <code>ej02/</code>; en 2025sem2 matutino y vespertino se llamaba <code>ej2/</code> y el archivo era <code>ejercicio_biblioteca.js</code>." },
+    { t: "Desde 2026: función pura + tests que no podés tocar", d: "Los tres son el mismo molde: array de datos + un criterio → array de resultados (o un objeto). Con <code>ej02.test.js</code> y un <code>.json</code> al lado." },
+    { tipo: "trampa", t: "2025sem2 era otra cosa", d: "Estado mutable, errores DEVUELTOS como string, y verificación mirando la salida de <code>node</code>. Si vuelve ese formato, lo que cambia es todo: no hay <code>throw</code> ni <code>assert</code>." },
+    { t: "2025sem1 no está en el repo", d: "La carpeta <code>2025sem1/parcial1</code> está vacía. No hay con qué comparar más atrás." },
+    { t: "Dónde apostar", d: "Al molde de 2026: <code>filter</code> + <code>map</code> sobre un array de objetos, con validación de formato y <code>assert.throws</code>. Pero tené leído el de la biblioteca por si acaso." },
+  ],
+  archivos: [
+    { nombre: "comparativa.txt", lenguaje: "texto", codigo:
+`═════════════════════════════════════════════════════════════════════════
+ EL EJERCICIO DE "ESCRIBÍ UNA FUNCIÓN" EN CADA PRUEBA
+═════════════════════════════════════════════════════════════════════════
+
+ PRUEBA                     Nº    FUNCIÓN                      TESTS
+ ─────────────────────────────────────────────────────────────────────
+ Simulacro 2026sem2        ej02   modelosPorCapacidad          sí ✔
+   (el más reciente)              (data, capacidad) -> string[]
+                                  datos: modelos.json
+
+ Prueba 2026sem1           ej02   countriesForCurrency         sí ✔
+                                  (data, currency) -> string[]
+                                  datos: americas.json
+
+ Simulacro 2026sem1        ej02   fieldListToObject            sí ✔
+                                  ([{field,value}]) -> object
+                                  datos: ninguno (van en el test)
+
+ Parcial 2025sem2 mat.      ej2   prestarLibro                 NO
+                                  buscarLibros
+                                  datos: datos_biblioteca.json
+
+ Parcial 2025sem2 vesp.     ej2   devolverLibro                NO
+                                  listarLibrosPrestados
+                                  datos: datos_biblioteca.json
+
+ Simulacro 2025sem2        ej02   genExp(result) -> {op,l,r}   NO
+                                  (generación aleatoria)
+
+ Parcial 2025sem1            —    la carpeta está vacía en el repo
+
+
+═════════════════════════════════════════════════════════════════════════
+ LOS DOS FORMATOS
+═════════════════════════════════════════════════════════════════════════
+
+ ┌────────────────────┬──────────────────────┬─────────────────────────┐
+ │                    │ 2026 (los 3)         │ 2025sem2 (biblioteca)   │
+ ├────────────────────┼──────────────────────┼─────────────────────────┤
+ │ tipo de función    │ pura                 │ muta un estado global   │
+ │ errores            │ throw                │ return "Error: ..."     │
+ │ verificación       │ ej02.test.js         │ mirar la salida de node │
+ │ export             │ export function      │ function (sin export)   │
+ │ datos              │ .json aparte         │ .json aparte            │
+ │ qué devuelve       │ array u objeto nuevo │ true | string | array   │
+ │ cuántas funciones  │ una                  │ dos                     │
+ └────────────────────┴──────────────────────┴─────────────────────────┘
+
+
+═════════════════════════════════════════════════════════════════════════
+ LO QUE SE REPITE EN LAS SEIS
+═════════════════════════════════════════════════════════════════════════
+
+   · recorrer un array de objetos                          6/6
+   · quedarse con los que cumplen una condición            6/6
+   · sacar una propiedad de cada elemento                  5/6
+   · manejar el caso "no encontré nada"                    6/6
+   · un archivo .json con los datos al lado                5/6
+   · validar el formato de los datos                       4/6
+   · buscar dentro de un sub-array o sub-objeto            4/6` },
+  ],
+},
+
+{
+  id: "chu-modulos",
+  titulo: "import / export: la parte que rompe antes de empezar",
+  resumen: "Si el export está mal, falla el primer assert y no llegás a nada. Los ejercicios usan ES modules (import/export), no CommonJS (require/module.exports), y hay tres detalles que se olvidan siempre.",
+  puntos: [
+    { tipo: "trampa", t: "La extensión .js es obligatoria", d: "<code>import { f } from \"./ej02.js\"</code>. En ES modules no se puede omitir, a diferencia de lo que hacen los bundlers en otros proyectos." },
+    { t: "El nombre tiene que coincidir exacto", d: "<code>export function modelosPorCapacidad</code> y el test hace <code>import { modelosPorCapacidad }</code>. Mayúsculas incluidas." },
+    { t: "Importar JSON: with { type: \"json\" }", d: "<code>import modelos from \"./modelos.json\" with { type: \"json\" }</code>. La sintaxis vieja era <code>assert { type: \"json\" }</code> y ya no funciona en Node nuevo." },
+    { t: "El package.json ya viene configurado", d: "Trae <code>\"type\": \"module\"</code>. No lo toques. Sin eso, Node interpretaría los <code>.js</code> como CommonJS y los <code>import</code> fallarían." },
+  ],
+  archivos: [
+    { nombre: "modulos.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   EXPORTAR (tu archivo, ej02.js)
+   ══════════════════════════════════════════════════════════════ */
+
+// ✅ export nombrado: es lo que esperan todos los tests
+export function modelosPorCapacidad(data, capacidad) { ... }
+
+// Podés exportar varias:
+export function genExp(result) { ... }
+export function evalExp(exp) { ... }
+
+// O declarar primero y exportar al final:
+function f() { ... }
+function g() { ... }
+export { f, g };
+
+// ❌ export default: el test hace import { nombre }, no import nombre
+export default function modelosPorCapacidad() { ... }
+
+// ❌ CommonJS: los ejercicios usan ES modules
+module.exports = { modelosPorCapacidad };
+
+/* ══════════════════════════════════════════════════════════════
+   IMPORTAR (el test)
+   ══════════════════════════════════════════════════════════════ */
+
+import assert from "node:assert";                            // built-in
+import { modelosPorCapacidad } from "./ej02.js";             // ← .js SÍ O SÍ
+import modelos from "./modelos.json" with { type: "json" };  // ← sintaxis nueva
+
+/* ══════════════════════════════════════════════════════════════
+   LOS ERRORES Y SUS MENSAJES
+   ══════════════════════════════════════════════════════════════
+
+   Falta el .js
+     import { f } from "./ej02"
+     → ERR_MODULE_NOT_FOUND: Cannot find module '.../ej02'
+
+   Nombre mal escrito o falta el export
+     → SyntaxError: The requested module './ej02.js' does not
+       provide an export named 'modelosPorCapacidad'
+
+   Falta "type": "module" en el package.json
+     → SyntaxError: Cannot use import statement outside a module
+
+   Usaste assert en vez de with en el import del JSON
+     → SyntaxError / ERR_IMPORT_ASSERTION_TYPE_MISSING
+
+   Todos estos revientan ANTES de correr un solo test.            */
+
+/* ══════════════════════════════════════════════════════════════
+   PARA CORRER
+   ══════════════════════════════════════════════════════════════
+
+   node ej02/ej02.test.js         desde la raíz del ejercicio
+   node ej02/ej02.js              para probar a mano con console.log */` },
+  ],
+},
+
+{
+  id: "chu-errores",
+  titulo: "Los errores que hacen fallar los tests",
+  resumen: "La lista completa, ordenada por frecuencia. Repasala antes de entregar: cada uno de estos rompe al menos un assert.",
+  puntos: [
+    { tipo: "error", t: "Validar el segundo argumento", d: "El nº1. <code>modelosPorCapacidad(modelos)</code> tiene que devolver <code>[]</code>, no arrojar." },
+    { tipo: "error", t: "Olvidar el export", d: "Falla el primer assert y no llegás al resto." },
+    { tipo: "error", t: "Ordenar el resultado", d: "<code>deepEqual</code> compara en orden. Los tests esperan el orden original del array de entrada." },
+    { tipo: "error", t: "Devolver los objetos enteros en vez de la propiedad", d: "Te falta el <code>.map()</code> final." },
+    { tipo: "error", t: "No validar los elementos", d: "El test manda <code>[{}]</code>: un array válido con un elemento inválido. Nada explota solo." },
+    { tipo: "error", t: "Olvidar el return acc en un reduce", d: "La vuelta siguiente recibe <code>undefined</code>." },
+    { tipo: "error", t: "typeof x === \"object\" sin el !== null", d: "<code>null</code> pasa la validación y explota después." },
+  ],
+  archivos: [
+    { nombre: "checklist-final.txt", lenguaje: "texto", codigo:
+`═══════════════════════════════════════════════════════════════
+ ANTES DE ENTREGAR
+═══════════════════════════════════════════════════════════════
+
+ CORRER
+   [ ] node ej02/ej02.test.js pasa (corrélo, no lo asumas)
+   [ ] se imprime "Tests ... finalizados correctamente"
+
+ EXPORT
+   [ ] la función está exportada con export
+   [ ] el nombre coincide EXACTO con el del import del test
+   [ ] no dejaste un export default
+
+ QUÉ DEVUELVE
+   [ ] array vacío para entrada vacía, no undefined
+   [ ] la propiedad pedida, no el objeto entero
+   [ ] en el orden original: no ordenaste nada
+   [ ] el tipo correcto (array vs objeto)
+
+ VALIDACIONES
+   [ ] arroja con undefined / null
+   [ ] arroja con un elemento mal formado ([{}])
+   [ ] NO arroja cuando falta el 2º argumento (si el test lo pide)
+   [ ] typeof x === "object" siempre va con && x !== null
+
+ EFECTOS
+   [ ] no mutaste el array de entrada (sort y reverse mutan)
+   [ ] en un reduce, devolvés el acumulador SIEMPRE
+
+ LIMPIEZA
+   [ ] no quedó código de la plantilla sin usar
+   [ ] no quedaron console.log de debug
+   [ ] NO modificaste ej02.test.js ni el .json
+
+
+═══════════════════════════════════════════════════════════════
+ PLAN DE ATAQUE (15 min)
+═══════════════════════════════════════════════════════════════
+
+ min 0-3    Abrí ej02.test.js. Anotá cada assert como un requisito.
+            Mirá el assert.ok del JSON: ahí está tu validación.
+
+ min 3-4    Abrí el .json y mirá UN elemento. Solo las propiedades
+            que nombra el test.
+
+ min 4-6    Escribí el esqueleto: validar contenedor, recorrer,
+            validar elemento, filtrar, devolver.
+
+ min 6-10   Corré el test. Arreglá el primer assert que falla.
+            Repetí. El test corta en el primero: es una lista
+            de tareas que se va destapando sola.
+
+ min 10-13  Los casos borde: entrada vacía, sin 2º argumento,
+            elemento inválido.
+
+ min 13-15  Releé el checklist de arriba.` },
+  ],
+  ejecutar:
+`const modelos = ${MODELOS_JSON};
+log("Los 5 errores más comunes, en vivo:");
+log("");
+
+log("1. Validar el 2º argumento");
+const e1 = (d, c) => { if (typeof c !== "string") throw new TypeError("falta"); return d.filter((m) => m.capacidades.includes(c)).map((m) => m.sigla); };
+try { e1(modelos); log("   f(modelos) -> " + JSON.stringify(e1(modelos))); }
+catch (e) { log("   f(modelos) -> arroja. El test esperaba []", "fail"); }
+
+log("");
+log("2. Ordenar el resultado");
+const bien = modelos.filter((m) => m.capacidades.includes("web")).map((m) => m.sigla);
+log("   sin ordenar -> " + JSON.stringify(bien) + "   ✔", "ok");
+log("   ordenado    -> " + JSON.stringify([...bien].sort()) + "   ❌", "fail");
+
+log("");
+log("3. Devolver los objetos enteros (falta el .map)");
+const e3 = modelos.filter((m) => m.capacidades.includes("web"));
+log("   -> [{sigla:'GPT', nombre:'ChatGPT', empresa:..., ...}, ...]", "fail");
+log("   el test esperaba [\\"GPT\\",\\"GRK\\",\\"PPX\\"]");
+
+log("");
+log("4. reduce sin return acc");
+try { log("   -> " + JSON.stringify([{k:1}].reduce((acc, x) => { acc.a = x.k; }, {}))); }
+catch (e) { log("   -> " + e.message, "fail"); }
+
+log("");
+log("5. typeof sin el !== null");
+const item = null;
+log("   typeof null === 'object' -> " + (typeof item === "object") + "  ← pasa la validación");
+try { log("   item.sigla -> " + item.sigla); }
+catch (e) { log("   item.sigla -> EXPLOTA: " + e.message, "fail"); }`
+},
+
+  ],
+};
+
+/* ==========================================================================
+   MOTOR
+   ========================================================================== */
+const VISTAS = [PARCIALES, VALIDACION, RECORRER, TRANSFORMAR, TESTS, CHULETA];
+
+/* ---------- escapado y resaltado ---------- */
+function escapar(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+const PALABRAS = new RegExp(
+  "\\b(const|let|var|function|return|if|else|for|of|in|while|switch|case|default|" +
+  "break|continue|throw|new|typeof|instanceof|export|import|from|with|class|" +
+  "try|catch|finally|async|await|true|false|null|undefined|this)\\b", "g");
+
+function resaltar(codigo, lenguaje) {
+  let out = escapar(codigo);
+  if (lenguaje === "texto") return out;
+
+  // 1. Comentarios y strings primero, reemplazados por un marcador para que
+  //    los pasos siguientes no los toquen.
+  const guardado = [];
+  const guardar = (clase) => (m) => {
+    guardado.push('<span class="' + clase + '">' + m + "</span>");
+    // El marcador es un carácter del área de uso privado de Unicode: así
+    // ni el paso de números ni el de palabras clave lo tocan.
+    return String.fromCharCode(0xE100 + guardado.length - 1);
+  };
+  out = out.replace(/\/\*[\s\S]*?\*\//g, guardar("cmt"));
+  out = out.replace(/\/\/[^\n]*/g, guardar("cmt"));
+  out = out.replace(/`(?:[^`\\]|\\.)*`/g, guardar("str"));
+  out = out.replace(/"(?:[^"\\\n]|\\.)*"/g, guardar("str"));
+  out = out.replace(/'(?:[^'\\\n]|\\.)*'/g, guardar("str"));
+
+  // 2. Sobre lo que queda: palabras clave, números y nombres de función.
+  if (lenguaje !== "json") {
+    out = out.replace(PALABRAS, '<span class="kw">$1</span>');
+    out = out.replace(/\b(\d[\d_.]*)\b/g, '<span class="num">$1</span>');
+    out = out.replace(/\b([a-zA-Z_$][\w$]*)(?=\()/g, '<span class="fn">$1</span>');
+  } else {
+    out = out.replace(/\b(\d[\d_.]*)\b/g, '<span class="num">$1</span>');
+  }
+
+  // 3. Devolver los comentarios y strings a su lugar.
+  return out.replace(/[\uE100-\uF8FF]/g, (ch) => guardado[ch.charCodeAt(0) - 0xE100]);
+}
+
+/* ---------- assert de juguete, para el botón "Ejecutar" ---------- */
+function iguales(a, b) {
+  if (a === b) return true;
+  if (typeof a !== "object" || typeof b !== "object" || a === null || b === null) {
+    return a == b;                     // el deepEqual de Node es "loose"
+  }
+  if (Array.isArray(a) !== Array.isArray(b)) return false;
+  const ka = Object.keys(a), kb = Object.keys(b);
+  if (ka.length !== kb.length) return false;
+  return ka.every((k) => iguales(a[k], b[k]));
+}
+
+function crearAssert() {
+  const fallo = (m, extra) => { throw new Error((m || "assert falló") + (extra || "")); };
+  return {
+    ok(v, m) { if (!v) fallo(m); },
+    equal(a, b, m) { if (a != b) fallo(m, " (recibí " + JSON.stringify(a) + ", esperaba " + JSON.stringify(b) + ")"); },
+    strictEqual(a, b, m) { if (a !== b) fallo(m); },
+    deepEqual(a, b, m) { if (!iguales(a, b)) fallo(m, " (recibí " + JSON.stringify(a) + ", esperaba " + JSON.stringify(b) + ")"); },
+    deepStrictEqual(a, b, m) { if (!iguales(a, b)) fallo(m); },
+    throws(fn, m) {
+      try { fn(); } catch { return; }
+      fallo(m, " (no arrojó ningún error)");
+    },
+  };
+}
+
+function formatear(v) {
+  if (typeof v === "string") return v;
+  if (v === undefined) return "undefined";
+  try { return JSON.stringify(v, null, 2); } catch { return String(v); }
+}
+
+/* ---------- construcción de una vista ---------- */
+function construirVista(def) {
+  const vista = document.createElement("div");
+  vista.className = "vista";
+  vista.id = "vista-" + def.id;
+
+  /* --- columna 1: la lista --- */
+  const colLista = document.createElement("div");
+  colLista.className = "lista";
+  const cab = document.createElement("div");
+  cab.className = "cab";
+  const ayuda = document.createElement("p");
+  ayuda.textContent = def.ayuda;
+  cab.append(ayuda);
+  const nav = document.createElement("nav");
+  colLista.append(cab, nav);
+
+  /* --- columna 2: la descripción --- */
+  const colDesc = document.createElement("div");
+  colDesc.className = "desc";
+
+  /* --- columna 3: el editor --- */
+  const colEd = document.createElement("div");
+  colEd.className = "editor";
+  const barra = document.createElement("div");
+  barra.className = "barra-arch";
+  const pre = document.createElement("pre");
+  const code = document.createElement("code");
+  pre.append(code);
+  const consola = document.createElement("div");
+  consola.className = "consola";
+  colEd.append(barra, pre, consola);
+
+  vista.append(colLista, colDesc, colEd);
+
+  let actual = def.items[0];
+  let archivoActual = 0;
+
+  function pintarNav() {
+    nav.replaceChildren();
+    let grupo = null;
+    for (const item of def.items) {
+      if (item.grupo && item.grupo !== grupo) {
+        grupo = item.grupo;
+        const h = document.createElement("div");
+        h.className = "grupo";
+        h.textContent = grupo;
+        nav.append(h);
+      }
+      const b = document.createElement("button");
+      b.textContent = item.titulo;
+      if (item.origen) {
+        const n = document.createElement("span");
+        n.className = "n";
+        n.textContent = item.origen;
+        b.append(n);
+      }
+      b.classList.toggle("activo", item.id === actual.id);
+      b.addEventListener("click", () => mostrar(item));
+      nav.append(b);
+    }
+  }
+
+  function pintarDesc() {
+    colDesc.replaceChildren();
+    colDesc.scrollTop = 0;
+
+    const h2 = document.createElement("h2");
+    h2.textContent = actual.titulo;
+    colDesc.append(h2);
+
+    if (actual.origen) {
+      const badge = document.createElement("span");
+      badge.className = "origen";
+      badge.textContent = actual.origen;
+      colDesc.append(badge);
+    }
+    if (actual.firma) {
+      const f = document.createElement("code");
+      f.className = "firma";
+      f.textContent = actual.firma;
+      colDesc.append(f);
+    }
+
+    const res = document.createElement("p");
+    res.className = "resumen";
+    res.textContent = actual.resumen;
+    colDesc.append(res);
+
+    if (actual.puntos && actual.puntos.length) {
+      const h3 = document.createElement("h3");
+      h3.textContent = "A tener en cuenta";
+      colDesc.append(h3);
+      for (const p of actual.puntos) {
+        const d = document.createElement("div");
+        d.className = "punto" + (p.tipo ? " " + p.tipo : "");
+        const t = document.createElement("span");
+        t.className = "t";
+        t.textContent = (p.tipo === "trampa" ? "⚠ " : p.tipo === "error" ? "✕ " : "") + p.t;
+        const dd = document.createElement("p");
+        dd.className = "d";
+        dd.innerHTML = p.d;     // las descripciones traen <code> a propósito
+        d.append(t, dd);
+        colDesc.append(d);
+      }
+    }
+  }
+
+  function pintarEditor() {
+    barra.replaceChildren();
+
+    actual.archivos.forEach((arch, i) => {
+      const b = document.createElement("button");
+      b.className = "arch" + (i === archivoActual ? " activo" : "");
+      b.textContent = arch.nombre;
+      b.addEventListener("click", () => { archivoActual = i; pintarEditor(); });
+      barra.append(b);
+    });
+
+    const sep = document.createElement("span");
+    sep.className = "sep";
+    barra.append(sep);
+
+    if (actual.ejecutar) {
+      const run = document.createElement("button");
+      run.className = "accion correr";
+      run.textContent = "▶ Ejecutar";
+      run.addEventListener("click", ejecutar);
+      barra.append(run);
+    }
+
+    const copiar = document.createElement("button");
+    copiar.className = "accion";
+    copiar.textContent = "Copiar";
+    copiar.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(actual.archivos[archivoActual].codigo);
+        copiar.textContent = "¡copiado!";
+      } catch { copiar.textContent = "no se pudo"; }
+      setTimeout(() => { copiar.textContent = "Copiar"; }, 1200);
+    });
+    barra.append(copiar);
+
+    const arch = actual.archivos[archivoActual];
+    code.innerHTML = resaltar(arch.codigo, arch.lenguaje || "js");
+    pre.scrollTop = 0;
+  }
+
+  function ejecutar() {
+    consola.replaceChildren();
+    consola.classList.add("visible");
+
+    const linea = (txt, clase) => {
+      const span = document.createElement("span");
+      if (clase) span.className = clase;
+      span.textContent = txt + "\n";
+      consola.append(span);
+    };
+
+    linea("$ node " + actual.archivos[0].nombre, "tit");
+
+    const log = (v, clase) => linea(formatear(v), clase);
+    try {
+      new Function("assert", "log", actual.ejecutar)(crearAssert(), log);
+    } catch (error) {
+      linea("");
+      linea("AssertionError: " + error.message, "fail");
+    }
+    consola.scrollTop = consola.scrollHeight;
+  }
+
+  function mostrar(item) {
+    actual = item;
+    archivoActual = 0;
+    consola.classList.remove("visible");
+    consola.replaceChildren();
+    pintarNav();
+    pintarDesc();
+    if (item.archivos && item.archivos.length) {
+      pre.style.display = "";
+      pintarEditor();
+    } else {
+      barra.replaceChildren();
+      code.textContent = "";
+      pre.style.display = "none";
+    }
+  }
+
+  mostrar(def.items[0]);
+  return vista;
+}
+
+/* ---------- pestañas ---------- */
+const app = document.getElementById("app");
+const tabsNav = document.getElementById("tabs");
+
+for (const def of VISTAS) {
+  app.append(construirVista(def));
+  const b = document.createElement("button");
+  b.textContent = def.tab;
+  b.dataset.id = def.id;
+  b.addEventListener("click", () => activar(def.id));
+  tabsNav.append(b);
+}
+
+function activar(id) {
+  document.querySelectorAll(".vista").forEach((v) => v.classList.toggle("activa", v.id === "vista-" + id));
+  tabsNav.querySelectorAll("button").forEach((b) => b.classList.toggle("activo", b.dataset.id === id));
+}
+
+activar("parciales");
+</script>
+</body>
+</html>

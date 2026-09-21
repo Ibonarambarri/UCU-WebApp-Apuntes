@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>02 — Menú con imagen alternada</title>
+<style>
+/* ============================================================
+   PATRÓN 2: secciones con imagen que alterna de lado
+   Salió en: menú Los Pollos Hermanos (2025 sem2 matutino).
+   ============================================================ */
+
+* { box-sizing: border-box; }
+
+body { color: #1a1a1a; font-family: Georgia, "Times New Roman", serif; margin: 0; }
+
+/* --- Banda de color a sangre (ocupa todo el ancho) --- */
+.hero {
+  align-items: flex-start;
+  background-color: #f5d800;
+  display: flex;
+  gap: 2em;
+  justify-content: space-between;
+  padding: 3em 4em;
+}
+.hero h1 { color: #d1332e; font-size: 3rem; line-height: 1.1; margin: 0 0 0.4em; }
+.hero p  { color: #d1332e; font-size: 0.85rem; font-weight: bold; margin: 0; max-width: 24em; }
+.hero .logo {
+  align-items: center; background: #fff8; border-radius: 50%;
+  display: flex; font-size: 4rem; height: 160px; justify-content: center; width: 160px;
+}
+
+.seccion { margin: 0 auto; max-width: 950px; padding: 3em 2em; }
+.seccion h2 { font-size: 2.4rem; margin: 0; text-align: center; }
+.subtitulo { font-size: 0.75rem; margin: 0.6em 0 2.5em; text-align: center; }
+
+/* --- LO IMPORTANTE: dos columnas que alternan de lado ---------
+   flex + row-reverse en una clase modificadora.
+   `flex: 0 0 40%` = no crece, no se achica, mide 40%.
+   `flex: 1`       = ocupa todo lo que sobre.
+   --------------------------------------------------------------- */
+.contenido { align-items: flex-start; display: flex; gap: 3em; }
+.contenido.invertida { flex-direction: row-reverse; }
+
+.ilustracion {
+  align-items: center; background: #fdf2e3; border-radius: 8px;
+  display: flex; flex: 0 0 40%; font-size: 7rem; justify-content: center; min-height: 280px;
+}
+
+.platos { flex: 1; list-style: none; margin: 0; padding: 0; }
+
+/* Separador punteado arriba de cada plato */
+.platos li { border-top: 2px dotted #1a1a1a; padding: 0.8em 0 1.5em; }
+
+/* Precio arriba a la derecha, título abajo a la izquierda */
+.precio { font-size: 1.1rem; font-weight: bold; margin: 0; text-align: right; }
+.platos h3 { font-size: 1.6rem; line-height: 1.15; margin: 0.1em 0 0.4em; }
+.descripcion { color: #4a4a4a; font-family: Arial, sans-serif; font-size: 0.75rem; line-height: 1.5; margin: 0; }
+
+@media (max-width: 700px) {
+  .hero { flex-direction: column; padding: 2em; }
+  .hero h1 { font-size: 2.2rem; }
+  .contenido, .contenido.invertida { flex-direction: column; }
+  .ilustracion { flex: 1; min-height: 180px; width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div>
+    <h1>Los Pollos<br>Hermanos</h1>
+    <p>El sabor que hace que hasta Heisenberg se saque el sombrero.</p>
+  </div>
+  <div class="logo">🍗</div>
+</header>
+
+<main>
+  <section class="seccion">
+    <h2>Entradas</h2>
+    <p class="subtitulo">El primer paso a la adicción</p>
+    <div class="contenido">
+      <div class="ilustracion">🧑‍⚖️</div>
+      <ul class="platos">
+        <li>
+          <p class="precio">$20</p>
+          <h3>Alitas de Crystal Meth</h3>
+          <p class="descripcion">Crujientes y adictivas, servidas con una salsa “azul” de la casa.</p>
+        </li>
+        <li>
+          <p class="precio">$18</p>
+          <h3>Nachos Salamanca</h3>
+          <p class="descripcion">Se comen rápido, pero cuidado… siempre hay consecuencias.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- misma estructura, sólo cambia la clase .invertida -->
+  <section class="seccion">
+    <h2>Platos Principales</h2>
+    <p class="subtitulo">La verdadera ‘cocina’ de Los Pollos Hermanos</p>
+    <div class="contenido invertida">
+      <div class="ilustracion">🧪</div>
+      <ul class="platos">
+        <li>
+          <p class="precio">$20</p>
+          <h3>Pollo a la Gus Fring</h3>
+          <p class="descripcion">Perfecto, impecable, sin una sola falla.</p>
+        </li>
+        <li>
+          <p class="precio">$22</p>
+          <h3>Ribs al estilo Heisenberg</h3>
+          <p class="descripcion">Tan intensas que parecen cocinadas en un laboratorio de química.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>

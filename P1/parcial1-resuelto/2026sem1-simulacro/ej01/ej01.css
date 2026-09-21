@@ -1,0 +1,105 @@
+/* Ejercicio 01 - resuelto */
+:root {
+  --borde: #1b1b1b;
+  --radio: 16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: #fff;
+  color: var(--borde);
+  font-family: "Comic Sans MS", "Segoe UI", Arial, sans-serif;
+  font-size: 16px;
+  margin: 0;
+  padding: 2vh 2vw;
+}
+
+.marco {
+  border: 2px solid var(--borde);
+  border-radius: var(--radio);
+  margin: 0 auto;
+  max-width: 950px;
+  padding: 1.5em;
+}
+
+h1 {
+  font-size: 2em;
+  font-weight: normal;
+  margin: 0.2em 0 1em;
+  text-align: center;
+}
+
+/* Grilla responsiva de dos columnas que colapsa a una en pantallas chicas */
+.grilla {
+  display: grid;
+  gap: 1.5em 2em;
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+}
+
+.plato {
+  border: 2px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 0.8em 1.2em 1.2em;
+}
+
+/* En el diseño algunas tarjetas no tienen recuadro */
+.plato.sin-borde {
+  border-color: transparent;
+}
+
+.plato header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.plato h2 {
+  font-size: 1.5em;
+  font-weight: normal;
+  margin: 0;
+}
+
+.bandera {
+  font-size: 2em;
+  line-height: 1;
+}
+
+.cuerpo {
+  align-items: center;
+  display: flex;
+  gap: 1em;
+  margin-top: 0.8em;
+}
+
+.comida {
+  flex: 0 0 auto;
+  font-size: 3.5em;
+  line-height: 1;
+}
+
+.cuerpo p {
+  flex: 1;
+  line-height: 1.5;
+  margin: 0;
+  text-align: right;
+}
+
+footer {
+  display: flex;
+  font-size: 0.9em;
+  justify-content: space-between;
+  margin-top: 2em;
+  padding: 0 0.3em;
+}
+
+@media (max-width: 420px) {
+  .cuerpo {
+    flex-direction: column;
+  }
+  .cuerpo p {
+    text-align: left;
+  }
+}

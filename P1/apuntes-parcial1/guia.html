@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía — Parcial 1 DWYM</title>
+<style>
+  * { box-sizing: border-box; }
+  :root {
+    --bg: #f6f7f9;
+    --panel: #fff;
+    --linea: #e2e5ea;
+    --texto: #1b1f24;
+    --tenue: #6a7280;
+    --acento: #1b4f9c;
+    --verde: #1f7a3d;
+    --rojo: #b3261e;
+    --amarillo: #fff6e0;
+    --amarillo-b: #f0d79a;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg); color: var(--texto); display: flex; flex-direction: column;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    margin: 0; overflow: hidden;
+  }
+
+  header {
+    align-items: center; background: var(--panel); border-bottom: 1px solid var(--linea);
+    display: flex; flex-shrink: 0; gap: 1.4em; height: 52px; padding: 0 1.2em;
+  }
+  .marca { font-size: .82rem; font-weight: 700; white-space: nowrap; }
+  .marca span { color: var(--tenue); font-weight: 400; }
+  #tabs { display: flex; gap: .2em; overflow-x: auto; }
+  #tabs button {
+    background: none; border: none; border-radius: 7px; color: var(--tenue); cursor: pointer;
+    font: inherit; font-size: .85rem; padding: .45em .85em; white-space: nowrap;
+  }
+  #tabs button:hover { background: #eef1f5; color: var(--texto); }
+  #tabs button.activo { background: var(--acento); color: #fff; }
+
+  #app { flex: 1; overflow-y: auto; }
+  .vista { display: none; margin: 0 auto; max-width: 980px; padding: 2em 1.8em 5em; }
+  .vista.activa { display: block; }
+
+  h1 { font-size: 1.6rem; margin: 0 0 .3em; }
+  .intro { color: var(--tenue); font-size: .95rem; line-height: 1.65; margin: 0 0 1.5em; max-width: 78ch; }
+  h2 {
+    border-top: 1px solid var(--linea); font-size: 1.1rem;
+    margin: 2.2em 0 .8em; padding-top: 1.2em;
+  }
+  h2:first-of-type { border-top: none; margin-top: 1.5em; padding-top: 0; }
+  h3 { font-size: .95rem; margin: 1.6em 0 .6em; }
+
+  p, li { font-size: .9rem; line-height: 1.7; }
+  ul, ol { padding-left: 1.3em; }
+  code {
+    background: #eef1f5; border-radius: 3px; font-family: var(--mono);
+    font-size: .87em; padding: 1px 5px;
+  }
+  a { color: var(--acento); }
+  a.enlace {
+    background: var(--panel); border: 1px solid var(--linea); border-radius: 6px;
+    display: inline-block; font-size: .78rem; margin: .15em .25em .15em 0;
+    padding: .25em .65em; text-decoration: none; white-space: nowrap;
+  }
+  a.enlace:hover { border-color: var(--acento); background: #eef4fc; }
+  a.enlace.apunte { border-color: #b9cbe4; }
+  a.enlace.carpeta::before { content: "📁 "; }
+  a.enlace.apunte::before { content: "📘 "; }
+
+  /* ---- la tabla de reconocimiento ---- */
+  .señal {
+    background: var(--panel); border: 1px solid var(--linea); border-left: 4px solid var(--acento);
+    border-radius: 10px; margin-bottom: .9em; padding: 1em 1.2em;
+  }
+  .señal .si {
+    color: var(--acento); font-size: .68rem; font-weight: 700;
+    letter-spacing: .09em; text-transform: uppercase;
+  }
+  .señal h4 { font-size: .98rem; margin: .2em 0 .5em; }
+  .señal p { margin: 0 0 .6em; }
+  .señal .donde { border-top: 1px dashed var(--linea); margin-top: .7em; padding-top: .7em; }
+  .señal .donde .et {
+    color: var(--tenue); display: block; font-size: .7rem; font-weight: 700;
+    letter-spacing: .07em; margin-bottom: .35em; text-transform: uppercase;
+  }
+
+  .aviso {
+    background: var(--amarillo); border: 1px solid var(--amarillo-b); border-radius: 10px;
+    font-size: .88rem; line-height: 1.65; margin: 1.2em 0; padding: .9em 1.1em;
+  }
+  .aviso.rojo { background: #fdeceb; border-color: #f0b8b4; }
+  .aviso.verde { background: #eef7f0; border-color: #cfe6d6; }
+  .aviso strong { display: block; margin-bottom: .3em; }
+
+  table { border-collapse: collapse; font-size: .84rem; margin: 1em 0 1.5em; width: 100%; }
+  th, td { border: 1px solid var(--linea); padding: .5em .7em; text-align: left; vertical-align: top; }
+  th { background: #eef1f5; font-size: .74rem; letter-spacing: .04em; text-transform: uppercase; }
+  td.si { background: #eafaef; }
+  td small { color: var(--tenue); }
+
+  .paso {
+    align-items: baseline; display: flex; gap: .9em; margin-bottom: .5em;
+  }
+  .paso .n {
+    background: var(--acento); border-radius: 999px; color: #fff; flex-shrink: 0;
+    font-size: .72rem; font-weight: 700; padding: .15em .6em;
+  }
+  .paso .txt { font-size: .9rem; line-height: 1.65; }
+
+  pre {
+    background: #1b1f24; border-radius: 8px; color: #e6e9ef; font-family: var(--mono);
+    font-size: 12.5px; line-height: 1.55; margin: .8em 0; overflow-x: auto; padding: .9em 1.1em;
+  }
+  pre .cmt { color: #7f8c99; font-style: italic; }
+
+  .tarjetas { display: grid; gap: 1em; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin: 1.2em 0; }
+  .tarjeta {
+    background: var(--panel); border: 1px solid var(--linea); border-radius: 10px; padding: 1em 1.1em;
+  }
+  .tarjeta h4 { font-size: .95rem; margin: 0 0 .35em; }
+  .tarjeta p { color: var(--tenue); font-size: .84rem; margin: 0 0 .7em; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="marca">Parcial 1 · DWYM <span>— Guía</span></div>
+  <nav id="tabs">
+    <button data-id="inicio" class="activo">Por dónde empezar</button>
+    <button data-id="ej01">Ej 01 · HTML y CSS</button>
+    <button data-id="ej02">Ej 02 · Función y tests</button>
+    <button data-id="ej03">Ej 03 · DOM y API</button>
+    <button data-id="parciales">Los parciales</button>
+    <button data-id="dia">El día de la prueba</button>
+  </nav>
+</header>
+
+<div id="app">
+
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="vista activa" id="v-inicio">
+  <h1>Guía del Parcial 1</h1>
+  <p class="intro">Esta carpeta tiene cuatro archivos y una carpeta. Los tres
+  apuntes son de consulta durante la práctica; esta guía es para leer <em>antes</em>,
+  y para volver el día de la prueba cuando abrís el enunciado y necesitás decidir
+  rápido a qué se parece lo que te tocó.</p>
+
+  <div class="tarjetas">
+    <div class="tarjeta">
+      <h4>📘 Apuntes de HTML y CSS</h4>
+      <p>Los 6 maquetados renderizados con su código, el componente icono+texto,
+         grillas, fichas, alineación y la comparativa.</p>
+      <a class="enlace apunte" href="APUNTES-HTML-CSS.html">Abrir</a>
+    </div>
+    <div class="tarjeta">
+      <h4>📘 Apuntes de JavaScript</h4>
+      <p>Los 6 ejercicios de «escribí una función» con sus tests, validación de
+         datos, arrays, y cómo leer un <code>.test.js</code>. Con botón de ejecutar.</p>
+      <a class="enlace apunte" href="APUNTES-JAVASCRIPT.html">Abrir</a>
+    </div>
+    <div class="tarjeta">
+      <h4>📘 Apuntes de DOM y API</h4>
+      <p>Los 9 ejercicios de DOM/API con demos que funcionan de verdad,
+         el esqueleto, <code>fetch</code>, el CRUD y los formularios.</p>
+      <a class="enlace apunte" href="APUNTES-DOM-API.html">Abrir</a>
+    </div>
+    <div class="tarjeta">
+      <h4>📁 parciales/</h4>
+      <p>Los 6 parciales y simulacros, cada uno con su <code>enunciado/</code>
+         para practicar de cero y su <code>resuelto/</code> para comparar.</p>
+      <a class="enlace carpeta" href="parciales/">Abrir</a>
+    </div>
+  </div>
+
+  <h2>La estructura de la prueba</h2>
+  <p>Desde 2026 son <strong>tres ejercicios</strong> (antes eran cuatro). Se entrega
+  con un <em>pull request</em> a tu fork. Durante la prueba podés usar todo lo que
+  tengas en la computadora, pero <strong>no hay internet ni asistentes de IA</strong>.</p>
+
+  <table>
+    <thead>
+      <tr><th>Ejercicio</th><th>Qué es</th><th>Cómo se corrige</th><th>Tiempo sugerido</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>ej01</strong></td>
+        <td>Reproducir un diseño con HTML y CSS a partir de una imagen</td>
+        <td>a ojo, contra <code>ej01.png</code></td>
+        <td>~20 min</td>
+      </tr>
+      <tr>
+        <td><strong>ej02</strong></td>
+        <td>Escribir una función que pase unos tests automáticos</td>
+        <td><code>node ej02/ej02.test.js</code></td>
+        <td>~15 min</td>
+      </tr>
+      <tr>
+        <td><strong>ej03</strong></td>
+        <td>Manipular el DOM y consumir una API con <code>fetch</code></td>
+        <td>usando la página</td>
+        <td>~25 min</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="aviso verde">
+    <strong>Preparación antes del día</strong>
+    Entrá a <code>parciales/2026sem2-simulacro/enunciado/ej03/</code> y corré
+    <code>npm install</code> una vez, <strong>con internet</strong>. Así
+    <code>json-server</code> te queda en la caché de npm y el día de la prueba
+    <code>npm install</code> funciona sin conexión. Es la única dependencia externa de
+    toda la prueba y lo único que te puede dejar trabado sin poder avanzar.
+  </div>
+
+  <h2>Cómo usar esto</h2>
+  <div class="paso"><span class="n">1</span><span class="txt">Leé las tres pestañas de ejercicios de esta guía. Son las señales para reconocer qué te tocó.</span></div>
+  <div class="paso"><span class="n">2</span><span class="txt">Hacé un parcial entero cronometrado desde <code>parciales/*/enunciado/</code>, sin mirar nada.</span></div>
+  <div class="paso"><span class="n">3</span><span class="txt">Compará contra el <code>resuelto/</code> de al lado y contra el apunte que corresponda.</span></div>
+  <div class="paso"><span class="n">4</span><span class="txt">Repetí con otro. Empezá por <strong>2026sem2</strong> y <strong>2026sem1</strong>, que son los que más se parecen a lo que viene.</span></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="vista" id="v-ej01">
+  <h1>Ejercicio 01 — HTML y CSS</h1>
+  <p class="intro">Te dan una imagen (<code>ej01.png</code>) y una tabla de datos, y
+  tenés que reproducir el diseño. Abrí la imagen y contestá estas preguntas en orden:
+  cada respuesta te manda a un parcial concreto donde eso ya salió resuelto.</p>
+
+  <div class="aviso">
+    <strong>Lo primero, siempre</strong>
+    Antes de escribir CSS: <code>* { box-sizing: border-box; }</code> arriba de todo, y
+    <code>margin: 0</code> en cada <code>h1</code>–<code>h4</code> y <code>p</code> que
+    vaya dentro de un flex. Son los dos errores que más se repiten en las correcciones.
+  </div>
+
+  <h2>Señales, y a dónde ir con cada una</h2>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>A · Una grilla de tarjetas iguales que se reacomoda</h4>
+    <p>El caso más probable: salió en <strong>los tres parciales de 2026</strong>. Si el
+    enunciado dice «la página debe ser responsiva» o «3, 2 o 1 columnas según el ancho»,
+    la respuesta es <code>grid-template-columns: repeat(auto-fit, minmax(280px, 1fr))</code>,
+    sin ninguna media query.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace apunte" href="APUNTES-HTML-CSS.html">Apuntes → Grillas y layouts</a>
+      <a class="enlace carpeta" href="parciales/2026sem2-simulacro/">2026sem2 · Observatorio de IA</a>
+      <a class="enlace carpeta" href="parciales/2026sem1-prueba/">2026sem1 · Apollo</a>
+      <a class="enlace carpeta" href="parciales/2026sem1-simulacro/">2026sem1 · Menú Internacional</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>B · Un emoji al lado de un texto de dos líneas</h4>
+    <p>Un icono a la izquierda y al lado un título con un subtítulo más chico debajo
+    (nombre / empresa, plato / país, misión / fecha). Está en <strong>los 6 parciales,
+    sin excepción</strong>. Son dos niveles de flex: fila para icono+texto, columna para
+    las dos líneas. Y <code>margin: 0</code> en los títulos, si no el icono queda descentrado.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace apunte" href="APUNTES-HTML-CSS.html">Apuntes → Icono + texto (8 variantes)</a>
+      <a class="enlace carpeta" href="parciales/2026sem2-simulacro/">2026sem2 · emoji en cajita</a>
+      <a class="enlace carpeta" href="parciales/2026sem1-prueba/">2026sem1 · emoji dentro del h2</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>C · Un borde redondeado que envuelve TODA la página</h4>
+    <p>Con el título adentro. Está en los tres de 2026 y es lo que más se olvida.
+    <code>margin: 0 auto</code> + <code>max-width</code> + <code>border</code>. No uses
+    <code>body { display: flex; align-items: center }</code> para centrar: después el pie
+    no llega a los bordes.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace apunte" href="APUNTES-HTML-CSS.html">Apuntes → Grillas y layouts → El marco exterior</a>
+      <a class="enlace carpeta" href="parciales/2026sem1-prueba/">2026sem1 · Apollo</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>D · Una tarjeta distinta a las demás</h4>
+    <p>Con borde de color, fondo gris, sin recuadro, o con una etiqueta encima. Siempre
+    se resuelve igual: clase base + una clase modificadora que cambia UNA propiedad. Nunca
+    dupliques la regla entera. Si la tarjeta va «sin borde», usá
+    <code>border-color: transparent</code> y no <code>border: none</code>, para que no se
+    desalinee con las que sí tienen.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace apunte" href="APUNTES-HTML-CSS.html">Apuntes → Fichas y etiquetas</a>
+      <a class="enlace carpeta" href="parciales/2026sem2-simulacro/">2026sem2 · borde naranja + ⭐</a>
+      <a class="enlace carpeta" href="parciales/2026sem1-prueba/">2026sem1 · fondo gris</a>
+      <a class="enlace carpeta" href="parciales/2026sem1-simulacro/">2026sem1 · sin recuadro</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>E · Píldoras / etiquetas en fila</h4>
+    <p>Palabras sueltas dentro de cápsulas. <code>flex-wrap: wrap</code> en el contenedor
+    (obligatorio, si no se desbordan), <code>border-radius: 999px</code> y
+    <code>white-space: nowrap</code> en cada una.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace apunte" href="APUNTES-HTML-CSS.html">Apuntes → Fichas y etiquetas</a>
+      <a class="enlace carpeta" href="parciales/2026sem2-simulacro/">2026sem2 · capacidades</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>F · Algo a la izquierda y algo a la derecha</h4>
+    <p>El pie de página (texto / fecha), el header de una tarjeta (nombre / bandera), una
+    fila de CV (cargo / período). Con <strong>dos</strong> elementos:
+    <code>justify-content: space-between</code>. Con <strong>tres o más</strong> y solo uno
+    que va a la derecha: <code>margin-left: auto</code> en ese, porque
+    <code>space-between</code> te separaría también el icono del texto.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace apunte" href="APUNTES-HTML-CSS.html">Apuntes → Alineación y filas</a>
+      <a class="enlace carpeta" href="parciales/2025sem2-parcial-vespertino/">2025sem2 · CV</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>G · Una imagen que alterna de lado entre secciones</h4>
+    <p>Zigzag. Misma estructura HTML en todas las filas y
+    <code>:nth-child(even) { flex-direction: row-reverse }</code>. Ojo: en la media query
+    hay que resetear <strong>también</strong> la regla de <code>even</code>.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace apunte" href="APUNTES-HTML-CSS.html">Apuntes → Grillas y layouts → Zigzag</a>
+      <a class="enlace carpeta" href="parciales/2025sem2-parcial-matutino/">2025sem2 · Los Pollos Hermanos</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>H · Imágenes o fuentes propias en una carpeta assets/</h4>
+    <p>Solo pasó en <strong>2025sem2</strong>. Desde 2026 todo es emoji, borde y texto:
+    no hay nada que descargar. Si te aparecen, van con <code>@font-face</code> y
+    <code>&lt;img&gt;</code> normales, y acordate de <code>max-width: 100%</code> para que
+    no se desborden.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace carpeta" href="parciales/2025sem2-parcial-matutino/">2025sem2 matutino</a>
+      <a class="enlace carpeta" href="parciales/2025sem2-parcial-vespertino/">2025sem2 vespertino</a>
+    </div>
+  </div>
+
+  <h2>Qué salió en cada uno</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Técnica</th>
+        <th>26s2 sim</th><th>26s1 pru</th><th>26s1 sim</th>
+        <th>25s2 mat</th><th>25s2 vesp</th><th>25s2 sim</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Grilla <code>auto-fit</code></td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td>—</td><td>—</td><td class="si">sí</td></tr>
+      <tr><td>Marco / contenedor centrado</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td>—</td><td class="si">sí</td><td class="si">sí</td></tr>
+      <tr><td>Icono + texto de doble fila</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td></tr>
+      <tr><td>Tarjeta destacada</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>Píldoras / fichas</td><td class="si">sí</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td><code>space-between</code></td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td>—</td></tr>
+      <tr><td>Media queries</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td class="si">sí</td><td>—</td></tr>
+      <tr><td>Zigzag alternado</td><td>—</td><td>—</td><td>—</td><td class="si">sí</td><td>—</td><td>—</td></tr>
+      <tr><td>Dos columnas <code>1fr 1fr</code></td><td>—</td><td>—</td><td>—</td><td>—</td><td class="si">sí</td><td>—</td></tr>
+      <tr><td>Hero / banda de color</td><td>—</td><td>—</td><td>—</td><td class="si">sí</td><td>—</td><td>—</td></tr>
+      <tr><td><code>position: absolute</code></td><td class="si">sí</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td><code>::before</code> para viñetas</td><td>—</td><td>—</td><td>—</td><td>—</td><td class="si">sí</td><td>—</td></tr>
+      <tr><td>Imágenes y fuentes propias</td><td>—</td><td>—</td><td>—</td><td class="si">sí</td><td class="si">sí</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <h2>El orden en que conviene escribirlo</h2>
+  <div class="paso"><span class="n">1</span><span class="txt"><strong>Leé la imagen 3 minutos.</strong> ¿Marco exterior? ¿Cuántas columnas? ¿Qué se repite? ¿Cuál es distinta? ¿Qué hay en el pie?</span></div>
+  <div class="paso"><span class="n">2</span><span class="txt"><strong>Todo el HTML primero</strong>, sin CSS. Semántico: <code>main</code>, <code>section</code>, <code>article</code>, <code>header</code>, <code>footer</code>. Una tarjeta bien y después copiar y pegar.</span></div>
+  <div class="paso"><span class="n">3</span><span class="txt"><strong>El reset y el contenedor.</strong> <code>box-sizing</code>, <code>body</code>, <code>.marco</code>.</span></div>
+  <div class="paso"><span class="n">4</span><span class="txt"><strong>La grilla y la caja.</strong> Que se acomoden los bloques antes de tocar lo de adentro.</span></div>
+  <div class="paso"><span class="n">5</span><span class="txt"><strong>Los detalles:</strong> márgenes en cero, tamaños, pesos, la modificadora de la destacada.</span></div>
+  <div class="paso"><span class="n">6</span><span class="txt"><strong>Achicá la ventana</strong> y arreglá lo que se rompa.</span></div>
+  <div class="paso"><span class="n">7</span><span class="txt"><strong>Repasá contra la imagen</strong> elemento por elemento, contando los datos uno a uno.</span></div>
+
+  <div class="aviso rojo">
+    <strong>Contá los datos contra la IMAGEN, no contra la tabla</strong>
+    En el simulacro 2026sem2 <strong>no coinciden</strong>: la imagen le da tres fichas a
+    Llama (<code>texto</code>, <code>código</code>, <code>local</code>) y la tabla del
+    enunciado solo dos. La imagen manda.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="vista" id="v-ej02">
+  <h1>Ejercicio 02 — Función que pasa unos tests</h1>
+  <p class="intro">Siempre es el <strong>segundo</strong> ejercicio, en las 6 pruebas. Pero
+  no siempre del mismo tipo: desde 2026 es una función pura con tests automáticos que no
+  podés modificar; en 2025sem2 era un sistema con estado que se verificaba mirando la
+  salida de <code>node</code>.</p>
+
+  <div class="aviso verde">
+    <strong>Lo primero: abrí el test, no el enunciado</strong>
+    <code>ej02.test.js</code> es la especificación real. Anotá cada <code>assert</code> como
+    un requisito y esa lista es tu checklist. El segundo <code>assert.ok</code> te regala
+    literalmente la validación de formato que tenés que escribir: copiala.
+  </div>
+
+  <h2>Señales, y a dónde ir con cada una</h2>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>A · Hay un archivo ej02.test.js</h4>
+    <p>Entonces es el molde de 2026: función pura, exportada con <code>export</code>, que
+    recibe un array de datos y devuelve otro array o un objeto. Se corre con
+    <code>node ej02/ej02.test.js</code>. Nunca toques el archivo de tests.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace apunte" href="APUNTES-JAVASCRIPT.html">Apuntes → Leer los tests</a>
+      <a class="enlace carpeta" href="parciales/2026sem2-simulacro/">2026sem2 · modelosPorCapacidad</a>
+      <a class="enlace carpeta" href="parciales/2026sem1-prueba/">2026sem1 · countriesForCurrency</a>
+      <a class="enlace carpeta" href="parciales/2026sem1-simulacro/">2026sem1 · fieldListToObject</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>B · «Dame la propiedad X de los que cumplen Y»</h4>
+    <p>Son <strong>dos</strong> operaciones, no una: <code>filter</code> decide quién entra,
+    <code>map</code> decide qué se devuelve de cada uno. Si lo hacés todo en un
+    <code>map</code> te quedan <code>null</code> en el resultado; si te quedás solo con el
+    <code>filter</code>, devolvés los objetos enteros.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace apunte" href="APUNTES-JAVASCRIPT.html">Apuntes → Recorrer y filtrar</a>
+      <a class="enlace carpeta" href="parciales/2026sem2-simulacro/">2026sem2 · siglas por capacidad</a>
+      <a class="enlace carpeta" href="parciales/2026sem1-prueba/">2026sem1 · códigos por moneda</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>C · Lo que buscás está dentro de un ARRAY del elemento</h4>
+    <p><code>{ capacidades: ["texto", "codigo"] }</code>. Se resuelve con
+    <code>item.capacidades.includes(loQueBusco)</code>.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace apunte" href="APUNTES-JAVASCRIPT.html">Apuntes → Validación → ¿Tiene la propiedad?</a>
+      <a class="enlace carpeta" href="parciales/2026sem2-simulacro/">2026sem2</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>D · Lo que buscás es una CLAVE de un objeto</h4>
+    <p><code>{ currencies: { "UYU": {...} } }</code>. Acá <code>includes</code>
+    <strong>no sirve</strong>: no es un array. Se usa
+    <code>Object.hasOwn(item.currencies, clave)</code> o <code>clave in item.currencies</code>.
+    Es la única diferencia real entre el ejercicio de 2026sem2 y el de 2026sem1.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace apunte" href="APUNTES-JAVASCRIPT.html">Apuntes → Validación → ¿Tiene la propiedad?</a>
+      <a class="enlace carpeta" href="parciales/2026sem1-prueba/">2026sem1 · countriesForCurrency</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>E · Hay que devolver un OBJETO, no un array</h4>
+    <p>«Convertí esta lista de pares en un objeto». Un <code>for...of</code> con
+    <code>result[item.clave] = item.valor</code> (con corchetes, para clave dinámica). El
+    «gana el último» sale gratis: el segundo pisa al primero solo.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace apunte" href="APUNTES-JAVASCRIPT.html">Apuntes → Transformar y agrupar</a>
+      <a class="enlace carpeta" href="parciales/2026sem1-simulacro/">2026sem1 · fieldListToObject</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>F · El archivo de datos es enorme</h4>
+    <p><code>americas.json</code> trae 56 países con decenas de propiedades cada uno. No lo
+    leas entero: buscá en el <code>assert.ok</code> del test qué propiedades valida
+    (<code>cca2</code> y <code>currencies</code>) y ocupate solo de esas.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace carpeta" href="parciales/2026sem1-prueba/">2026sem1 · americas.json</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>G · NO hay tests, y las funciones modifican unos datos</h4>
+    <p>Es el molde de 2025sem2 (la biblioteca). Cambia todo: los errores se
+    <strong>devuelven</strong> como string en vez de arrojarse, las funciones
+    <strong>mutan</strong> el estado, y se verifica corriendo <code>node archivo.js</code> y
+    mirando la salida. Validá en cascada con un <code>return</code> por chequeo, y acordate
+    de actualizar <strong>todos</strong> los registros afectados, no solo uno.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace apunte" href="APUNTES-JAVASCRIPT.html">Apuntes → Parciales → prestarLibro / devolverLibro</a>
+      <a class="enlace carpeta" href="parciales/2025sem2-parcial-matutino/">2025sem2 matutino</a>
+      <a class="enlace carpeta" href="parciales/2025sem2-parcial-vespertino/">2025sem2 vespertino</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>H · Hay que GENERAR datos, no filtrarlos</h4>
+    <p>«Devolvé una expresión aleatoria que dé este resultado». La técnica es
+    <strong>despejar</strong>: elegís un operando al azar y calculás el otro. Y se testea
+    distinto: no comparás la salida, verificás una <em>propiedad</em> muchas veces.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace apunte" href="APUNTES-JAVASCRIPT.html">Apuntes → Parciales → genExp</a>
+      <a class="enlace carpeta" href="parciales/2025sem2-simulacro/">2025sem2 · simulacro</a>
+    </div>
+  </div>
+
+  <h2>Qué pidió cada uno</h2>
+  <table>
+    <thead>
+      <tr><th>Prueba</th><th>Nº</th><th>Función</th><th>Tests</th><th>La clave</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Simulacro 2026sem2</strong><br><small>el más reciente</small></td><td><code>ej02</code></td><td><code>modelosPorCapacidad(data, capacidad)</code></td><td class="si">sí</td><td><code>includes</code> sobre un sub-array</td></tr>
+      <tr><td>Prueba 2026sem1</td><td><code>ej02</code></td><td><code>countriesForCurrency(data, currency)</code></td><td class="si">sí</td><td><code>Object.hasOwn</code> sobre claves</td></tr>
+      <tr><td>Simulacro 2026sem1</td><td><code>ej02</code></td><td><code>fieldListToObject(lista)</code></td><td class="si">sí</td><td>devuelve objeto, no array</td></tr>
+      <tr><td>Parcial 2025sem2 mat.</td><td><code>ej2</code></td><td><code>prestarLibro</code> / <code>buscarLibros</code></td><td>no</td><td>muta estado, devuelve strings</td></tr>
+      <tr><td>Parcial 2025sem2 vesp.</td><td><code>ej2</code></td><td><code>devolverLibro</code> / <code>listarLibrosPrestados</code></td><td>no</td><td><code>flatMap</code>, préstamo abierto</td></tr>
+      <tr><td>Simulacro 2025sem2</td><td><code>ej02</code></td><td><code>genExp(result)</code></td><td>no</td><td>generar, no filtrar</td></tr>
+    </tbody>
+  </table>
+
+  <h2>La decisión que más gente falla</h2>
+  <div class="aviso rojo">
+    <strong>Error vs. valor vacío: no es lo mismo</strong>
+    Los tests distinguen dos situaciones que parecen la misma. <strong>Arrojá error</strong>
+    solo cuando el <em>contenedor</em> o la <em>forma</em> de los elementos están mal
+    (<code>undefined</code>, <code>null</code>, no es array, <code>[{}]</code>).
+    <strong>Devolvé vacío</strong> cuando simplemente no hay coincidencias, o cuando falta
+    el segundo argumento. Si le ponés un <code>if (!capacidad) throw</code>, rompés el test
+    que pide <code>modelosPorCapacidad(modelos)</code> → <code>[]</code>.
+  </div>
+
+  <h2>El esqueleto que resuelve el 90%</h2>
+<pre><span class="cmt">// 1. Validar el contenedor. Cubre undefined y null de una vez.</span>
+if (!Array.isArray(data)) {
+  throw new TypeError("El primer argumento debe ser un array.");
+}
+
+const resultado = [];
+
+for (const item of data) {
+  <span class="cmt">// 2. Validar cada elemento. typeof null === "object", ojo.</span>
+  if (typeof item?.propA !== "string" || !Array.isArray(item?.propB)) {
+    throw new TypeError("Formato inválido.");
+  }
+  <span class="cmt">// 3. Filtrar y quedarse con la parte que se pide.</span>
+  if (item.propB.includes(criterio)) {
+    resultado.push(item.propA);
+  }
+}
+
+return resultado;   <span class="cmt">// en el orden original: no ordenes nada</span></pre>
+
+  <h2>Antes de entregar</h2>
+  <ul>
+    <li><code>node ej02/ej02.test.js</code> pasa — <strong>corrélo, no lo asumas</strong></li>
+    <li>La función está <code>export</code>ada, con el nombre exacto del <code>import</code> del test</li>
+    <li>Devuelve array vacío para entrada vacía, no <code>undefined</code></li>
+    <li>Arroja con <code>null</code>, <code>undefined</code> y con <code>[{}]</code></li>
+    <li><strong>No</strong> arroja cuando falta el segundo argumento</li>
+    <li>Respeta el orden original — <code>deepEqual</code> compara en orden</li>
+    <li>No mutaste el array de entrada (<code>sort</code> y <code>reverse</code> mutan)</li>
+    <li>Si usaste <code>reduce</code>, devolvés el acumulador <strong>siempre</strong></li>
+    <li>No tocaste <code>ej02.test.js</code> ni el <code>.json</code></li>
+  </ul>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="vista" id="v-ej03">
+  <h1>Ejercicio 03 — DOM y API</h1>
+  <p class="intro">El ejercicio grande. Desde 2026 junta las dos cosas que en 2025sem2
+  estaban separadas (el <code>ej3</code> de DOM y el <code>ej4</code> de API). Los cinco
+  que tienen API son <strong>el mismo archivo con otros nombres</strong>: si te sabés el
+  esqueleto, la mitad del ejercicio ya está escrita.</p>
+
+  <div class="aviso verde">
+    <strong>Lo primero: levantá el servidor</strong>
+    <code>cd ej03 &amp;&amp; npm install &amp;&amp; npm start</code> → <code>http://localhost:3000/</code>.
+    Y entrá a <code>http://localhost:3000/&lt;entidad&gt;</code> a ver el JSON: si eso responde,
+    la API anda y cualquier problema es de tu código. Después escribí
+    <code>fetchJSON</code> de memoria, antes que nada.
+  </div>
+
+  <h2>Señales, y a dónde ir con cada una</h2>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>A · Se genera algo ALEATORIO y el usuario decide con botones</h4>
+    <p>El molde de 2026, dos veces. El ciclo es: generar → mostrar → el usuario elige →
+    <code>POST</code> → generar de nuevo → recargar el historial. El estado del elemento
+    actual vive en una variable global (<code>let currentCombo</code>).</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace apunte" href="APUNTES-DOM-API.html">Apuntes → El esqueleto</a>
+      <a class="enlace carpeta" href="parciales/2026sem2-simulacro/">2026sem2 · Arena de Prompts</a>
+      <a class="enlace carpeta" href="parciales/2026sem1-prueba/">2026sem1 · combinaciones de color</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>B · Hay un FORMULARIO para cargar datos</h4>
+    <p>Listar desde la API, agregar con <code>POST</code>, recargar. Dos trampas:
+    <code>input.value</code> es <strong>siempre string</strong> aunque el input sea
+    <code>type="number"</code> (envolvelo en <code>Number()</code>), y un
+    <code>&lt;button&gt;</code> dentro de un <code>&lt;form&gt;</code> es
+    <strong>submit</strong> por defecto y recarga la página.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace apunte" href="APUNTES-DOM-API.html">Apuntes → Eventos y formularios</a>
+      <a class="enlace carpeta" href="parciales/2026sem1-simulacro/">2026sem1 · colores RGB</a>
+      <a class="enlace carpeta" href="parciales/2025sem2-simulacro/">2025sem2 · Gestor de Tareas</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>C · Cada fila lleva sus propios botones</h4>
+    <p>Borrar, editar, promover. Se crean desde JS con una fábrica
+    <code>button(label, onClick)</code>, y el dato se captura en un
+    <strong>closure</strong>: <code>button('Borrar', () =&gt; borrar(item))</code>. La flecha
+    se acuerda de qué <code>item</code> era, sin necesidad de <code>data-id</code>.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace apunte" href="APUNTES-DOM-API.html">Apuntes → Eventos → closures</a>
+      <a class="enlace carpeta" href="parciales/2025sem2-parcial-matutino/">2025sem2 · Mini-Contacts</a>
+      <a class="enlace carpeta" href="parciales/2025sem2-parcial-vespertino/">2025sem2 · Mini-Products</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>D · Hay que modificar UN campo de un registro</h4>
+    <p>Marcar como completado, cambiar el rol, restar stock. Usá <code>PATCH</code> con solo
+    el campo que cambia. Si te obligan a <code>PUT</code>, mandá el objeto entero:
+    <code>{ ...item, campo: nuevo }</code> — <strong><code>PUT</code> reemplaza</strong> y
+    te borra todo lo que no mandes.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace apunte" href="APUNTES-DOM-API.html">Apuntes → fetch y el CRUD (con demo de PATCH vs PUT)</a>
+      <a class="enlace carpeta" href="parciales/2025sem2-parcial-matutino/">2025sem2 · PATCH del rol</a>
+      <a class="enlace carpeta" href="parciales/2025sem2-parcial-vespertino/">2025sem2 · PUT del stock</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>E · NO hay API: solo hay que reaccionar a un click</h4>
+    <p>Un dado, un display de 7 segmentos. La clave no es JavaScript sino la
+    <strong>tabla de datos</strong>: qué elementos se prenden para cada valor. Escribí el
+    objeto primero y el código sale en cuatro líneas. Y recorré <strong>todos</strong> los
+    elementos siempre, no solo los que se prenden, o quedan encendidos los del valor anterior.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace apunte" href="APUNTES-DOM-API.html">Apuntes → Parciales → Display LED / Dado</a>
+      <a class="enlace carpeta" href="parciales/2025sem2-parcial-matutino/">2025sem2 · display LED</a>
+      <a class="enlace carpeta" href="parciales/2025sem2-parcial-vespertino/">2025sem2 · dado</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>F · Hay estado que NO se guarda en la API</h4>
+    <p>Favoritos, filtros, orden. Vive en una variable o un <code>Set</code>, y cada vez que
+    cambia llamás a <code>render()</code> que redibuja <strong>todo</strong>. Nunca guardes
+    el estado leyendo el DOM: si reordenás la lista, lo perdés.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace apunte" href="APUNTES-DOM-API.html">Apuntes → Parciales → Países con favoritos</a>
+      <a class="enlace carpeta" href="parciales/2025sem2-simulacro/">2025sem2 · países</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Si ves…</span>
+    <h4>G · La URL de la API es externa (https://…)</h4>
+    <p>Solo pasó una vez, en el simulacro 2025sem2 (restcountries). Es solo lectura y la
+    respuesta viene muy anidada: aplanala con un <code>map</code> inicial y el resto del
+    código queda limpio.</p>
+    <div class="donde">
+      <span class="et">Mirá</span>
+      <a class="enlace carpeta" href="parciales/2025sem2-simulacro/">2025sem2 · simulacro</a>
+    </div>
+  </div>
+
+  <h2>Qué pidió cada uno</h2>
+  <table>
+    <thead>
+      <tr><th>Prueba</th><th>Nº</th><th>Qué</th><th>Verbos</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Simulacro 2026sem2</strong><br><small>el más reciente</small></td><td><code>ej03</code></td><td>Arena de Prompts — duelo aleatorio + 🏆</td><td>GET, POST</td></tr>
+      <tr><td>Prueba 2026sem1</td><td><code>ej03</code></td><td>Combinaciones de color — 👍 / 👎</td><td>GET, POST</td></tr>
+      <tr><td>Simulacro 2026sem1</td><td><code>ej03</code></td><td>Colores RGB + formulario</td><td>GET, POST</td></tr>
+      <tr><td rowspan="2">Parcial 2025sem2 mat.</td><td><code>ej3</code></td><td>Display LED de 7 segmentos</td><td>— solo DOM</td></tr>
+      <tr><td><code>ej4</code></td><td>Mini-Contacts API</td><td>GET, POST, PATCH, DELETE</td></tr>
+      <tr><td rowspan="2">Parcial 2025sem2 vesp.</td><td><code>ej3</code></td><td>Dado</td><td>— solo DOM</td></tr>
+      <tr><td><code>ej4</code></td><td>Mini-Products API</td><td>GET, POST, PUT, DELETE</td></tr>
+      <tr><td rowspan="2">Simulacro 2025sem2</td><td><code>ej03</code></td><td>Países con favoritos (API pública)</td><td>GET</td></tr>
+      <tr><td><code>ej04</code></td><td>Gestor de Tareas</td><td>GET, POST, PATCH, DELETE</td></tr>
+    </tbody>
+  </table>
+
+  <div class="aviso">
+    <strong>2026 usa URL relativa, 2025 absoluta</strong>
+    Desde 2026 <code>json-server</code> sirve la página <em>y</em> la API, así que están en
+    el mismo origen y alcanza <code>fetchJSON('/duelos')</code>. En 2025 la página se abría
+    aparte y había que escribir <code>http://localhost:3000/users</code>.
+  </div>
+
+  <h2>El orden en que conviene escribirlo</h2>
+  <div class="paso"><span class="n">1</span><span class="txt"><code>npm install &amp;&amp; npm start</code>. Verificá la API en el navegador.</span></div>
+  <div class="paso"><span class="n">2</span><span class="txt">Leé el README y anotá el <strong>nombre exacto</strong> de las propiedades y de los endpoints.</span></div>
+  <div class="paso"><span class="n">3</span><span class="txt">Escribí <code>fetchJSON</code>. Probalo en la consola: <code>await fetchJSON('/duelos')</code>.</span></div>
+  <div class="paso"><span class="n">4</span><span class="txt"><code>loadX()</code> + <code>xElement()</code>. Con eso ya ves los datos: medio ejercicio hecho.</span></div>
+  <div class="paso"><span class="n">5</span><span class="txt">Las operaciones (POST / PATCH / DELETE), cada una con su <code>await loadX()</code> al final.</span></div>
+  <div class="paso"><span class="n">6</span><span class="txt">Lo de generar o leer el formulario, y el arranque en <code>onLoad</code>.</span></div>
+  <div class="paso"><span class="n">7</span><span class="txt">Borrá el HTML de ejemplo y los párrafos del enunciado. Recargá y probá todo.</span></div>
+
+  <div class="aviso rojo">
+    <strong>Los nombres de las propiedades, literal de la consigna</strong>
+    En tu simulacro 2026sem2 en curso, el <code>ej03</code> postea y lee
+    <code>result</code>, pero el README y el <code>db.json</code> sembrado usan
+    <code>ganador</code>. Resultado: los duelos que ya estaban en la API se dibujan
+    <strong>todos</strong> como si hubiera ganado B. Está en
+    <code>parciales/2026sem2-simulacro/en-curso/ej03/public/ej03.js</code>, líneas 80 y 107.
+  </div>
+
+  <h2>Antes de entregar</h2>
+  <ul>
+    <li>La lista se ve al cargar, sin tocar nada</li>
+    <li>Cada botón hace lo suyo <strong>y la lista se actualiza sola</strong></li>
+    <li>Probaste con la API vacía (<code>[]</code>) y con datos, y recargaste la página</li>
+    <li>Los nombres de las propiedades son literal los del README</li>
+    <li>No mandás el <code>id</code> en el POST — lo genera el servidor</li>
+    <li><code>JSON.stringify</code> en el body y <code>Content-Type: application/json</code></li>
+    <li><code>await</code> antes de cada <code>fetchJSON</code>, y <code>await loadX()</code> después de cada operación</li>
+    <li><code>replaceChildren</code>, no <code>append</code> — si no, la lista se duplica</li>
+    <li><code>event.preventDefault()</code> si hay un <code>&lt;form&gt;</code></li>
+    <li><code>try / catch</code> con <code>console.error</code> en cada operación</li>
+    <li>Borraste los elementos de ejemplo y los párrafos del enunciado</li>
+    <li>No tocaste nada fuera de <code>public/</code></li>
+    <li>F12 → Console sin errores rojos</li>
+  </ul>
+
+  <h2>Síntomas y su causa</h2>
+  <table>
+    <thead><tr><th>Lo que ves</th><th>Lo que pasa</th></tr></thead>
+    <tbody>
+      <tr><td><code>x.map is not a function</code></td><td>Te falta un <code>await</code> antes del <code>fetchJSON</code></td></tr>
+      <tr><td>La lista se duplica en cada recarga</td><td>Usaste <code>append</code> en vez de <code>replaceChildren</code></td></tr>
+      <tr><td>La página parpadea y se pierde todo</td><td>Falta <code>event.preventDefault()</code> en el submit</td></tr>
+      <tr><td><code>getElementById</code> devuelve <code>null</code></td><td>El script corrió antes que el body: usá <code>&lt;body onload&gt;</code> o ponelo al final</td></tr>
+      <tr><td>Se guarda basura o tira 400</td><td>Falta <code>JSON.stringify</code> o el <code>Content-Type</code></td></tr>
+      <tr><td>El botón no hace nada</td><td>Es <code>type="submit"</code> dentro de un form</td></tr>
+      <tr><td>Los datos viejos se ven mal</td><td>Estás leyendo una propiedad con otro nombre que el del <code>db.json</code></td></tr>
+      <tr><td>Guardás y no aparece hasta refrescar</td><td>Te falta el <code>await loadX()</code> después de la operación</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="vista" id="v-parciales">
+  <h1>Los parciales</h1>
+  <p class="intro">Seis pruebas, cada una con su <code>enunciado/</code> (tal cual te lo
+  dan, para practicar de cero) y su <code>resuelto/</code> (para comparar después). Están
+  ordenados del más reciente al más viejo: los de arriba son los que más se parecen a lo
+  que viene.</p>
+
+  <div class="aviso">
+    <strong>Los <code>node_modules</code> no están copiados</strong>
+    Donde haya un <code>package.json</code> (los <code>ej03</code> de 2026 y el
+    <code>ej04</code> del simulacro 2025sem2), corré <code>npm install</code> dentro de esa
+    carpeta una vez, <strong>con internet</strong>. Con hacerlo en una sola alcanza:
+    <code>json-server</code> queda en la caché de npm y ya funciona en el resto.<br><br>
+    En el <code>ej4</code> de los parciales 2025sem2 no hay <code>package.json</code>
+    porque el enunciado solo te daba <code>consigna.md</code>, <code>db.json</code> e
+    <code>index.html</code>: el JS y el servidor los armabas vos con
+    <code>npx json-server db.json -s .</code>
+  </div>
+
+  <div class="señal">
+    <span class="si">El más reciente</span>
+    <h4>2026sem2 · Simulacro <small>(matutino)</small></h4>
+    <p><strong>ej01</strong> Observatorio de IA — grilla de tarjetas, emoji en cajita,
+    destacada con etiqueta ⭐, fichas.<br>
+    <strong>ej02</strong> <code>modelosPorCapacidad</code> — filtrar por un array de capacidades.<br>
+    <strong>ej03</strong> Arena de Prompts — duelo aleatorio, POST, historial.</p>
+    <p><em>Este es el tuyo en curso.</em> La carpeta <code>en-curso/</code> tiene lo que
+    llevás hecho; <code>enunciado/</code> es el punto de partida limpio.</p>
+    <div class="donde">
+      <span class="et">Abrir</span>
+      <a class="enlace carpeta" href="parciales/2026sem2-simulacro/enunciado/">enunciado</a>
+      <a class="enlace carpeta" href="parciales/2026sem2-simulacro/en-curso/">en-curso</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Prueba real</span>
+    <h4>2026sem1 · Prueba 1 <small>(vespertino)</small></h4>
+    <p><strong>ej01</strong> Programa Apollo — grilla, emoji dentro del <code>h2</code>,
+    lista a la derecha, tarjeta con fondo gris.<br>
+    <strong>ej02</strong> <code>countriesForCurrency</code> — buscar una clave en un objeto.<br>
+    <strong>ej03</strong> Combinaciones de color — aleatorio, 👍/👎, POST, historial.</p>
+    <div class="donde">
+      <span class="et">Abrir</span>
+      <a class="enlace carpeta" href="parciales/2026sem1-prueba/enunciado/">enunciado</a>
+      <a class="enlace carpeta" href="parciales/2026sem1-prueba/resuelto/">resuelto</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Simulacro</span>
+    <h4>2026sem1 · Simulacro <small>(vespertino)</small></h4>
+    <p><strong>ej01</strong> Menú Internacional — header interno con
+    <code>space-between</code>, emoji grande al costado, tarjetas sin recuadro.<br>
+    <strong>ej02</strong> <code>fieldListToObject</code> — devolver un objeto, no un array.<br>
+    <strong>ej03</strong> Colores RGB — formulario, <code>Number()</code>, POST.</p>
+    <div class="donde">
+      <span class="et">Abrir</span>
+      <a class="enlace carpeta" href="parciales/2026sem1-simulacro/enunciado/">enunciado</a>
+      <a class="enlace carpeta" href="parciales/2026sem1-simulacro/resuelto/">resuelto</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Formato viejo · 4 ejercicios</span>
+    <h4>2025sem2 · Parcial 1 <small>(matutino)</small></h4>
+    <p><strong>ej1</strong> Los Pollos Hermanos — hero de color, zigzag, precios con
+    separador punteado, imágenes y fuentes propias.<br>
+    <strong>ej2</strong> Biblioteca — <code>prestarLibro</code> / <code>buscarLibros</code>,
+    sin tests, muta estado.<br>
+    <strong>ej3</strong> Display LED de 7 segmentos — solo DOM.<br>
+    <strong>ej4</strong> Mini-Contacts API — CRUD completo con PATCH.</p>
+    <div class="donde">
+      <span class="et">Abrir</span>
+      <a class="enlace carpeta" href="parciales/2025sem2-parcial-matutino/enunciado/">enunciado</a>
+      <a class="enlace carpeta" href="parciales/2025sem2-parcial-matutino/resuelto/">resuelto</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Formato viejo · 4 ejercicios</span>
+    <h4>2025sem2 · Parcial 1 <small>(vespertino)</small></h4>
+    <p><strong>ej1</strong> CV de Voldemort — hoja centrada, dos columnas, filas
+    título/período, viñetas con <code>::before</code>.<br>
+    <strong>ej2</strong> Biblioteca — <code>devolverLibro</code> /
+    <code>listarLibrosPrestados</code>, <code>flatMap</code>.<br>
+    <strong>ej3</strong> Dado — solo DOM.<br>
+    <strong>ej4</strong> Mini-Products API — CRUD completo con PUT.</p>
+    <div class="donde">
+      <span class="et">Abrir</span>
+      <a class="enlace carpeta" href="parciales/2025sem2-parcial-vespertino/enunciado/">enunciado</a>
+      <a class="enlace carpeta" href="parciales/2025sem2-parcial-vespertino/resuelto/">resuelto</a>
+    </div>
+  </div>
+
+  <div class="señal">
+    <span class="si">Formato viejo · 4 ejercicios</span>
+    <h4>2025sem2 · Simulacro</h4>
+    <p><strong>ej01</strong> Comidas — el maquetado más simple de todos.<br>
+    <strong>ej02</strong> <code>genExp</code> — generar datos aleatorios, no filtrar.<br>
+    <strong>ej03</strong> Países con favoritos — API pública, estado en un <code>Set</code>.<br>
+    <strong>ej04</strong> Gestor de Tareas — submit de formulario, PATCH, DELETE.</p>
+    <div class="donde">
+      <span class="et">Abrir</span>
+      <a class="enlace carpeta" href="parciales/2025sem2-simulacro/enunciado/">enunciado</a>
+      <a class="enlace carpeta" href="parciales/2025sem2-simulacro/resuelto/">resuelto</a>
+    </div>
+  </div>
+
+  <h2>La tendencia</h2>
+  <table>
+    <thead><tr><th></th><th>2025sem2</th><th>2026 (los tres)</th></tr></thead>
+    <tbody>
+      <tr><td>Ejercicios</td><td>4</td><td class="si">3</td></tr>
+      <tr><td>ej01</td><td>imágenes y fuentes propias</td><td class="si">emojis, bordes y grillas</td></tr>
+      <tr><td>ej02</td><td>sin tests, muta estado</td><td class="si">función pura + tests automáticos</td></tr>
+      <tr><td>DOM y API</td><td>separados (ej3 y ej4)</td><td class="si">juntos en el ej03</td></tr>
+      <tr><td>URL de la API</td><td>absoluta</td><td class="si">relativa</td></tr>
+      <tr><td>Verbos</td><td>los cuatro</td><td class="si">GET y POST</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Apostá a la columna de la derecha</strong>, pero tené leída la izquierda: el
+  CRUD completo con PATCH y DELETE apareció tres veces y no cuesta nada repasarlo.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="vista" id="v-dia">
+  <h1>El día de la prueba</h1>
+  <p class="intro">Sin internet y sin asistentes de IA. Podés usar todo lo que tengas en la
+  computadora, así que esta carpeta entera te sirve: abrí los cuatro HTML en pestañas antes
+  de empezar.</p>
+
+  <h2>Los primeros 5 minutos</h2>
+  <div class="paso"><span class="n">1</span><span class="txt">Fork privado, clonar, abrir la carpeta.</span></div>
+  <div class="paso"><span class="n">2</span><span class="txt"><code>cd ej03 &amp;&amp; npm install</code> — <strong>arrancalo ya</strong>, que corra en segundo plano mientras leés.</span></div>
+  <div class="paso"><span class="n">3</span><span class="txt">Leé los tres enunciados de corrido, sin escribir nada. Decidí en qué orden los vas a hacer.</span></div>
+  <div class="paso"><span class="n">4</span><span class="txt">Abrí esta guía en las tres pestañas de ejercicios y fijate a qué parcial se parece cada uno.</span></div>
+
+  <h2>El orden que conviene</h2>
+  <p><strong>ej02 → ej01 → ej03.</strong> El ej02 es el más corto y el único con una señal
+  objetiva de «terminado» (los tests pasan): sacártelo de encima primero te deja tranquilo.
+  El ej01 es predecible y se hace en un rato. El ej03 es el que más se puede alargar, así
+  que dejale el bloque de tiempo más grande.</p>
+  <p>Si vas mal de tiempo: en el ej03, <strong>listar los datos ya vale puntos</strong>.
+  Asegurate de que el <code>GET</code> y el dibujado funcionen antes de meterte con el POST.</p>
+
+  <h2>Las cinco líneas que hay que saber de memoria</h2>
+<pre>* { box-sizing: border-box; }                                    <span class="cmt">// ej01, arriba de todo</span>
+
+grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));     <span class="cmt">// ej01, la grilla</span>
+
+if (!Array.isArray(data)) throw new TypeError("...");            <span class="cmt">// ej02, validar</span>
+
+contenedor.replaceChildren(...items.map(itemElement));           <span class="cmt">// ej03, redibujar</span>
+
+await fetchJSON(url, { method: 'POST', body: JSON.stringify(x) });<span class="cmt">// ej03, guardar</span></pre>
+
+  <h2>Los errores que más puntos cuestan</h2>
+  <table>
+    <thead><tr><th>Ej</th><th>Error</th><th>Por qué pasa</th></tr></thead>
+    <tbody>
+      <tr><td>01</td><td>Falta <code>margin: 0</code> en los títulos</td><td>El margen por defecto descentra el icono</td></tr>
+      <tr><td>01</td><td>Falta el marco exterior</td><td>Se mira la tarjeta y no la página entera</td></tr>
+      <tr><td>01</td><td>Dejar el <code>Lorem</code> y los comentarios de la plantilla</td><td>Se entrega sin releer</td></tr>
+      <tr><td>02</td><td>Validar el segundo argumento</td><td>Parece lógico, pero el test pide que devuelva <code>[]</code></td></tr>
+      <tr><td>02</td><td>Ordenar el resultado</td><td><code>deepEqual</code> compara en orden</td></tr>
+      <tr><td>02</td><td>Olvidar el <code>export</code></td><td>Falla el primer assert y no llegás a nada</td></tr>
+      <tr><td>03</td><td>Usar otro nombre de propiedad</td><td>No se copia literal del README</td></tr>
+      <tr><td>03</td><td>No recargar después de la operación</td><td>La consigna lo pide explícitamente</td></tr>
+      <tr><td>03</td><td>Falta <code>preventDefault()</code></td><td>La página se recarga y parece que no anda</td></tr>
+      <tr><td>03</td><td>Dejar el HTML de ejemplo</td><td>El contenedor tiene que arrancar vacío</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Los últimos 5 minutos</h2>
+  <div class="paso"><span class="n">1</span><span class="txt">Corré <code>node ej02/ej02.test.js</code> una vez más.</span></div>
+  <div class="paso"><span class="n">2</span><span class="txt">Recargá la página del ej03 y probá cada botón de nuevo.</span></div>
+  <div class="paso"><span class="n">3</span><span class="txt">Abrí el ej01 y achicá la ventana.</span></div>
+  <div class="paso"><span class="n">4</span><span class="txt">Buscá restos de las plantillas: comentarios <code>TODO</code>, <code>Lorem</code>, elementos de ejemplo, párrafos con la consigna.</span></div>
+  <div class="paso"><span class="n">5</span><span class="txt">Commit, push, y <strong>abrí el pull request</strong> — el ejercicio no está entregado hasta que el PR existe.</span></div>
+
+  <div class="aviso verde">
+    <strong>Si algo no anda y no encontrás por qué</strong>
+    F12 → Console para los errores, F12 → Network para ver qué mandaste de verdad
+    (Headers, Payload, Response). El 90% de los bugs del ej03 se ven ahí en diez segundos:
+    falta el <code>Content-Type</code>, el body dice <code>[object Object]</code>, o el
+    status es 404.
+  </div>
+</div>
+
+</div>
+
+<script>
+  const tabs = document.getElementById("tabs");
+  tabs.addEventListener("click", (event) => {
+    const boton = event.target.closest("button[data-id]");
+    if (!boton) return;
+    const id = boton.dataset.id;
+    document.querySelectorAll(".vista").forEach((v) => v.classList.toggle("activa", v.id === "v-" + id));
+    tabs.querySelectorAll("button").forEach((b) => b.classList.toggle("activo", b === boton));
+    document.getElementById("app").scrollTop = 0;
+  });
+</script>
+</body>
+</html>

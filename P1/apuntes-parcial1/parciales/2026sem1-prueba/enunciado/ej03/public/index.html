@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prueba 1 - Ej03</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="ej03.js"></script>
+</head>
+
+<body onload="onLoad()">
+  <div id="content">
+    <h1>Ejercicio 03</h1>
+
+    <p>Al cargar la página se debe generar una combinación aleatoria de color de
+      texto y color de fondo, y mostrarla en el recuadro de abajo con un texto
+      de ejemplo. El usuario aprueba o rechaza la combinación con los botones 👍
+      y 👎. Al hacerlo, la combinación y la decisión se envían a la API, se
+      genera una nueva combinación aleatoria, y el historial se recarga.
+    </p>
+
+    <div id="preview" style="background-color: #2d6a4f; color: #a3c4f5;">
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+        vestibulum dignissim leo, vel porta lorem euismod sit amet. Cras quis
+        elit fringilla, sagittis erat ut, mattis tortor. Nullam lacinia lacinia
+        diam nec scelerisque. Donec mi sem, efficitur non tempus ac, scelerisque
+        quis libero.
+      </p>
+      <p>
+        Donec cursus ex arcu, in convallis nibh iaculis in. Etiam semper
+        interdum tristique. Nunc faucibus mauris eget sapien interdum blandit.
+        Nullam congue purus et molestie gravida. Fusce eu sem pharetra,
+        porttitor odio a, scelerisque leo.
+      </p>
+    </div>
+
+    <div id="actions">
+      <button onclick="onApprove()">👍</button>
+      <button onclick="onReject()">👎</button>
+    </div>
+
+    <h2>Historial</h2>
+    <p>Aquí se deben mostrar todas las combinaciones guardadas en la API,
+      cargadas al iniciar la página y recargadas luego de cada decisión.
+    </p>
+
+    <div id="history">
+
+      <div class="combo" style="background-color: #5752e6; color: #f5e1df;">
+        <span class="combo-colors">#5752e6 / #f5e1df</span>
+        <span class="combo-verdict">👍</span>
+      </div>
+      <div class="combo" style="background-color: #1f1f1f; color: #f9c74f;">
+        <span class="combo-colors">#1f1f1f / #f9c74f</span>
+        <span class="combo-verdict">👎</span>
+      </div>
+      <div class="combo" style="background-color: #c8d3fb; color: #ec2929;">
+        <span class="combo-colors">#c8d3fb / #ec2929</span>
+        <span class="combo-verdict">👍</span>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

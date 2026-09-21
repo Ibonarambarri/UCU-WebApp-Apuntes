@@ -1,0 +1,10 @@
+Programar las funcionalidades CRUD para el Gestor de Tareas:
+
+- loadTasks - Debe obtener el listado de tareas y actualizar la vista.
+- toggleComplete - Debe actualiar el estado de la tearea y actualizar la vista
+- deleteTask - Debe eliminar la tarea seleccionada y actualizar la vista.
+- form.addEventListener - Debe manejar el submit del formulario, crear la nueva tarea y actualizar la vista.
+
+
+Instalar json-server: npm install json-server
+Iniciar el servidor json: npx json-server db.json

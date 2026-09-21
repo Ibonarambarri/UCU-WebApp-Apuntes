@@ -1,0 +1,120 @@
+/* ============================================================
+   SNIPPET 4 — CSS que resuelve los maquetados del parcial
+   ============================================================ */
+
+/* --- Siempre, arriba de todo --- */
+* { box-sizing: border-box; }
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 2vh 2vw;
+}
+
+/* --- Contenedor centrado con ancho máximo --- */
+.marco {
+  margin: 0 auto;
+  max-width: 1000px;
+  padding: 1.5em;
+}
+
+/* ============================================================
+   1. GRILLA RESPONSIVA — la que piden desde 2026.
+      auto-fit + minmax = responsivo SIN media queries.
+   ============================================================ */
+.grilla {
+  display: grid;
+  gap: 1.2em;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* Variante: exactamente N columnas que colapsan */
+.grilla-3 {
+  display: grid;
+  gap: 1em;
+  grid-template-columns: repeat(3, 1fr);
+}
+@media (max-width: 700px) { .grilla-3 { grid-template-columns: 1fr; } }
+
+/* ============================================================
+   2. BARRA: algo a la izquierda, algo a la derecha
+      (headers de tarjeta, footers, filas de lista)
+   ============================================================ */
+.barra {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  gap: 1em;
+}
+
+/* Truco: empujar UN elemento a la derecha sin space-between */
+.empujar-derecha { margin-left: auto; }
+
+/* ============================================================
+   3. DOS COLUMNAS que alternan de lado
+   ============================================================ */
+.dos-col {
+  display: flex;
+  gap: 3em;
+  align-items: flex-start;
+}
+.dos-col.invertida { flex-direction: row-reverse; }
+.dos-col > .fija { flex: 0 0 40%; }   /* no crece ni se achica */
+.dos-col > .fluida { flex: 1; }        /* ocupa lo que queda */
+
+/* ============================================================
+   4. TARJETA
+   ============================================================ */
+.tarjeta {
+  border: 2px solid #1b1b1b;
+  border-radius: 14px;
+  padding: 1em;
+}
+.tarjeta.destacada { background-color: #dfe3e8; }  /* modificador */
+
+/* ============================================================
+   5. CENTRAR (las 3 formas)
+   ============================================================ */
+.centrar-flex { display: flex; align-items: center; justify-content: center; }
+.centrar-grid { display: grid; place-items: center; }
+.centrar-bloque { margin: 0 auto; width: fit-content; }
+
+/* ============================================================
+   6. Lista sin bullets (SIEMPRE que uses <ul> para tarjetas)
+   ============================================================ */
+ul.limpia { list-style: none; margin: 0; padding: 0; }
+
+/* ============================================================
+   7. Fuente propia
+   ============================================================ */
+@font-face {
+  font-family: 'MiFuente';
+  src: url('./assets/fonts/MiFuente-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* ============================================================
+   8. Imágenes que no se desbordan
+   ============================================================ */
+img { max-width: 100%; height: auto; display: block; }
+.icono-cuadrado { width: 64px; height: 64px; object-fit: contain; }
+
+/* ============================================================
+   9. Media query de rescate (si algo no entra en el celular)
+   ============================================================ */
+@media (max-width: 480px) {
+  body { font-size: 14px; }
+  .dos-col, .dos-col.invertida { flex-direction: column; }
+  .texto-derecha { text-align: left; }
+}
+
+/* ============================================================
+   Variables (opcional pero queda prolijo)
+   ============================================================ */
+:root {
+  --borde: #1b1b1b;
+  --acento: #d1332e;
+  --radio: 14px;
+}
+.usa-vars { border: 2px solid var(--borde); border-radius: var(--radio); }

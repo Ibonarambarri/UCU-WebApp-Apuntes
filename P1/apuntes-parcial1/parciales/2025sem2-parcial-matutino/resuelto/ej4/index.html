@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Ejercicio 4 - Mini-Contacts API</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="ej04.js" defer></script>
+  </head>
+  <body onload="onLoad()">
+    <h1>Mini-Contacts</h1>
+
+    <div id="form">
+      <input id="name" name="name" placeholder="Name" required />
+      <input id="email" name="email" placeholder="Email" required />
+      <select id="role" name="role">
+        <option>Admin</option>
+        <option>Editor</option>
+        <option>Viewer</option>
+      </select>
+      <button id="add">Add</button>
+    </div>
+
+    <ul id="users"></ul>
+  </body>
+</html>

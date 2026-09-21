@@ -1,0 +1,67 @@
+/*
+  Reemplazar este código CSS con los estilos necesarios.
+*/
+body {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  margin: 1em 10vh;
+}
+
+#content {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  width: 100%;
+}
+
+#preview {
+  border-radius: 8px;
+  font-size: 1em;
+  line-height: 1.5;
+  padding: 1.5em 2em;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#actions {
+  display: flex;
+  gap: 1em;
+}
+
+button {
+  background: none;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 2em;
+  padding: 0.2em 0.6em;
+  transition: border-color 0.15s;
+}
+
+#history {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.combo {
+  align-items: center;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.6em 1em;
+}
+
+.combo-colors {
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+.combo-verdict {
+  font-size: 1.4em;
+}

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulacro Parcial 1 - HTML</title>
+  <link rel="stylesheet" href="ej03.css">
+  <script src="ej03.js"></script>
+</head>
+
+<body onload="showCountries()">
+  <h1>Ejercicio 03</h1>
+  <p>
+    Esta página debe obtener una lista de países de la API pública
+    <a
+      href="https://restcountries.com/v3.1/all?fields=cca2,name,flags">https://restcountries.com/v3.1/all?fields=cca2,name,flags</a>
+    y mostrar una lista con la banderas, código y nombre común de cada país.
+
+    Cada imagen deberá incluir un ícono de “favorito” en la esquina superior derecha. Al hacer clic en dicho ícono, el
+    país correspondiente se marcará como favorito, pasando a mostrarse en primer lugar dentro del listado y aplicando
+    un estilo visual que lo distinga de los no favoritos. Si se desmarca el favorito, el país deberá recuperar su
+    posición en el orden alfabético original y su estilo habitual.
+
+    Pueden usar los siguientes iconos para favorito: ♡ ❤️
+  </p>
+  <div id="countries">
+    <ul>
+      <li>
+        <div class="country-container">
+          <div class="card-header">
+            <img src="https://flagcdn.com/w320/jm.png" alt="Flag of Jamaica">
+            <span class="favorite">♡</span>
+          </div>
+          <p>JM: Jamaica</p>
+        </div>
+      </li>
+      <li>
+        <div class="country-container">
+          <div class="card-header">
+            <img src="https://flagcdn.com/w320/km.png" alt="Flag of Comoros">
+            <span class="favorite">♡</span>
+          </div>
+          KM: Comoros
+        </div>
+      </li>
+      <li>
+        <div class="country-container">
+          <div class="card-header">
+            <img src="https://flagcdn.com/w320/zw.png" alt="Flag of Zimbabwe">
+            <span class="favorite">♡</span>
+          </div>
+          ZW: Zimbabwe
+        </div>
+      </li>
+      <li>
+        <div class="country-container">
+          <div class="card-header">
+            <img src="https://flagcdn.com/w320/sx.png" alt="Flag of Sint Maarten">
+            <span class="favorite">♡</span>
+          </div>
+          SX: Sint Maarten
+        </div>
+      </li>
+      <li>
+        <div class="country-container">
+          <div class="card-header">
+            <img src="https://flagcdn.com/w320/la.png" alt="Flag of Laos">
+            <span class="favorite">♡</span>
+          </div>
+          LA: Laos
+        </div>
+      </li>
+      <li>
+        <div class="country-container">
+          <div class="card-header">
+            <img src="https://flagcdn.com/w320/lv.png" alt="Flag of Latvia">
+            <span class="favorite">♡</span>
+          </div>
+          LV: Latvia
+        </div>
+      </li>
+      <li>
+        <div class="country-container">
+          <div class="card-header">
+            <img src="https://flagcdn.com/w320/tj.png" alt="Flag of Tajikistan">
+            <span class="favorite">♡</span>
+          </div>
+          TJ: Tajikistan
+        </div>
+      </li>
+      <li>
+        <div class="country-container">
+          <div class="card-header">
+            <img src="https://flagcdn.com/w320/gb.png" alt="Flag of United Kingdom">
+            <span class="favorite">♡</span>
+          </div>
+          <p>GB: United Kingdom</p>
+        </div>
+      </li>
+      <li>
+        <div class="country-container">
+          <div class="card-header">
+            <img src="https://flagcdn.com/w320/ni.png" alt="Flag of Nicaragua">
+            <span class="favorite">♡</span>
+          </div>
+          NI: Nicaragua
+        </div>
+      </li>
+    </ul>
+  </div>
+  <p>
+    El archivo <a href="./ej03.json">ej03.json</a> tiene un ejemplo del formato de datos que devuelve la API.
+  </p>
+</body>
+</html>

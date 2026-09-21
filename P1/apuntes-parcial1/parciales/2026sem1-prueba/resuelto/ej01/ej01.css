@@ -1,0 +1,97 @@
+/* Ejercicio 01 - resuelto */
+:root {
+  --borde: #1b1b1b;
+  --gris-tarjeta: #dfe3e8;
+  --radio: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: #fff;
+  color: var(--borde);
+  font-family: "Comic Sans MS", "Segoe UI", Arial, sans-serif;
+  font-size: 16px;
+  margin: 0;
+  padding: 2vh 2vw;
+}
+
+/* Marco exterior que envuelve todo el poster */
+.marco {
+  border: 2px solid var(--borde);
+  border-radius: var(--radio);
+  margin: 0 auto;
+  max-width: 1100px;
+  padding: 1.5em;
+}
+
+h1 {
+  font-size: 2.2em;
+  font-weight: normal;
+  margin: 0.2em 0 0.8em;
+  text-align: center;
+}
+
+/* Grilla responsiva: las columnas se ajustan solas al ancho de la ventana */
+.grilla {
+  display: grid;
+  gap: 1.2em;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.mision {
+  border: 2px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 0.8em 1em 1em;
+}
+
+/* Misiones que alunizaron: fondo gris */
+.mision.alunizo {
+  background-color: var(--gris-tarjeta);
+}
+
+.mision h2 {
+  font-size: 1.25em;
+  font-weight: normal;
+  margin: 0 0 0.3em;
+}
+
+.fecha {
+  font-size: 0.95em;
+  margin: 0 0 0.8em;
+}
+
+.tripulacion {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: right;
+}
+
+.tripulacion li {
+  line-height: 1.6;
+}
+
+.icono {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+footer {
+  display: flex;
+  font-size: 0.9em;
+  justify-content: space-between;
+  margin-top: 1.5em;
+  padding: 0 0.3em;
+}
+
+/* En pantallas angostas la tripulación se alinea a la izquierda */
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+  .tripulacion {
+    text-align: left;
+  }
+}

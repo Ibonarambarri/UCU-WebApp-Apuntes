@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>03 — CV a dos columnas</title>
+<style>
+/* ============================================================
+   PATRÓN 3: CV / perfil
+   Salió en: CV de Voldemort (2025 sem2 vespertino).
+   Piezas: foto redonda, secciones separadas por línea,
+           título + fecha a los extremos, listas con bullet propio.
+   ============================================================ */
+
+* { box-sizing: border-box; }
+
+body {
+  background: #ededed;
+  color: #2b2b2b;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  margin: 0;
+  padding: 2em 1em;
+}
+
+/* Hoja blanca centrada */
+.cv { background: #fff; margin: 0 auto; max-width: 800px; padding: 3em 3.5em; }
+
+/* Cada sección se separa con una línea. `> section` sólo las hijas directas. */
+.cv > section { border-top: 1px solid #d9d9d9; padding: 2em 0; }
+
+h2 { font-size: 1.05rem; margin: 0 0 1.2em; }
+
+/* --- Encabezado con foto redonda --- */
+.encabezado { align-items: center; display: flex; gap: 1.5em; padding-bottom: 2em; }
+.foto {
+  align-items: center; background: #dfe3e8; border-radius: 50%;
+  display: flex; font-size: 2rem; height: 72px; justify-content: center; width: 72px;
+}
+.rol { color: #7a7a7a; font-size: 0.78rem; letter-spacing: 0.14em; margin: 0 0 0.3em; text-transform: uppercase; }
+h1 { font-size: 1.9rem; margin: 0; }
+
+/* --- Dos columnas iguales --- */
+.dos-columnas { display: grid; gap: 3em; grid-template-columns: 1fr 1fr; }
+
+.parrafo { color: #555; font-size: 0.85rem; line-height: 1.7; margin: 0; }
+
+/* Lista con bullet dibujado por CSS (::before) */
+.contacto { color: #555; font-size: 0.85rem; list-style: none; margin: 0; padding: 0; }
+.contacto li { line-height: 1.6; padding: 0.35em 0 0.35em 1.2em; position: relative; }
+.contacto li::before { color: #ccc; content: "•"; left: 0; position: absolute; }
+
+/* --- Item con título a la izquierda y período a la derecha --- */
+.item { margin-bottom: 1.4em; }
+.item-cabecera { align-items: baseline; display: flex; gap: 1em; justify-content: space-between; }
+.item h3 { font-size: 0.92rem; margin: 0 0 0.4em; }
+.periodo { color: #7a7a7a; font-size: 0.75rem; white-space: nowrap; }
+
+.logros { color: #555; font-size: 0.85rem; list-style: none; margin: 0; padding: 0; }
+.logros li { line-height: 1.7; padding-left: 1.2em; position: relative; }
+.logros li::before { content: "·"; font-weight: bold; left: 0.3em; position: absolute; }
+
+/* --- Grilla de logos/tecnologías --- */
+.tecnologias { display: flex; flex-wrap: wrap; gap: 1em; list-style: none; margin: 0; padding: 0; }
+.tecnologias li {
+  align-items: center; border: 1px solid #d9d9d9; border-radius: 4px;
+  display: flex; font-size: 1.8rem; height: 62px; justify-content: center; width: 62px;
+}
+
+@media (max-width: 640px) {
+  .cv { padding: 2em 1.5em; }
+  .dos-columnas { gap: 2em; grid-template-columns: 1fr; }
+  .item-cabecera { flex-direction: column; gap: 0.2em; }
+}
+</style>
+</head>
+<body>
+<main class="cv">
+
+  <header class="encabezado">
+    <div class="foto">🧙</div>
+    <div>
+      <p class="rol">Cyber Security Specialist / Hacker</p>
+      <h1>Lord Voldemort</h1>
+    </div>
+  </header>
+
+  <section class="dos-columnas">
+    <div>
+      <h2>Perfil</h2>
+      <p class="parrafo">Hacker con amplia experiencia en ingeniería social, penetración
+        de sistemas y control distribuido de redes oscuras.</p>
+    </div>
+    <div>
+      <h2>Contacto</h2>
+      <ul class="contacto">
+        <li>Dirección: Dumbledor St 666</li>
+        <li>Email: voldemort@darknet.onion</li>
+        <li>Teléfono: +666-MORTIFAGO</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Trabajos</h2>
+    <article class="item">
+      <div class="item-cabecera">
+        <h3>Head of Security – IBM</h3>
+        <span class="periodo">1960 – Presente</span>
+      </div>
+      <ul class="logros">
+        <li>Lideró proyectos de encriptación tan fuertes que ni Dumbledore.exe pudo romperlos.</li>
+        <li>Implementó sistemas de autenticación biométrica avanzados anti muggles.</li>
+      </ul>
+    </article>
+    <article class="item">
+      <div class="item-cabecera">
+        <h3>Founder &amp; Lead Hacker – Mortífagos Collective</h3>
+        <span class="periodo">1947 – Presente</span>
+      </div>
+      <ul class="logros">
+        <li>Administró infraestructura descentralizada (7 Horcrux servers).</li>
+      </ul>
+    </article>
+  </section>
+
+  <section>
+    <h2>Tecnologías</h2>
+    <ul class="tecnologias">
+      <li>🐍</li><li>☕</li><li>🧅</li><li>🐧</li><li>🌿</li>
+    </ul>
+  </section>
+
+</main>
+</body>
+</html>

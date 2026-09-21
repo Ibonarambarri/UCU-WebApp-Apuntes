@@ -1,0 +1,3943 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parcial 1 · DWYM — Apuntes de DOM y API</title>
+<style>
+  * { box-sizing: border-box; }
+  :root {
+    --bg: #f6f7f9;
+    --panel: #fff;
+    --linea: #e2e5ea;
+    --texto: #1b1f24;
+    --tenue: #6a7280;
+    --acento: #1b4f9c;
+    --verde: #1f7a3d;
+    --rojo: #b3261e;
+    --amarillo: #fff6e0;
+    --amarillo-b: #f0d79a;
+    --code-bg: #1b1f24;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg); color: var(--texto); display: flex; flex-direction: column;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    margin: 0; overflow: hidden;
+  }
+
+  /* ---------------- header ---------------- */
+  header {
+    align-items: center; background: var(--panel); border-bottom: 1px solid var(--linea);
+    display: flex; flex-shrink: 0; gap: 1.4em; height: 52px; padding: 0 1.2em;
+  }
+  .marca { font-size: .82rem; font-weight: 700; white-space: nowrap; }
+  .marca span { color: var(--tenue); font-weight: 400; }
+  #tabs { display: flex; gap: .2em; overflow-x: auto; }
+  #tabs button {
+    background: none; border: none; border-radius: 7px; color: var(--tenue); cursor: pointer;
+    font: inherit; font-size: .85rem; padding: .45em .85em; white-space: nowrap;
+  }
+  #tabs button:hover { background: #eef1f5; color: var(--texto); }
+  #tabs button.activo { background: var(--acento); color: #fff; }
+
+  #app { flex: 1; overflow: hidden; }
+  .vista { display: none; height: 100%; }
+  .vista.activa { display: grid; grid-template-columns: 250px minmax(300px, 1fr) minmax(360px, 1.2fr); }
+
+  /* ---------------- columna 1: lista ---------------- */
+  .lista {
+    background: var(--panel); border-right: 1px solid var(--linea);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .lista .cab { border-bottom: 1px solid var(--linea); padding: .85em 1.1em; }
+  .lista .cab p { color: var(--tenue); font-size: .76rem; line-height: 1.45; margin: 0; }
+  .lista nav { flex: 1; overflow-y: auto; padding: .6em .55em 2em; }
+  .grupo {
+    color: var(--tenue); font-size: .65rem; font-weight: 700; letter-spacing: .09em;
+    margin: 1em 0 .3em; padding: 0 .5em; text-transform: uppercase;
+  }
+  .grupo:first-child { margin-top: .2em; }
+  .lista nav button {
+    background: none; border: none; border-radius: 7px; color: var(--texto); cursor: pointer;
+    display: block; font: inherit; font-size: .83rem; line-height: 1.3; padding: .48em .6em;
+    text-align: left; width: 100%;
+  }
+  .lista nav button:hover { background: #eef1f5; }
+  .lista nav button.activo { background: var(--acento); color: #fff; }
+  .lista nav button .n { display: block; font-size: .67rem; opacity: .65; }
+
+  /* ---------------- columna 2: descripción ---------------- */
+  .desc { border-right: 1px solid var(--linea); overflow-y: auto; padding: 1.3em 1.5em 4em; }
+  .desc h2 { font-size: 1.15rem; margin: 0 0 .25em; }
+  .origen {
+    background: #eef1f5; border-radius: 999px; color: var(--tenue); font-family: var(--mono);
+    font-size: .68rem; padding: .2em .7em; vertical-align: middle; white-space: nowrap;
+  }
+  .desc .firma {
+    background: var(--code-bg); border-radius: 8px; color: #ffcb6b; display: block;
+    font-family: var(--mono); font-size: .76rem; margin: .9em 0; overflow-x: auto;
+    padding: .7em .9em; white-space: pre;
+  }
+  .desc .resumen { color: #3c4450; font-size: .88rem; line-height: 1.65; margin: .7em 0 0; }
+  .desc h3 {
+    border-top: 1px solid var(--linea); color: var(--tenue); font-size: .7rem;
+    letter-spacing: .09em; margin: 1.6em 0 .8em; padding-top: 1em; text-transform: uppercase;
+  }
+  .punto {
+    background: var(--panel); border: 1px solid var(--linea); border-left: 3px solid var(--acento);
+    border-radius: 8px; margin-bottom: .7em; padding: .7em .9em;
+  }
+  .punto.trampa { background: var(--amarillo); border-color: var(--amarillo-b); border-left-color: #e0a72e; }
+  .punto.error  { border-left-color: var(--rojo); }
+  .punto .t { display: block; font-size: .85rem; font-weight: 700; margin-bottom: .25em; }
+  .punto .d { color: #3c4450; font-size: .84rem; line-height: 1.6; margin: 0; }
+  .punto code, .desc .resumen code {
+    background: #eef1f5; border-radius: 3px; font-family: var(--mono); font-size: .88em; padding: 1px 4px;
+  }
+  .punto.trampa code { background: #fdeec6; }
+
+  /* ---------------- columna 3: editor / demo ---------------- */
+  .editor { display: flex; flex-direction: column; overflow: hidden; }
+  .barra-arch {
+    align-items: center; background: var(--panel); border-bottom: 1px solid var(--linea);
+    display: flex; gap: .2em; overflow-x: auto; padding: .35em .8em;
+  }
+  .barra-arch button.arch {
+    background: none; border: none; border-radius: 6px; color: var(--tenue); cursor: pointer;
+    font-family: var(--mono); font-size: .76rem; padding: .35em .7em; white-space: nowrap;
+  }
+  .barra-arch button.arch:hover { background: #eef1f5; }
+  .barra-arch button.arch.activo { background: #eef1f5; color: var(--texto); font-weight: 700; }
+  .barra-arch .sep { flex: 1; }
+  .barra-arch .accion {
+    background: #fff; border: 1px solid var(--linea); border-radius: 6px; cursor: pointer;
+    font: inherit; font-size: .74rem; padding: .28em .65em; white-space: nowrap;
+  }
+  .barra-arch .accion:hover { border-color: var(--acento); color: var(--acento); }
+  .barra-arch .accion.correr { border-color: var(--verde); color: var(--verde); font-weight: 700; }
+  .barra-arch .accion.correr.activo { background: var(--verde); border-color: var(--verde); color: #fff; }
+
+  .editor pre {
+    background: var(--code-bg); color: #e6e9ef; flex: 1; font-family: var(--mono);
+    font-size: 12.5px; line-height: 1.6; margin: 0; overflow: auto; padding: .9em 1.1em 2em; tab-size: 2;
+  }
+  .editor pre code { background: none; color: inherit; display: block; font-size: inherit; padding: 0; }
+  pre .cmt { color: #7f8c99; font-style: italic; }
+  pre .str { color: #a5d6a7; }
+  pre .kw  { color: #c792ea; }
+  pre .num { color: #f78c6c; }
+  pre .fn  { color: #82aaff; }
+  pre .tag { color: #7bb7ff; }
+  pre .atr { color: #c3a6ff; }
+
+  .zona-demo { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+  .zona-demo.visible { display: flex; }
+  .aviso-demo {
+    background: #eef7f0; border-bottom: 1px solid #cfe6d6; color: #2c5c3c;
+    font-size: .74rem; line-height: 1.5; padding: .45em .9em;
+  }
+  .zona-demo iframe { background: #fff; border: 0; flex: 1; width: 100%; }
+
+  .consola {
+    background: #11141a; border-top: 2px solid #2b313b; color: #cfd6e4; display: none;
+    flex-shrink: 0; font-family: var(--mono); font-size: 11.5px; line-height: 1.5;
+    max-height: 32%; overflow: auto; padding: .5em .9em .8em; white-space: pre-wrap;
+  }
+  .consola.visible { display: block; }
+  .consola .ok   { color: #7ee2a8; }
+  .consola .fail { color: #ff8f85; }
+  .consola .tit  { color: #7f8c99; }
+  .consola .net  { color: #ffcb6b; }
+
+  @media (max-width: 1000px) {
+    body { overflow: auto; }
+    .vista.activa { grid-template-columns: 1fr; grid-template-rows: auto auto 70vh; }
+    .lista, .desc { border-right: none; border-bottom: 1px solid var(--linea); }
+    .lista nav { max-height: 180px; }
+    .desc { max-height: 320px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="marca">Parcial 1 · DWYM <span>— DOM y API</span></div>
+  <nav id="tabs"></nav>
+</header>
+
+<div id="app"></div>
+
+<script>
+/* ==========================================================================
+   Apuntes del ejercicio de DOM + API del Parcial 1.
+   Todo el contenido es data; el motor está al final del archivo.
+
+   Los demos "▶ Ver funcionando" corren dentro de un iframe aislado con un
+   json-server FALSO: se reemplaza window.fetch por una función que guarda
+   los datos en memoria y responde igual que el servidor real. Así el CRUD
+   funciona sin levantar nada.
+   ========================================================================== */
+
+/* ==========================================================================
+   TAB 1 — Los parciales
+   ========================================================================== */
+const PARCIALES = {
+  id: "parciales",
+  tab: "Parciales",
+  ayuda: "El ejercicio de DOM + API de todas las pruebas. Elegí uno: en el medio qué pide y qué mirar, a la derecha los archivos y el botón para verlo funcionando.",
+  items: [
+
+/* ---------------------------------------------------------------- */
+{
+  grupo: "2026sem2 · el más reciente",
+  id: "arena",
+  titulo: "Arena de Prompts",
+  origen: "simulacro 2026sem2 · ej03",
+  firma: "GET /duelos   ·   POST /duelos\n{ id, prompt, modeloA, modeloB, ganador: \"A\" | \"B\" }",
+  resumen: "Al cargar se genera un duelo aleatorio: un prompt de una lista y dos modelos DISTINTOS de otra. El usuario elige el ganador con los botones 🏆; eso hace POST, genera un duelo nuevo y recarga el historial desde la API. Es el molde exacto del ejercicio: estado en memoria + POST + recarga.",
+  puntos: [
+    { tipo: "error", t: "El bug de tu solución actual", d: "Posteás y leés <code>result</code>, pero la consigna y el <code>db.json</code> sembrado usan <code>ganador</code>. Los duelos que ya están en la API se dibujan TODOS como si hubiera ganado B, porque <code>duelos.result</code> es <code>undefined</code>. Cambiá <code>result:</code> por <code>ganador:</code> en el POST y <code>duelos.result</code> por <code>duelos.ganador</code> en el render." },
+    { t: "El ciclo: generar → mostrar → guardar → recargar", d: "<code>onLoad</code> genera y carga. Cada botón hace <code>POST</code>, vuelve a generar, y vuelve a pedir el historial. El historial NUNCA se actualiza a mano: siempre se relee de la API." },
+    { t: "Dos modelos distintos", d: "<code>while (b === a) b = elegirAlAzar(MODELOS)</code>. Funciona porque <code>elegirAlAzar</code> devuelve la MISMA referencia del array, así que <code>===</code> compara bien. Si los objetos vinieran de un <code>map</code> o de la API, habría que comparar por una propiedad." },
+    { t: "Borrá el HTML de ejemplo", d: "<code>index.html</code> trae tres <code>&lt;div class=\"duelo\"&gt;</code> hardcodeados y párrafos explicativos. En la entrega el contenedor arranca vacío y lo llena el JS." },
+    { t: "No mandes el id en el POST", d: "Lo genera json-server. Si lo mandás vos, podés pisar uno existente." },
+  ],
+  archivos: [
+    { nombre: "index.html", lenguaje: "html", codigo:
+`<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulacro Prueba 1 - Ej03</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="ej03.js"><\/script>
+</head>
+
+<body onload="onLoad()">
+  <div id="content">
+    <h1>Arena de Prompts</h1>
+
+    <div id="arena">
+      <p id="prompt"></p>
+      <div id="contendientes">
+        <div class="contendiente">
+          <span class="modelo-emoji" id="emo-a"></span>
+          <span class="modelo-nombre" id="modelo-a"></span>
+          <button onclick="onWinA()">🏆</button>
+        </div>
+        <span class="vs">VS</span>
+        <div class="contendiente">
+          <span class="modelo-emoji" id="emo-b"></span>
+          <span class="modelo-nombre" id="modelo-b"></span>
+          <button onclick="onWinB()">🏆</button>
+        </div>
+      </div>
+    </div>
+
+    <h2>Historial</h2>
+    <div id="history"></div>
+  </div>
+</body>
+
+</html>` },
+    { nombre: "ej03.js", codigo:
+`/*
+# Ejercicio 03 - resuelto.
+
+Al cargar se genera un duelo aleatorio. El usuario elige el ganador: eso hace
+POST a la API, genera un duelo nuevo y recarga el historial.
+*/
+
+const PROMPTS = [
+  "Explicame flexbox como si tuviera 5 años",
+  "Escribí un mensaje para pedir prórroga del parcial",
+  "Generá un plan de estudio para la prueba de DWYM",
+  "¿Por qué mi CSS funciona en mi máquina y en la tuya no?",
+  "Resumí este PDF de 300 páginas en un tweet",
+  "Convertí este for anidado en algo que no dé vergüenza",
+];
+
+const MODELOS = [
+  { nombre: "ChatGPT",  emoji: "🤖" },
+  { nombre: "Claude",   emoji: "🧠" },
+  { nombre: "Gemini",   emoji: "✨" },
+  { nombre: "Copilot",  emoji: "💻" },
+  { nombre: "Llama",    emoji: "🦙" },
+  { nombre: "DeepSeek", emoji: "🔍" },
+];
+
+function elegirAlAzar(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
+// EL ESTADO: el duelo que se está mostrando en este momento.
+let currentCombo = null;
+
+async function onLoad() {
+  newCombo();
+  await loadHistory();
+}
+
+function onWinA() { return saveCombo("A"); }
+function onWinB() { return saveCombo("B"); }
+
+/* Genera un duelo aleatorio y lo muestra en el recuadro. */
+function newCombo() {
+  const a = elegirAlAzar(MODELOS);
+  let b = elegirAlAzar(MODELOS);
+  // Dos modelos DISTINTOS. Funciona con === porque elegirAlAzar devuelve
+  // la misma referencia del objeto que está en el array.
+  while (b === a) {
+    b = elegirAlAzar(MODELOS);
+  }
+
+  currentCombo = {
+    prompt: elegirAlAzar(PROMPTS),
+    modeloA: a.nombre,
+    modeloB: b.nombre,
+  };
+
+  document.getElementById("prompt").textContent = "«" + currentCombo.prompt + "»";
+  document.getElementById("modelo-a").textContent = a.nombre;
+  document.getElementById("emo-a").textContent = a.emoji;
+  document.getElementById("modelo-b").textContent = b.nombre;
+  document.getElementById("emo-b").textContent = b.emoji;
+}
+
+/* Guarda el duelo con el veredicto y refresca todo. */
+async function saveCombo(ganador) {
+  try {
+    await fetchJSON("/duelos", {
+      method: "POST",
+      // ← "ganador", el nombre que dice la consigna. NO "result".
+      body: JSON.stringify({ ...currentCombo, ganador }),
+    });
+    newCombo();
+    await loadHistory();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/* Pide el historial a la API y lo vuelve a dibujar dentro de #history. */
+async function loadHistory() {
+  const history = document.getElementById("history");
+  try {
+    const duelos = await fetchJSON("/duelos");
+    history.replaceChildren(...duelos.map(dueloElement));
+  } catch (error) {
+    console.error(error);
+    history.replaceChildren();
+  }
+}
+
+/* Construye el <div class="duelo"> de un duelo guardado. */
+function dueloElement(duelo) {
+  const div = document.createElement("div");
+  div.className = "duelo";
+
+  const prompt = document.createElement("span");
+  prompt.className = "duelo-prompt";
+  prompt.textContent = "«" + duelo.prompt + "»";
+
+  const resultado = document.createElement("span");
+  resultado.className = "duelo-resultado";
+  resultado.textContent = duelo.ganador === "A"
+    ? duelo.modeloA + " 🏆 vs " + duelo.modeloB
+    : duelo.modeloA + " vs " + duelo.modeloB + " 🏆";
+
+  div.append(prompt, resultado);
+  return div;
+}
+
+/* El helper que conviene escribir SIEMPRE primero. */
+async function fetchJSON(path, options) {
+  const resource = new URL(path, window.location);
+  const response = await window.fetch(resource, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw new Error("Error " + response.status + ": " + response.statusText);
+  }
+}` },
+    { nombre: "styles.css", lenguaje: "css", codigo:
+`body {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  margin: 1em 6vw;
+}
+
+#content { align-items: center; display: flex; flex-direction: column; gap: 1em; width: 100%; }
+
+#arena {
+  align-items: center;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 1.5em 2em;
+  width: 100%;
+}
+
+#prompt { font-size: 1.15em; font-style: italic; margin: 0; text-align: center; }
+
+#contendientes { align-items: center; display: flex; gap: 2em; }
+
+.contendiente { align-items: center; display: flex; flex-direction: column; gap: .5em; }
+.modelo-emoji { font-size: 2.5em; line-height: 1; }
+.modelo-nombre { font-weight: bold; }
+.vs { color: #999; font-size: 1.5em; font-weight: bold; }
+
+button {
+  background: none; border: 2px solid #ccc; border-radius: 8px; cursor: pointer;
+  font-size: 1.4em; padding: .2em .6em; transition: border-color .15s;
+}
+button:hover { border-color: #f2b544; }
+
+#history { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+
+.duelo {
+  align-items: center; background: #f4f4f4; border-radius: 6px; display: flex;
+  gap: 1em; justify-content: space-between; padding: .6em 1em;
+}
+.duelo-prompt { font-style: italic; }
+.duelo-resultado { font-weight: bold; white-space: nowrap; }` },
+    { nombre: "api/db.json", lenguaje: "json", codigo:
+`{
+  "duelos": [
+    { "id": "5Ei7ZOXqfOA", "prompt": "Escribí un mensaje para pedir prórroga del parcial",
+      "modeloA": "DeepSeek", "modeloB": "Llama", "ganador": "A" },
+    { "id": "iKY_SiPKd1g", "prompt": "Generá un plan de estudio para la prueba de DWYM",
+      "modeloA": "ChatGPT", "modeloB": "Copilot", "ganador": "B" },
+    { "id": "Lya84u9nQNw", "prompt": "Generá un plan de estudio para la prueba de DWYM",
+      "modeloA": "Copilot", "modeloB": "Gemini", "ganador": "A" },
+    { "id": "nIBr48iQVhY", "prompt": "Resumí este PDF de 300 páginas en un tweet",
+      "modeloA": "DeepSeek", "modeloB": "Llama", "ganador": "B" }
+  ]
+}` },
+  ],
+  demo: {
+    db: `{ "duelos": [
+      { "id": "5Ei7ZOXqfOA", "prompt": "Escribí un mensaje para pedir prórroga del parcial", "modeloA": "DeepSeek", "modeloB": "Llama", "ganador": "A" },
+      { "id": "iKY_SiPKd1g", "prompt": "Generá un plan de estudio para la prueba de DWYM", "modeloA": "ChatGPT", "modeloB": "Copilot", "ganador": "B" },
+      { "id": "Lya84u9nQNw", "prompt": "Resumí este PDF de 300 páginas en un tweet", "modeloA": "Copilot", "modeloB": "Gemini", "ganador": "A" }
+    ] }`,
+    aviso: "Tocá los 🏆: cada click hace POST y recarga el historial desde la API falsa.",
+  },
+},
+
+/* ---------------------------------------------------------------- */
+{
+  grupo: "2026sem1 · prueba y simulacro",
+  id: "combos",
+  titulo: "Aprobador de combinaciones de color",
+  origen: "prueba 2026sem1 · ej03",
+  firma: "GET /combos   ·   POST /combos\n{ id, textColor, backgroundColor, approved: true | false }",
+  resumen: "Estructuralmente IDÉNTICO al de 2026sem2: genera algo aleatorio, lo muestra, el usuario decide con dos botones, POST, nuevo aleatorio, recargar historial. Lo único distinto es qué se genera (colores hexadecimales) y cómo se dibuja cada ítem.",
+  puntos: [
+    { t: "Es la misma plantilla que Arena de Prompts", d: "Compará los dos <code>ej03.js</code>: <code>onLoad</code>, <code>newCombo</code>, <code>saveCombo</code>, <code>loadHistory</code>, <code>comboElement</code>, <code>fetchJSON</code>. Mismos nombres, misma estructura. Aprendida una, sabés las dos." },
+    { t: "Cambiar estilos desde JS", d: "<code>preview.style.backgroundColor = color</code>. En JS las propiedades CSS van en camelCase: <code>backgroundColor</code>, no <code>background-color</code>." },
+    { t: "Generar un color hexadecimal", d: "Tres números de 0 a 255, cada uno pasado a hexadecimal con <code>toString(16)</code> y rellenado a 2 dígitos con <code>padStart(2, '0')</code>. Sin el padStart, el 10 daría <code>#a</code> en vez de <code>#0a</code>." },
+    { t: "Guardar un booleano", d: "Los dos botones llaman a la misma función con <code>true</code> o <code>false</code>. Un solo camino de guardado, dos entradas." },
+  ],
+  archivos: [
+    { nombre: "index.html", lenguaje: "html", codigo:
+`<body onload="onLoad()">
+  <div id="content">
+    <h1>Ejercicio 03</h1>
+
+    <div id="preview" style="background-color: #2d6a4f; color: #a3c4f5;">
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+        vestibulum dignissim leo, vel porta lorem euismod sit amet.</p>
+      <p>Donec cursus ex arcu, in convallis nibh iaculis in. Etiam semper
+        interdum tristique.</p>
+    </div>
+
+    <div id="actions">
+      <button onclick="onApprove()">👍</button>
+      <button onclick="onReject()">👎</button>
+    </div>
+
+    <h2>Historial</h2>
+    <div id="history"></div>
+  </div>
+</body>` },
+    { nombre: "ej03.js", codigo:
+`/*
+# Ejercicio 03 - resuelto.
+
+Al cargar se genera una combinación aleatoria de color de texto y de fondo. El
+usuario la aprueba (👍) o la rechaza (👎); en ambos casos se envía por POST, se
+genera una nueva y se recarga el historial.
+*/
+
+// EL ESTADO: la combinación que se está mostrando.
+let currentCombo = null;
+
+async function onLoad() {
+  newCombo();
+  await loadHistory();
+}
+
+// Dos botones, una sola función de guardado con distinto argumento.
+function onApprove() { return saveCombo(true); }
+function onReject()  { return saveCombo(false); }
+
+/* Genera una combinación aleatoria y la muestra en #preview. */
+function newCombo() {
+  currentCombo = {
+    backgroundColor: randomColor(),
+    textColor: randomColor(),
+  };
+  const preview = document.getElementById('preview');
+  // En JS las propiedades CSS van en camelCase.
+  preview.style.backgroundColor = currentCombo.backgroundColor;
+  preview.style.color = currentCombo.textColor;
+}
+
+/* Envía la combinación actual con el veredicto y refresca todo. */
+async function saveCombo(approved) {
+  try {
+    await fetchJSON('/combos', {
+      method: 'POST',
+      body: JSON.stringify({ ...currentCombo, approved }),
+    });
+    newCombo();
+    await loadHistory();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/* Pide el historial a la API y lo vuelve a dibujar dentro de #history. */
+async function loadHistory() {
+  const history = document.getElementById('history');
+  try {
+    const combos = await fetchJSON('/combos');
+    history.replaceChildren(...combos.map(comboElement));
+  } catch (error) {
+    console.error(error);
+    history.replaceChildren();
+  }
+}
+
+/* Construye el <div class="combo"> de una combinación guardada. */
+function comboElement(combo) {
+  const div = document.createElement('div');
+  div.className = 'combo';
+  div.style.backgroundColor = combo.backgroundColor;
+  div.style.color = combo.textColor;
+
+  const colors = document.createElement('span');
+  colors.className = 'combo-colors';
+  colors.textContent = combo.backgroundColor + ' / ' + combo.textColor;
+
+  const verdict = document.createElement('span');
+  verdict.className = 'combo-verdict';
+  verdict.textContent = combo.approved ? '👍' : '👎';
+
+  div.append(colors, verdict);
+  return div;
+}
+
+async function fetchJSON(path, options) {
+  const resource = new URL(path, window.location);
+  const response = await window.fetch(resource, {
+    ...options,
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw new Error('Error ' + response.status + ': ' + response.statusText);
+  }
+}
+
+/* #rrggbb con tres números aleatorios de 0 a 255.
+   padStart es imprescindible: sin él, el 10 daría "a" y no "0a". */
+function randomColor() {
+  return '#' + Array.from(
+    { length: 3 },
+    () => Math.floor(Math.random() * 256).toString(16).padStart(2, '0'),
+  ).join('');
+}` },
+    { nombre: "styles.css", lenguaje: "css", codigo:
+`body { font-family: Arial, Helvetica, sans-serif; font-size: 15px; margin: 1em 5vw; }
+#content { display: flex; flex-direction: column; gap: 1em; }
+
+#preview { border-radius: 8px; padding: 1em 1.4em; }
+#preview p { margin: 0 0 .7em; }
+
+#actions { display: flex; gap: .8em; justify-content: center; }
+#actions button {
+  background: none; border: 2px solid #ccc; border-radius: 8px; cursor: pointer;
+  font-size: 1.5em; padding: .15em .7em;
+}
+#actions button:hover { border-color: #f2b544; }
+
+#history { display: flex; flex-direction: column; gap: 6px; }
+.combo {
+  align-items: center; border-radius: 6px; display: flex;
+  justify-content: space-between; padding: .5em .9em;
+}
+.combo-colors { font-family: monospace; }` },
+    { nombre: "api/db.json", lenguaje: "json", codigo:
+`{
+  "combos": [
+    { "id": "zyVRYJIIyec", "backgroundColor": "#e5e2a7", "textColor": "#7d355a", "approved": true },
+    { "id": "PIhdi6zHClA", "backgroundColor": "#ac503b", "textColor": "#670b8d", "approved": false },
+    { "id": "mw_TG1pBJPo", "backgroundColor": "#766fea", "textColor": "#3607d0", "approved": true }
+  ]
+}` },
+  ],
+  demo: {
+    db: `{ "combos": [
+      { "id": "zyVRYJIIyec", "backgroundColor": "#e5e2a7", "textColor": "#7d355a", "approved": true },
+      { "id": "PIhdi6zHClA", "backgroundColor": "#ac503b", "textColor": "#670b8d", "approved": false }
+    ] }`,
+    aviso: "👍 / 👎 hacen POST, generan una combinación nueva y recargan el historial.",
+  },
+},
+
+/* ---------------------------------------------------------------- */
+{
+  grupo: "2026sem1 · prueba y simulacro",
+  id: "colores",
+  titulo: "Lista de colores + formulario",
+  origen: "simulacro 2026sem1 · ej03",
+  firma: "GET /colors   ·   POST /colors\n{ id, red, green, blue }",
+  resumen: "La otra mitad del molde: en vez de generar algo aleatorio, los datos los carga el usuario en un formulario. Listar desde la API, agregar con POST, recargar. Es el caso más parecido a lo que puede caer si el ejercicio no tiene aleatoriedad.",
+  puntos: [
+    { tipo: "trampa", t: "input.value SIEMPRE es string", d: "Aunque el input sea <code>type=\"number\"</code>. Si guardás <code>document.getElementById('red').value</code> tal cual, la API recibe <code>\"220\"</code> y no <code>220</code>. Envolvelo en <code>Number(...)</code>." },
+    { t: "reportValidity() aprovecha la validación del HTML", d: "El HTML ya trae <code>required</code>, <code>min</code> y <code>max</code>. <code>form.reportValidity()</code> devuelve <code>false</code> y muestra el globito del navegador si algo está mal. Gratis." },
+    { t: "El botón es type=\"button\"", d: "Dentro de un <code>&lt;form&gt;</code>, un botón sin <code>type</code> es <code>submit</code> y recarga la página. O le ponés <code>type=\"button\"</code>, o manejás el <code>submit</code> con <code>preventDefault()</code>." },
+    { t: "Destructuring en el parámetro", d: "<code>function colorElement({ red, green, blue })</code> saca las tres propiedades del objeto directamente en la firma. Más corto que <code>color.red</code> tres veces." },
+    { t: "Elegir texto blanco o negro según el fondo", d: "La fórmula de luminancia <code>(0.299·r + 0.587·g + 0.114·b) / 255</code>: si da más de 0.5 el fondo es claro y el texto va negro. Detalle lindo que suma." },
+  ],
+  archivos: [
+    { nombre: "index.html", lenguaje: "html", codigo:
+`<body onload="onLoad()">
+  <div id="content">
+    <h1>Ejercicio 03</h1>
+    <p>Mostrar los colores definidos en la API. Cada color es un rectángulo
+      con el fondo del color y el texto con el valor RGB.</p>
+
+    <div id="colors"></div>
+
+    <p>Este formulario debe permitir agregar nuevos colores.</p>
+
+    <form id="color-form">
+      <label for="red" style="color: red;">Rojo:</label>
+      <input type="number" id="red" name="red" min="0" max="255" required value="220">
+
+      <label for="green" style="color: green;">Verde:</label>
+      <input type="number" id="green" name="green" min="0" max="255" required value="220">
+
+      <label for="blue" style="color: blue;">Azul:</label>
+      <input type="number" id="blue" name="blue" min="0" max="255" required value="100">
+
+      <!-- type="button": si no, dentro de un form es submit y recarga -->
+      <button type="button" onclick="onAddColor()">Agregar</button>
+    </form>
+  </div>
+</body>` },
+    { nombre: "ej03.js", codigo:
+`/*
+# Ejercicio 03 - resuelto.
+
+Muestra los colores guardados en la API y permite agregar nuevos con el
+formulario.
+*/
+
+async function onLoad() {
+  await loadColors();
+}
+
+/* Pide los colores a la API y los dibuja dentro de #colors. */
+async function loadColors() {
+  const container = document.getElementById('colors');
+  try {
+    const colors = await fetchJSON('/colors');
+    container.replaceChildren(...colors.map(colorElement));
+  } catch (error) {
+    console.error(error);
+    container.replaceChildren();
+  }
+}
+
+/* Construye el <div class="color"> de un color.
+   El destructuring en el parámetro evita escribir color.red tres veces. */
+function colorElement({ red, green, blue }) {
+  const rgb = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
+  const div = document.createElement('div');
+  div.className = 'color';
+  div.style.backgroundColor = rgb;
+  div.style.color = contrastColor(red, green, blue);
+  div.textContent = rgb;
+  return div;
+}
+
+/* Blanco o negro según qué tanto contraste con el fondo (luminancia). */
+function contrastColor(red, green, blue) {
+  const luminance = (0.299 * red + 0.587 * green + 0.114 * blue) / 255;
+  return luminance > 0.5 ? '#000000' : '#ffffff';
+}
+
+/* Envía el color del formulario a la API y recarga la lista. */
+async function onAddColor() {
+  const form = document.getElementById('color-form');
+  // Aprovecha required / min / max del HTML: muestra el globito del navegador.
+  if (!form.reportValidity()) {
+    return;
+  }
+
+  const color = {
+    // Number(): input.value SIEMPRE es string, aunque el input sea number.
+    red:   Number(document.getElementById('red').value),
+    green: Number(document.getElementById('green').value),
+    blue:  Number(document.getElementById('blue').value),
+  };
+
+  try {
+    await fetchJSON('/colors', {
+      method: 'POST',
+      body: JSON.stringify(color),
+    });
+    await loadColors();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchJSON(path, options) {
+  const resource = new URL(path, window.location);
+  const response = await window.fetch(resource, {
+    ...options,
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw new Error('Error ' + response.status + ': ' + response.statusText);
+  }
+}` },
+    { nombre: "styles.css", lenguaje: "css", codigo:
+`body { font-family: Arial, Helvetica, sans-serif; font-size: 15px; margin: 1em 5vw; }
+#content { display: flex; flex-direction: column; gap: 1em; }
+
+#colors { display: flex; flex-wrap: wrap; gap: .6em; }
+
+.color {
+  align-items: center; border-radius: 6px; display: flex; font-family: monospace;
+  font-size: .85em; height: 62px; justify-content: center; width: 140px;
+}
+
+#color-form { align-items: center; display: flex; flex-wrap: wrap; gap: .5em; }
+#color-form input { padding: .3em; width: 80px; }
+#color-form button { cursor: pointer; padding: .4em 1em; }` },
+    { nombre: "api/db.json", lenguaje: "json", codigo:
+`{
+  "colors": [
+    { "id": 1, "red": 220, "green": 40,  "blue": 60 },
+    { "id": 2, "red": 40,  "green": 160, "blue": 90 },
+    { "id": 3, "red": 250, "green": 235, "blue": 120 },
+    { "id": 4, "red": 30,  "green": 40,  "blue": 120 }
+  ]
+}` },
+  ],
+  demo: {
+    db: `{ "colors": [
+      { "id": 1, "red": 220, "green": 40, "blue": 60 },
+      { "id": 2, "red": 40, "green": 160, "blue": 90 },
+      { "id": 3, "red": 250, "green": 235, "blue": 120 },
+      { "id": 4, "red": 30, "green": 40, "blue": 120 }
+    ] }`,
+    aviso: "Cambiá los números y tocá Agregar: POST y recarga. Probá poner 300 para ver reportValidity().",
+  },
+},
+
+/* ---------------------------------------------------------------- */
+{
+  grupo: "2025sem2 · CRUD completo (ej4)",
+  id: "contacts",
+  titulo: "Mini-Contacts API",
+  origen: "parcial 2025sem2 matutino · ej4",
+  firma: "GET /users · POST /users · PATCH /users/:id · DELETE /users/:id\n{ id, name, email, role: \"Viewer\" | \"Editor\" | \"Admin\" }",
+  resumen: "El CRUD entero, que es la versión más completa que salió: listar, crear desde un formulario, modificar UN campo con PATCH y borrar. Cada fila lleva sus propios botones, creados desde JS, con el usuario capturado en un closure.",
+  puntos: [
+    { t: "Botones creados desde JS con closure", d: "<code>button('Delete', () =&gt; deleteUser(user))</code>. La flecha se acuerda de QUÉ user era, sin necesidad de guardar el id en un <code>data-</code>. Es el patrón más limpio para listas dinámicas." },
+    { t: "PATCH modifica solo lo que mandás", d: "<code>PATCH /users/3</code> con <code>{ role: \"Admin\" }</code> cambia el rol y deja intactos <code>name</code> y <code>email</code>. Con <code>PUT</code> tendrías que mandar el objeto ENTERO o perderías los otros campos." },
+    { tipo: "trampa", t: "Después de cada operación, recargá", d: "<code>await deleteUser(...)</code> y después <code>await loadUsers()</code>. No borres el <code>&lt;li&gt;</code> a mano: si el servidor falló, tu UI queda mintiendo. La API es la fuente de verdad." },
+    { t: "DELETE puede devolver 204 sin cuerpo", d: "<code>response.json()</code> explota con un cuerpo vacío. Por eso el helper hace <code>return response.status === 204 ? null : await response.json()</code>." },
+    { t: "Promote/Demote con un array de roles", d: "<code>ROLES.indexOf(user.role)</code> + un delta, acotado con <code>Math.min</code>/<code>Math.max</code>. Convertir «siguiente/anterior» en un índice es más simple que una cadena de ifs." },
+    { t: "Limpiar el formulario tras el éxito", d: "<code>input.value = ''</code> y <code>select.selectedIndex = 0</code>. Y hacelo DESPUÉS del await, nunca antes: si el POST falla, el usuario no pierde lo que escribió." },
+  ],
+  archivos: [
+    { nombre: "index.html", lenguaje: "html", codigo:
+`<body onload="onLoad()">
+  <h1>Mini-Contacts</h1>
+
+  <div id="form">
+    <input id="name" name="name" placeholder="Name" required />
+    <input id="email" name="email" placeholder="Email" required />
+    <select id="role" name="role">
+      <option>Admin</option>
+      <option>Editor</option>
+      <option>Viewer</option>
+    </select>
+    <button id="add">Add</button>
+  </div>
+
+  <ul id="users"></ul>
+</body>` },
+    { nombre: "ej04.js", codigo:
+`/*
+# Ejercicio 04 - Mini-Contacts API (resuelto)
+
+Levantar con:  npx json-server db.json -s .
+*/
+
+const API = 'http://localhost:3000/users';
+
+// Orden de roles: convertir "siguiente/anterior" en un índice es más simple
+// que una cadena de ifs.
+const ROLES = ['Viewer', 'Editor', 'Admin'];
+
+function onLoad() {
+  document.getElementById('add').addEventListener('click', addUser);
+  loadUsers();
+}
+
+/* ─── 1. LISTAR ────────────────────────────────────────────── */
+async function loadUsers() {
+  const list = document.getElementById('users');
+  try {
+    const users = await fetchJSON(API);
+    list.replaceChildren(...users.map(userElement));
+  } catch (error) {
+    console.error(error);
+    list.replaceChildren();
+  }
+}
+
+function userElement(user) {
+  const li = document.createElement('li');
+
+  const info = document.createElement('span');
+  info.textContent = user.name + ' / ' + user.role + ' / ' + user.email;
+  li.append(info, ' ');
+
+  // Cada flecha "se acuerda" de QUÉ user era: eso es un closure.
+  // No hace falta guardar el id en un data-attribute.
+  li.append(
+    button('Promote', () => changeRole(user, +1)),
+    button('Demote',  () => changeRole(user, -1)),
+    button('Delete',  () => deleteUser(user)),
+  );
+  return li;
+}
+
+/* Fábrica de botones: se repite en TODOS los ejercicios de este tipo. */
+function button(label, onClick, disabled = false) {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.textContent = label;
+  b.disabled = disabled;
+  b.addEventListener('click', onClick);
+  return b;
+}
+
+/* ─── 2. CREAR (POST) ──────────────────────────────────────── */
+async function addUser() {
+  const name = document.getElementById('name');
+  const email = document.getElementById('email');
+  const role = document.getElementById('role');
+
+  if (!name.value.trim() || !email.value.trim()) {
+    console.warn('Name y Email son obligatorios.');
+    return;
+  }
+
+  try {
+    await fetchJSON(API, {
+      method: 'POST',
+      body: JSON.stringify({
+        name: name.value.trim(),
+        email: email.value.trim(),
+        role: role.value,
+      }),
+    });
+    // Limpiar DESPUÉS del await: si el POST falla, no se pierde lo escrito.
+    name.value = '';
+    email.value = '';
+    role.selectedIndex = 0;
+    await loadUsers();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/* ─── 3. MODIFICAR UN CAMPO (PATCH) ────────────────────────── */
+async function changeRole(user, delta) {
+  const index = ROLES.indexOf(user.role);
+  const nextIndex = Math.min(ROLES.length - 1, Math.max(0, index + delta));
+  if (nextIndex === index) {
+    return;                    // ya está en el extremo: no hacemos nada
+  }
+  try {
+    await fetchJSON(API + '/' + user.id, {
+      method: 'PATCH',
+      // PATCH manda SOLO lo que cambia. name y email quedan intactos.
+      body: JSON.stringify({ role: ROLES[nextIndex] }),
+    });
+    await loadUsers();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/* ─── 4. BORRAR (DELETE) ───────────────────────────────────── */
+async function deleteUser(user) {
+  try {
+    await fetchJSON(API + '/' + user.id, { method: 'DELETE' });
+    await loadUsers();         // recargar, no borrar el <li> a mano
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchJSON(url, options) {
+  const response = await fetch(url, {
+    ...options,
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+  });
+  if (!response.ok) {
+    throw new Error('Error ' + response.status + ': ' + response.statusText);
+  }
+  // DELETE puede devolver 204 sin cuerpo: response.json() explotaría.
+  return response.status === 204 ? null : await response.json();
+}` },
+    { nombre: "consigna.md", lenguaje: "texto", codigo:
+`## Ejercicio 4 — Mini-Contacts API
+
+**Objetivo:** Consumir una API de usuarios para listar, crear, editar
+parcialmente (rol) y borrar.
+
+### Consigna (obligatoria)
+
+1. Al inicializar la página: renderizar los usuarios como elementos de la
+   lista \`#users\` (Formato: Name / Role / Email).
+
+2. Al hacer click en el botón Add: crear un usuario con la información cargada
+   en los inputs \`#name\`, \`#email\` y \`#role\`. Tras éxito, **actualizar la
+   UI** y limpiar el formulario.
+
+3. Agregar 2 botones a cada usuario, "Promote/Demote", que actualice **solo**
+   \`role\`. Tras éxito, **actualizar la UI**.
+
+4. Agregar un botón "Delete" por fila, que elimine un usuario. Tras éxito,
+   **actualizar la UI**.
+
+
+──────────────────────────────────────────────────────────────
+ Fijate que la consigna repite tres veces "tras éxito,
+ actualizar la UI". Eso es literalmente:
+
+     await fetchJSON(...);     // la operación
+     await loadUsers();        // recargar desde la API
+
+ Es el requisito que más se olvida y el más fácil de cumplir.
+──────────────────────────────────────────────────────────────` },
+    { nombre: "db.json", lenguaje: "json", codigo:
+`{
+  "users": [
+    { "id": 1, "name": "Ana García",      "email": "ana@ucu.edu.uy",    "role": "Admin" },
+    { "id": 2, "name": "Pedro Gómez",     "email": "pedro@ucu.edu.uy",  "role": "Editor" },
+    { "id": 3, "name": "Lucía Fernández", "email": "lucia@ucu.edu.uy",  "role": "Viewer" }
+  ]
+}` },
+  ],
+  demo: {
+    db: `{ "users": [
+      { "id": 1, "name": "Ana García", "email": "ana@ucu.edu.uy", "role": "Admin" },
+      { "id": 2, "name": "Pedro Gómez", "email": "pedro@ucu.edu.uy", "role": "Editor" },
+      { "id": 3, "name": "Lucía Fernández", "email": "lucia@ucu.edu.uy", "role": "Viewer" }
+    ] }`,
+    aviso: "CRUD completo: agregá, promové, degradá y borrá. Mirá la consola de abajo para ver cada request.",
+  },
+},
+
+/* ---------------------------------------------------------------- */
+{
+  grupo: "2025sem2 · CRUD completo (ej4)",
+  id: "products",
+  titulo: "Mini-Products API",
+  origen: "parcial 2025sem2 vespertino · ej4",
+  firma: "GET /products · POST /products · PUT /products/:id · DELETE /products/:id\n{ id, title, price, stock, category }",
+  resumen: "El mismo CRUD que Mini-Contacts, pero con PUT en vez de PATCH, y con campos numéricos. Los dos detalles que lo distinguen: convertir los inputs a Number, y deshabilitar el botón cuando no queda stock.",
+  puntos: [
+    { tipo: "trampa", t: "PUT REEMPLAZA el objeto entero", d: "<code>PUT /products/1</code> con <code>{ stock: 19 }</code> te borra title, price y category. Por eso hay que mandar <code>{ ...product, stock: product.stock - 1 }</code>: el spread copia todo y solo pisa lo que cambia. Con <code>PATCH</code> alcanzaría con <code>{ stock: ... }</code>." },
+    { tipo: "trampa", t: "Number() en los campos numéricos", d: "<code>price</code> y <code>stock</code> tienen que llegar como números. Sin <code>Number()</code>, la API guarda <code>\"5.5\"</code> y después <code>product.stock - 1</code> hace cuentas raras con strings." },
+    { t: "Deshabilitar en vez de esconder", d: "<code>button('Buy 1', ..., product.stock &lt;= 0)</code>. El botón sigue ahí pero gris. Mejor UX que hacerlo desaparecer, y una línea de código." },
+    { t: "Validar todos los campos de una", d: "<code>fields.some((f) =&gt; f.value.trim() === '')</code> sobre el array de inputs. Más corto que un if por campo, y se extiende solo si agregás uno más." },
+    { t: "Limpiar todos los campos de una", d: "<code>fields.forEach((f) =&gt; { f.value = ''; })</code>. Mismo array, misma idea." },
+  ],
+  archivos: [
+    { nombre: "index.html", lenguaje: "html", codigo:
+`<body onload="onLoad()">
+  <h1>Mini-Products</h1>
+
+  <div id="form">
+    <input id="title" name="title" placeholder="Title" required />
+    <input id="price" name="price" type="number" step="0.01" min="0" placeholder="Price" required />
+    <input id="stock" name="stock" type="number" step="1" min="0" placeholder="Stock" required />
+    <input id="category" name="category" placeholder="Category" required />
+    <button id="add-product">Add product</button>
+  </div>
+
+  <ul id="products"></ul>
+</body>` },
+    { nombre: "ej04.js", codigo:
+`/*
+# Ejercicio 04 - Mini-Products API (resuelto)
+
+Levantar con:  npx json-server db.json -s .
+*/
+
+const API = 'http://localhost:3000/products';
+
+function onLoad() {
+  document.getElementById('add-product').addEventListener('click', addProduct);
+  loadProducts();
+}
+
+/* ─── 1. LISTAR ────────────────────────────────────────────── */
+async function loadProducts() {
+  const list = document.getElementById('products');
+  try {
+    const products = await fetchJSON(API);
+    list.replaceChildren(...products.map(productElement));
+  } catch (error) {
+    console.error(error);
+    list.replaceChildren();
+  }
+}
+
+function productElement(product) {
+  const li = document.createElement('li');
+
+  const info = document.createElement('span');
+  info.textContent = product.title + ' — $' + product.price
+    + ' — stock: ' + product.stock + ' — ' + product.category;
+
+  li.append(
+    info,
+    // El tercer argumento deshabilita el botón cuando no queda stock.
+    button('Buy 1', () => buyOne(product), product.stock <= 0),
+    button('Delete', () => deleteProduct(product)),
+  );
+  return li;
+}
+
+function button(label, onClick, disabled = false) {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.textContent = label;
+  b.disabled = disabled;
+  b.addEventListener('click', onClick);
+  return b;
+}
+
+/* ─── 2. CREAR (POST) ──────────────────────────────────────── */
+async function addProduct() {
+  // Un array con los cuatro inputs: valida y limpia todos de una.
+  const fields = ['title', 'price', 'stock', 'category']
+    .map((id) => document.getElementById(id));
+
+  if (fields.some((f) => f.value.trim() === '')) {
+    console.warn('Todos los campos son obligatorios.');
+    return;
+  }
+
+  const [title, price, stock, category] = fields;
+  try {
+    await fetchJSON(API, {
+      method: 'POST',
+      body: JSON.stringify({
+        title: title.value.trim(),
+        price: Number(price.value),      // ← input.value es string SIEMPRE
+        stock: Number(stock.value),
+        category: category.value.trim(),
+      }),
+    });
+    fields.forEach((f) => { f.value = ''; });
+    await loadProducts();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/* ─── 3. BORRAR (DELETE) ───────────────────────────────────── */
+async function deleteProduct(product) {
+  try {
+    await fetchJSON(API + '/' + product.id, { method: 'DELETE' });
+    await loadProducts();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/* ─── 4. MODIFICAR (PUT) ───────────────────────────────────── */
+async function buyOne(product) {
+  if (product.stock <= 0) {
+    return;
+  }
+  try {
+    await fetchJSON(API + '/' + product.id, {
+      method: 'PUT',
+      // PUT REEMPLAZA el objeto entero: hay que mandarlo completo.
+      // El spread copia todo y solo pisa stock.
+      // Con PATCH alcanzaría con { stock: product.stock - 1 }.
+      body: JSON.stringify({ ...product, stock: product.stock - 1 }),
+    });
+    await loadProducts();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchJSON(url, options) {
+  const response = await fetch(url, {
+    ...options,
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+  });
+  if (!response.ok) {
+    throw new Error('Error ' + response.status + ': ' + response.statusText);
+  }
+  return response.status === 204 ? null : await response.json();
+}` },
+    { nombre: "db.json", lenguaje: "json", codigo:
+`{
+  "products": [
+    { "id": 1, "title": "Notebook",  "price": 5.5,  "stock": 20, "category": "Stationery" },
+    { "id": 2, "title": "Pen",       "price": 1.2,  "stock": 3,  "category": "Stationery" },
+    { "id": 3, "title": "Backpack",  "price": 42.0, "stock": 0,  "category": "Bags" },
+    { "id": 4, "title": "Water bottle", "price": 9.9, "stock": 7, "category": "Kitchen" }
+  ]
+}` },
+  ],
+  demo: {
+    db: `{ "products": [
+      { "id": 1, "title": "Notebook", "price": 5.5, "stock": 20, "category": "Stationery" },
+      { "id": 2, "title": "Pen", "price": 1.2, "stock": 3, "category": "Stationery" },
+      { "id": 3, "title": "Backpack", "price": 42, "stock": 0, "category": "Bags" }
+    ] }`,
+    aviso: "Fijate que Backpack tiene el botón Buy 1 deshabilitado (stock 0). Comprá 3 Pens y mirá qué pasa.",
+  },
+},
+
+/* ---------------------------------------------------------------- */
+{
+  grupo: "2025sem2 · CRUD completo (ej4)",
+  id: "tareas",
+  titulo: "Gestor de Tareas",
+  origen: "simulacro 2025sem2 · ej04",
+  firma: "GET /tasks · POST /tasks · PATCH /tasks/:id · DELETE /tasks/:id\n{ id, title, completed: true | false }",
+  resumen: "El clásico to-do. Lo distinto de los otros: acá el alta va por el submit de un <form>, no por el click de un botón suelto. Eso obliga a event.preventDefault(), que es el error que más gente comete en este ejercicio.",
+  puntos: [
+    { tipo: "error", t: "Sin preventDefault() la página se recarga", d: "El comportamiento por defecto de un <code>&lt;form&gt;</code> es navegar. Se recarga la página, se pierde todo y parece que «no hizo nada». Siempre <code>event.preventDefault()</code> como PRIMERA línea del handler." },
+    { t: "Toggle con PATCH y el valor negado", d: "<code>{ completed: !task.completed }</code>. Una sola función para marcar y desmarcar." },
+    { t: "El texto del botón depende del estado", d: "<code>task.completed ? '↩︎ Reabrir' : '✔ Completar'</code>. Como redibujás la lista entera después de cada operación, el texto se actualiza solo." },
+    { t: "Clase condicional", d: "<code>li.className = task.completed ? 'completed' : ''</code>. Y en el CSS, <code>.completed { text-decoration: line-through }</code>. El estado visual sale del dato, no de tocar el DOM a mano." },
+    { t: "trim() antes de guardar", d: "<code>input.value.trim()</code> y si queda vacío, <code>return</code>. Sin eso se pueden crear tareas de puros espacios." },
+  ],
+  archivos: [
+    { nombre: "index.html", lenguaje: "html", codigo:
+`<body>
+  <h1>Gestor de Tareas</h1>
+
+  <form id="task-form">
+    <input type="text" id="task-input" placeholder="Nueva tarea..." required />
+    <button type="submit">Agregar</button>
+  </form>
+
+  <ul id="task-list"></ul>
+
+  <!-- El script va al FINAL del body: así el DOM ya existe cuando corre,
+       y no hace falta onload ni defer. -->
+  <script src="ej04.js"><\/script>
+</body>` },
+    { nombre: "ej04.js", codigo:
+`/*
+# Ejercicio 04 - Gestor de Tareas CRUD (resuelto)
+
+Levantar la API con:  npx json-server db.json
+*/
+
+const API_URL = 'http://localhost:3000/tasks';
+
+// El script está al final del body, así que estos elementos ya existen.
+const taskList = document.getElementById('task-list');
+const form = document.getElementById('task-form');
+const input = document.getElementById('task-input');
+
+/* ─── GET: obtiene el listado y actualiza la vista ─────────── */
+async function loadTasks() {
+  try {
+    const tasks = await fetchJSON(API_URL);
+    taskList.replaceChildren(...tasks.map(taskElement));
+  } catch (error) {
+    console.error(error);
+    taskList.replaceChildren();
+  }
+}
+
+/* Construye el <li> de una tarea. */
+function taskElement(task) {
+  const li = document.createElement('li');
+  // El estado visual sale del dato. Como redibujamos todo después de
+  // cada operación, no hay que tocar la clase a mano nunca más.
+  li.className = task.completed ? 'completed' : '';
+
+  const title = document.createElement('div');
+  title.className = 'task-title';
+  title.textContent = task.title;
+
+  const actions = document.createElement('div');
+  actions.className = 'task-actions';
+  actions.append(
+    button(task.completed ? '↩︎ Reabrir' : '✔ Completar', () => toggleComplete(task)),
+    button('🗑 Borrar', () => deleteTask(task)),
+  );
+
+  li.append(title, actions);
+  return li;
+}
+
+function button(label, onClick) {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.textContent = label;
+  b.addEventListener('click', onClick);
+  return b;
+}
+
+/* ─── PATCH: cambia el estado ──────────────────────────────── */
+async function toggleComplete(task) {
+  try {
+    await fetchJSON(API_URL + '/' + task.id, {
+      method: 'PATCH',
+      body: JSON.stringify({ completed: !task.completed }),
+    });
+    await loadTasks();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/* ─── DELETE ───────────────────────────────────────────────── */
+async function deleteTask(task) {
+  try {
+    await fetchJSON(API_URL + '/' + task.id, { method: 'DELETE' });
+    await loadTasks();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/* ─── POST: el submit del formulario ───────────────────────── */
+form.addEventListener('submit', async (event) => {
+  // ⚠ LA LÍNEA MÁS IMPORTANTE DEL EJERCICIO.
+  // Sin esto el navegador navega, la página se recarga y parece
+  // que el botón "no hace nada".
+  event.preventDefault();
+
+  const title = input.value.trim();
+  if (!title) {
+    return;
+  }
+
+  try {
+    await fetchJSON(API_URL, {
+      method: 'POST',
+      body: JSON.stringify({ title, completed: false }),
+    });
+    input.value = '';
+    await loadTasks();
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+async function fetchJSON(url, options) {
+  const response = await fetch(url, {
+    ...options,
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+  });
+  if (!response.ok) {
+    throw new Error('Error ' + response.status + ': ' + response.statusText);
+  }
+  return response.status === 204 ? null : await response.json();
+}
+
+// Arranque: el script está al final del body, así que se puede llamar directo.
+loadTasks();` },
+    { nombre: "ej04.css", lenguaje: "css", codigo:
+`body { font-family: Arial, Helvetica, sans-serif; font-size: 15px; margin: 1em 5vw; }
+
+#task-form { display: flex; gap: .5em; margin-bottom: 1em; }
+#task-form input { flex: 1; padding: .45em .6em; }
+#task-form button { cursor: pointer; padding: .45em 1.2em; }
+
+#task-list { list-style: none; margin: 0; padding: 0; }
+
+#task-list li {
+  align-items: center; background: #f4f4f4; border-radius: 6px; display: flex;
+  gap: 1em; justify-content: space-between; margin-bottom: .5em; padding: .6em .9em;
+}
+
+/* El estado visual sale de la clase que pone el JS */
+#task-list li.completed .task-title { color: #888; text-decoration: line-through; }
+
+.task-actions { display: flex; gap: .4em; }
+.task-actions button { cursor: pointer; font-size: .85em; padding: .3em .7em; }` },
+    { nombre: "db.json", lenguaje: "json", codigo:
+`{
+  "tasks": [
+    { "id": "a3c7", "title": "Repasar flexbox",           "completed": false },
+    { "id": "25d0", "title": "Hacer el simulacro",        "completed": true  },
+    { "id": "9f1b", "title": "Leer los tests del ej02",   "completed": false }
+  ]
+}` },
+  ],
+  demo: {
+    db: `{ "tasks": [
+      { "id": "a3c7", "title": "Repasar flexbox", "completed": false },
+      { "id": "25d0", "title": "Hacer el simulacro", "completed": true },
+      { "id": "9f1b", "title": "Leer los tests del ej02", "completed": false }
+    ] }`,
+    aviso: "Escribí una tarea y dale Enter: eso dispara el submit del form (con preventDefault).",
+  },
+},
+
+/* ---------------------------------------------------------------- */
+{
+  grupo: "2025sem2 · solo DOM (ej3)",
+  id: "led",
+  titulo: "Display LED de 7 segmentos",
+  origen: "parcial 2025sem2 matutino · ej3",
+  firma: "click en el display → dígito aleatorio 0-9",
+  resumen: "Sin API: solo DOM. Al hacer click se elige un número al azar y se prenden o apagan los 7 segmentos. La clave del ejercicio no es JavaScript sino la TABLA de datos: qué segmentos van encendidos para cada dígito. Escribila primero y el código sale en cuatro líneas.",
+  puntos: [
+    { t: "Los datos primero, el código después", d: "El objeto <code>SEGMENTOS</code> con los 10 dígitos es el 80% del ejercicio. Una vez que lo tenés, el bucle que prende y apaga es trivial. Si empezás por el código, te quedan diez ifs." },
+    { t: "Recorrer TODOS y decidir según la lista", d: "No prendas solo los de la lista: recorré los 7 SIEMPRE y a cada uno le ponés on u off. Si solo prendés, quedan encendidos los del dígito anterior." },
+    { t: "IDs armados con template string", d: "<code>document.getElementById(`seg-${nombre}`)</code>. Nombrar los elementos con un patrón (<code>seg-a</code>…<code>seg-g</code>) te deja recorrerlos con un bucle en vez de escribir siete líneas." },
+    { t: "?? para el caso raro", d: "<code>SEGMENTOS[digit] ?? []</code>: si te llega un dígito que no está en la tabla, se apagan todos en vez de explotar." },
+    { t: "onclick en el HTML es válido", d: "<code>&lt;div id=\"content\" onclick=\"showRandomDigit()\"&gt;</code>. Es lo que trae la plantilla y está bien. La alternativa con <code>addEventListener</code> es igual de correcta." },
+  ],
+  archivos: [
+    { nombre: "ej03.html", lenguaje: "html", codigo:
+`<body onload="showRandomDigit()">
+  <h1>Ejercicio 03</h1>
+  <p>Esta página debe implementar un dígito de un display LED de 7 segmentos.
+    Al hacer click en el display se debe definir un valor aleatorio entre 0 y 9
+    y mostrar el dígito correspondiente.</p>
+
+  <div id="content" onclick="showRandomDigit()">
+    <div id="displayLED" tabindex="0">
+      <div id="seg-a" class="segment"></div>
+      <div id="seg-b" class="segment"></div>
+      <div id="seg-c" class="segment"></div>
+      <div id="seg-d" class="segment"></div>
+      <div id="seg-e" class="segment"></div>
+      <div id="seg-f" class="segment"></div>
+      <div id="seg-g" class="segment"></div>
+    </div>
+  </div>
+</body>` },
+    { nombre: "ej03.js", codigo:
+`/*
+# Ejercicio 03 - resuelto.
+
+showRandomDigit está asociada al click. Elige un dígito aleatorio entre 0 y 9
+y prende/apaga los 7 segmentos correspondientes.
+
+    ─a─
+   f│ │b
+    ─g─
+   e│ │c
+    ─d─
+*/
+
+// LOS DATOS PRIMERO. Esto es el 80% del ejercicio; el resto sale solo.
+const SEGMENTOS = {
+  0: ['a', 'b', 'c', 'd', 'e', 'f'],
+  1: ['b', 'c'],
+  2: ['a', 'b', 'g', 'e', 'd'],
+  3: ['a', 'b', 'g', 'c', 'd'],
+  4: ['f', 'g', 'b', 'c'],
+  5: ['a', 'f', 'g', 'c', 'd'],
+  6: ['a', 'f', 'g', 'e', 'c', 'd'],
+  7: ['a', 'b', 'c'],
+  8: ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
+  9: ['a', 'b', 'c', 'd', 'f', 'g'],
+};
+
+const TODOS = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
+
+const COLOR_ON = '#e0e000';
+const COLOR_OFF = '#030303';
+
+function showRandomDigit() {
+  // Math.random() da [0, 1). Por 10 y truncado -> 0..9
+  showDigit(Math.floor(Math.random() * 10));
+}
+
+function showDigit(digit) {
+  const encendidos = SEGMENTOS[digit] ?? [];
+
+  // Recorrer TODOS, no solo los encendidos: si no, quedan prendidos
+  // los del dígito anterior.
+  for (const nombre of TODOS) {
+    const segmento = document.getElementById('seg-' + nombre);
+    segmento.style.backgroundColor =
+      encendidos.includes(nombre) ? COLOR_ON : COLOR_OFF;
+  }
+
+  console.log('Dígito mostrado: ' + digit);
+}` },
+    { nombre: "ej03.css", lenguaje: "css", codigo:
+`body { font-family: Arial, Helvetica, sans-serif; font-size: 15px; margin: 1em 5vw; }
+
+#content { cursor: pointer; display: flex; justify-content: center; padding: 1.5em; }
+
+/* Los 7 segmentos se posicionan en absoluto sobre un rectángulo */
+#displayLED {
+  background: #111;
+  border-radius: 8px;
+  height: 220px;
+  padding: 14px;
+  position: relative;
+  width: 130px;
+}
+
+.segment { background: #030303; position: absolute; transition: background-color .12s; }
+
+/* horizontales */
+#seg-a, #seg-g, #seg-d { height: 14px; left: 26px; width: 78px; }
+#seg-a { top: 14px; }
+#seg-g { top: 103px; }
+#seg-d { top: 192px; }
+
+/* verticales */
+#seg-f, #seg-b, #seg-e, #seg-c { height: 78px; width: 14px; }
+#seg-f { left: 14px;  top: 26px; }
+#seg-b { left: 104px; top: 26px; }
+#seg-e { left: 14px;  top: 115px; }
+#seg-c { left: 104px; top: 115px; }` },
+  ],
+  demo: {
+    aviso: "Hacé click en el display: cada click sortea un dígito nuevo.",
+  },
+},
+
+/* ---------------------------------------------------------------- */
+{
+  grupo: "2025sem2 · solo DOM (ej3)",
+  id: "dado",
+  titulo: "Dado",
+  origen: "parcial 2025sem2 vespertino · ej3",
+  firma: "click en el dado → valor aleatorio 1-6",
+  resumen: "El gemelo del display LED, con el mismo esqueleto: una tabla de datos, un bucle que recorre todo, y click para sortear. La diferencia interesante es cómo se oculta: visibility en vez de display, para que la grilla no se reacomode.",
+  puntos: [
+    { tipo: "trampa", t: "visibility: hidden, NO display: none", d: "<code>display: none</code> saca el elemento del flujo y la grilla de 3×3 se reacomoda: los pips que quedan se mueven. <code>visibility: hidden</code> lo deja invisible pero ocupando su lugar." },
+    { t: "Nombrar por posición", d: "<code>pip11</code>…<code>pip33</code> = fila y columna. Así la tabla de datos se lee sola: el 4 son las cuatro esquinas, <code>['pip11','pip13','pip31','pip33']</code>." },
+    { t: "Aleatorio entre 1 y N", d: "<code>Math.floor(Math.random() * 6) + 1</code>. El <code>+ 1</code> corre el rango de 0-5 a 1-6. Es el error de un lugar más común con random." },
+    { t: "Misma estructura que el LED", d: "Tabla → recorrer todos → aplicar on/off. Si te sale uno, te sale el otro. Vale la pena tener el patrón memorizado." },
+  ],
+  archivos: [
+    { nombre: "ej03.html", lenguaje: "html", codigo:
+`<body onload="rollDie()">
+  <h1>Ejercicio 03</h1>
+  <p>Esta página debe implementar un dado. Al hacer click en el dado se debe
+    definir un valor aleatorio entre 1 y 6 y mostrar los pips de la manera
+    estándar.</p>
+
+  <div id="content" onclick="rollDie()">
+    <div id="die" tabindex="0">
+      <span id="pip11" class="pip">⬤</span>
+      <span id="pip12" class="pip">⬤</span>
+      <span id="pip13" class="pip">⬤</span>
+      <span id="pip21" class="pip">⬤</span>
+      <span id="pip22" class="pip">⬤</span>
+      <span id="pip23" class="pip">⬤</span>
+      <span id="pip31" class="pip">⬤</span>
+      <span id="pip32" class="pip">⬤</span>
+      <span id="pip33" class="pip">⬤</span>
+    </div>
+  </div>
+</body>` },
+    { nombre: "ej03.js", codigo:
+`/*
+# Ejercicio 03 - resuelto.
+
+rollDie está asociada al click en el dado. Elige un valor aleatorio entre 1 y 6
+y muestra los pips de la manera estándar.
+
+Los ids son pipFILACOLUMNA sobre una grilla 3x3:
+
+    pip11  pip12  pip13
+    pip21  pip22  pip23
+    pip31  pip32  pip33
+*/
+
+// LOS DATOS PRIMERO. Se leen solos: el 4 son las cuatro esquinas.
+const PIPS = {
+  1: ['pip22'],
+  2: ['pip11', 'pip33'],
+  3: ['pip11', 'pip22', 'pip33'],
+  4: ['pip11', 'pip13', 'pip31', 'pip33'],
+  5: ['pip11', 'pip13', 'pip22', 'pip31', 'pip33'],
+  6: ['pip11', 'pip13', 'pip21', 'pip23', 'pip31', 'pip33'],
+};
+
+const TODOS = [
+  'pip11', 'pip12', 'pip13',
+  'pip21', 'pip22', 'pip23',
+  'pip31', 'pip32', 'pip33',
+];
+
+function rollDie() {
+  // * 6 da 0..5, el + 1 lo corre a 1..6
+  showDie(Math.floor(Math.random() * 6) + 1);
+}
+
+function showDie(value) {
+  const visibles = PIPS[value] ?? [];
+
+  for (const id of TODOS) {
+    // visibility: hidden en vez de display: none, para que la grilla
+    // NO se reacomode al ocultar un pip.
+    document.getElementById(id).style.visibility =
+      visibles.includes(id) ? 'visible' : 'hidden';
+  }
+
+  console.log('Dado: ' + value);
+}` },
+    { nombre: "ej03.css", lenguaje: "css", codigo:
+`body { font-family: Arial, Helvetica, sans-serif; font-size: 15px; margin: 1em 5vw; }
+
+#content { cursor: pointer; display: flex; justify-content: center; padding: 1.5em; }
+
+/* Grilla 3x3: cada pip cae en su celda por el orden del HTML */
+#die {
+  background: #fff;
+  border: 3px solid #1b1b1b;
+  border-radius: 16px;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  height: 190px;
+  padding: 16px;
+  width: 190px;
+}
+
+.pip {
+  align-items: center;
+  color: #1b1b1b;
+  display: flex;
+  font-size: 2.2em;
+  justify-content: center;
+  line-height: 1;
+}` },
+  ],
+  demo: {
+    aviso: "Click para tirar. Fijate que los pips ocultos siguen ocupando su lugar en la grilla.",
+  },
+},
+
+/* ---------------------------------------------------------------- */
+{
+  grupo: "2025sem2 · solo DOM (ej3)",
+  id: "paises",
+  titulo: "Países con favoritos",
+  origen: "simulacro 2025sem2 · ej03",
+  firma: "GET https://restcountries.com/v3.1/all?fields=cca2,name,flags\n(API pública, solo lectura)",
+  resumen: "El único que consume una API PÚBLICA externa en vez de json-server, y el único con estado local que no se guarda en ningún lado: los favoritos viven en un Set en memoria. Al marcar uno, sube al principio de la lista y cambia de estilo.",
+  puntos: [
+    { t: "Estado en memoria + re-render completo", d: "Un <code>Set</code> con los códigos favoritos y una función <code>render()</code> que dibuja TODO de nuevo. Cada vez que cambia el estado, llamás a <code>render()</code>. No toques nodos sueltos: es más simple y no se desincroniza." },
+    { t: "Set para pertenencia", d: "<code>favorites.has(cca2)</code>, <code>.add()</code>, <code>.delete()</code>. Más claro que un array con <code>includes</code> + <code>filter</code> para quitar, y no permite duplicados." },
+    { t: "Ordenar en dos grupos", d: "<code>[...favs, ...noFavs]</code> con dos <code>filter</code> sobre la misma lista ya ordenada alfabéticamente. Los favoritos suben y el resto conserva su orden original, que es lo que pide la consigna." },
+    { t: "Normalizar la respuesta de la API", d: "La API devuelve <code>country.name.common</code> y <code>country.flags.png</code> anidados. Un <code>map</code> inicial los aplana a <code>{ cca2, name, flag }</code> y el resto del código queda limpio." },
+    { tipo: "trampa", t: "Guardá el estado, no el DOM", d: "El favorito se guarda en el <code>Set</code>, y el corazón se dibuja a partir del <code>Set</code>. Si guardaras «cuál corazón está rojo» leyendo el DOM, al reordenar la lista lo perderías." },
+  ],
+  archivos: [
+    { nombre: "ej03.html", lenguaje: "html", codigo:
+`<body onload="showCountries()">
+  <h1>Ejercicio 03</h1>
+  <p>Esta página debe obtener una lista de países de la API pública
+    https://restcountries.com/v3.1/all?fields=cca2,name,flags
+    y mostrar una lista con la bandera, código y nombre común de cada país.
+
+    Cada imagen deberá incluir un ícono de "favorito" en la esquina superior
+    derecha. Al hacer clic, el país se marcará como favorito, pasando a
+    mostrarse en primer lugar y con un estilo que lo distinga. Si se desmarca,
+    recupera su posición alfabética y su estilo habitual.
+
+    Pueden usar los siguientes iconos para favorito: ♡ ❤️</p>
+
+  <div id="countries"></div>
+</body>` },
+    { nombre: "ej03.js", codigo:
+`/*
+# Ejercicio 03 - resuelto.
+
+Obtiene la lista de países de la API pública y la muestra con bandera, código y
+nombre. Cada tarjeta tiene un ícono de favorito: los favoritos se muestran
+primero y con otro estilo.
+*/
+
+const API_URL = 'https://restcountries.com/v3.1/all?fields=cca2,name,flags';
+
+// ─── EL ESTADO DE LA PÁGINA ───────────────────────────────────
+let countries = [];               // [{ cca2, name, flag, alt }]
+const favorites = new Set();      // códigos cca2 marcados como favoritos
+
+async function showCountries() {
+  try {
+    const data = await fetchJSON(API_URL);
+
+    // NORMALIZAR: la API devuelve todo anidado (name.common, flags.png).
+    // Aplanarlo acá deja el resto del código limpio.
+    countries = data
+      .map((country) => ({
+        cca2: country.cca2,
+        name: country.name.common,
+        flag: country.flags.png,
+        alt: country.flags.alt ?? ('Flag of ' + country.name.common),
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    render();
+  } catch (error) {
+    console.error(error);
+    document.getElementById('countries').textContent =
+      'No se pudieron cargar los países.';
+  }
+}
+
+/* Dibuja la lista ENTERA: primero los favoritos, después el resto.
+   Los dos grupos conservan el orden alfabético original. */
+function render() {
+  const ordered = [
+    ...countries.filter((c) => favorites.has(c.cca2)),
+    ...countries.filter((c) => !favorites.has(c.cca2)),
+  ];
+
+  const ul = document.createElement('ul');
+  ul.append(...ordered.map(countryElement));
+  document.getElementById('countries').replaceChildren(ul);
+}
+
+function countryElement(country) {
+  // El estilo sale del ESTADO, no de leer el DOM.
+  const isFavorite = favorites.has(country.cca2);
+
+  const li = document.createElement('li');
+
+  const container = document.createElement('div');
+  container.className = isFavorite
+    ? 'country-container favorite-card'
+    : 'country-container';
+
+  const header = document.createElement('div');
+  header.className = 'card-header';
+
+  const img = document.createElement('img');
+  img.src = country.flag;
+  img.alt = country.alt;
+
+  const star = document.createElement('span');
+  star.className = 'favorite';
+  star.textContent = isFavorite ? '❤️' : '♡';
+  star.title = isFavorite ? 'Quitar de favoritos' : 'Marcar como favorito';
+  star.addEventListener('click', () => toggleFavorite(country.cca2));
+
+  header.append(img, star);
+
+  const p = document.createElement('p');
+  p.textContent = country.cca2 + ': ' + country.name;
+
+  container.append(header, p);
+  li.append(container);
+  return li;
+}
+
+/* Cambiar el estado y redibujar. Nada más. */
+function toggleFavorite(cca2) {
+  if (favorites.has(cca2)) {
+    favorites.delete(cca2);
+  } else {
+    favorites.add(cca2);
+  }
+  render();
+}
+
+async function fetchJSON(url, options) {
+  const response = await fetch(url, options);
+  if (!response.ok) {
+    throw new Error('Error ' + response.status + ': ' + response.statusText);
+  }
+  return await response.json();
+}` },
+    { nombre: "ej03.css", lenguaje: "css", codigo:
+`body { font-family: Arial, Helvetica, sans-serif; font-size: 15px; margin: 1em 5vw; }
+
+#countries ul {
+  display: grid;
+  gap: 1em;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.country-container {
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  padding: .6em;
+}
+
+/* El estilo del favorito: una clase modificadora, igual que en el ej01 */
+.country-container.favorite-card {
+  background: #fff6e0;
+  border-color: #f5a623;
+}
+
+.card-header { align-items: flex-start; display: flex; gap: .5em; justify-content: space-between; }
+.card-header img { border: 1px solid #ccc; width: 100%; max-width: 110px; }
+
+.favorite { cursor: pointer; font-size: 1.3em; line-height: 1; user-select: none; }
+
+.country-container p { font-size: .88rem; margin: .5em 0 0; }` },
+    { nombre: "ej03.json", lenguaje: "json", codigo:
+`// Ejemplo del formato que devuelve la API (un elemento de los ~250).
+// Fijate lo anidado que viene: por eso conviene aplanarlo con un map.
+[
+  {
+    "cca2": "JM",
+    "flags": {
+      "alt": "The flag of Jamaica is divided by a gold diagonal cross...",
+      "png": "https://flagcdn.com/w320/jm.png",
+      "svg": "https://flagcdn.com/jm.svg"
+    },
+    "name": {
+      "common": "Jamaica",
+      "official": "Jamaica",
+      "nativeName": { "eng": { "common": "Jamaica", "official": "Jamaica" } }
+    }
+  }
+]` },
+  ],
+  demo: {
+    aviso: "Adaptado: emojis de bandera y pocos países, para andar sin internet. La lógica (Set, render, reordenar) es idéntica.",
+    html: `<h3>Países</h3>
+<p class="nota">Tocá el corazón: el país sube al principio y cambia de estilo.
+Volvé a tocarlo y recupera su lugar alfabético.</p>
+<div id="countries"></div>`,
+    css: `body { font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 14px; }
+h3 { font-size: 1em; margin: 0 0 .4em; }
+.nota { color: #666; font-size: .82em; line-height: 1.5; margin: 0 0 .9em; }
+#countries ul { display: grid; gap: .7em; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                list-style: none; margin: 0; padding: 0; }
+.country-container { border: 2px solid #ddd; border-radius: 10px; padding: .5em .6em; }
+.country-container.favorite-card { background: #fff6e0; border-color: #f5a623; }
+.card-header { align-items: center; display: flex; justify-content: space-between; }
+.card-header .bandera { font-size: 2.2em; line-height: 1; }
+.favorite { cursor: pointer; font-size: 1.2em; line-height: 1; user-select: none; }
+.country-container p { font-size: .85em; margin: .3em 0 0; }`,
+    js: `// Datos de ejemplo, ya en el formato que devuelve la API una vez aplanado.
+const DATOS = [
+  { cca2: 'UY', name: 'Uruguay',   flag: '\uD83C\uDDFA\uD83C\uDDFE' },
+  { cca2: 'AR', name: 'Argentina', flag: '\uD83C\uDDE6\uD83C\uDDF7' },
+  { cca2: 'BR', name: 'Brazil',    flag: '\uD83C\uDDE7\uD83C\uDDF7' },
+  { cca2: 'CL', name: 'Chile',     flag: '\uD83C\uDDE8\uD83C\uDDF1' },
+  { cca2: 'JM', name: 'Jamaica',   flag: '\uD83C\uDDEF\uD83C\uDDF2' },
+  { cca2: 'MX', name: 'Mexico',    flag: '\uD83C\uDDF2\uD83C\uDDFD' },
+];
+
+// ─── EL ESTADO ───
+let countries = [];
+const favorites = new Set();
+
+function showCountries() {
+  countries = [...DATOS].sort((a, b) => a.name.localeCompare(b.name));
+  render();
+}
+
+/* Dibuja la lista ENTERA: favoritos primero, después el resto,
+   los dos grupos en orden alfabético. */
+function render() {
+  const ordered = [
+    ...countries.filter((c) => favorites.has(c.cca2)),
+    ...countries.filter((c) => !favorites.has(c.cca2)),
+  ];
+  const ul = document.createElement('ul');
+  ul.append(...ordered.map(countryElement));
+  document.getElementById('countries').replaceChildren(ul);
+}
+
+function countryElement(country) {
+  const isFavorite = favorites.has(country.cca2);   // ← el estilo sale del ESTADO
+
+  const li = document.createElement('li');
+  const container = document.createElement('div');
+  container.className = isFavorite ? 'country-container favorite-card' : 'country-container';
+
+  const header = document.createElement('div');
+  header.className = 'card-header';
+
+  const bandera = document.createElement('span');
+  bandera.className = 'bandera';
+  bandera.textContent = country.flag;
+
+  const star = document.createElement('span');
+  star.className = 'favorite';
+  star.textContent = isFavorite ? '\u2764\uFE0F' : '\u2661';
+  star.title = isFavorite ? 'Quitar de favoritos' : 'Marcar como favorito';
+  star.addEventListener('click', () => toggleFavorite(country.cca2));
+
+  header.append(bandera, star);
+
+  const p = document.createElement('p');
+  p.textContent = country.cca2 + ': ' + country.name;
+
+  container.append(header, p);
+  li.append(container);
+  return li;
+}
+
+/* Cambiar el estado y redibujar. Nada más. */
+function toggleFavorite(cca2) {
+  if (favorites.has(cca2)) favorites.delete(cca2);
+  else favorites.add(cca2);
+  render();
+}`,
+    init: "showCountries()",
+  },
+},
+
+  ],
+};
+
+/* ==========================================================================
+   TAB 2 — El esqueleto
+   ========================================================================== */
+const ESQUELETO = {
+  id: "esqueleto",
+  tab: "El esqueleto",
+  ayuda: "Los cinco ejercicios con API son el MISMO archivo con otros nombres. Aprendete este esqueleto y en la prueba solo cambiás qué se dibuja.",
+  items: [
+
+{
+  id: "esq-plantilla",
+  titulo: "La plantilla completa, en orden de escritura",
+  resumen: "Escribí siempre en este orden: primero fetchJSON, después la función que carga y dibuja, después la que construye un elemento, y al final las de guardar. Así en cualquier momento tenés algo que funciona a medias en vez de nada que funcione.",
+  puntos: [
+    { t: "1º · fetchJSON", d: "Es idéntico en todos los parciales. Escribilo de memoria antes que nada: te desbloquea todo lo demás y ya podés probar en la consola del navegador." },
+    { t: "2º · cargar + dibujar", d: "<code>loadX()</code> pide a la API y hace <code>contenedor.replaceChildren(...datos.map(xElement))</code>. Con esto ya ves los datos en pantalla: medio ejercicio hecho." },
+    { t: "3º · construir un elemento", d: "<code>xElement(dato)</code> devuelve un nodo. Es la única función que cambia de verdad entre un ejercicio y otro." },
+    { t: "4º · guardar y recargar", d: "<code>await fetchJSON(..., { method })</code> y después <code>await loadX()</code>. SIEMPRE recargar: la API es la fuente de verdad." },
+    { t: "5º · el arranque", d: "<code>onLoad()</code> llama a lo anterior. Si el script está en el <code>&lt;head&gt;</code>, el HTML usa <code>&lt;body onload=\"onLoad()\"&gt;</code>." },
+  ],
+  archivos: [
+    { nombre: "plantilla.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   EL ESQUELETO. Sirve para los 5 ejercicios con API que salieron.
+   Cambiá los nombres y el cuerpo de xElement, nada más.
+   ══════════════════════════════════════════════════════════════ */
+
+/* ─── 1. El helper. Escribilo PRIMERO, siempre igual ────────── */
+async function fetchJSON(path, options) {
+  const resource = new URL(path, window.location);
+  const response = await window.fetch(resource, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
+    },
+  });
+  if (!response.ok) {
+    throw new Error('Error ' + response.status + ': ' + response.statusText);
+  }
+  // DELETE puede devolver 204 sin cuerpo: json() explotaría.
+  return response.status === 204 ? null : await response.json();
+}
+
+/* ─── 2. Cargar y dibujar ───────────────────────────────────── */
+async function loadItems() {
+  const contenedor = document.getElementById('lista');
+  try {
+    const items = await fetchJSON('/items');
+    contenedor.replaceChildren(...items.map(itemElement));
+  } catch (error) {
+    console.error(error);
+    contenedor.replaceChildren();     // que la página no quede rota
+  }
+}
+
+/* ─── 3. Construir UN elemento. Lo único que cambia de verdad ─ */
+function itemElement(item) {
+  const div = document.createElement('div');
+  div.className = 'item';
+
+  const texto = document.createElement('span');
+  texto.textContent = item.nombre;
+
+  div.append(
+    texto,
+    button('Borrar', () => borrar(item)),
+  );
+  return div;
+}
+
+/* Fábrica de botones: aparece en todos los ejercicios */
+function button(label, onClick, disabled = false) {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.textContent = label;
+  b.disabled = disabled;
+  b.addEventListener('click', onClick);
+  return b;
+}
+
+/* ─── 4. Guardar y recargar ─────────────────────────────────── */
+async function crear(datos) {
+  try {
+    await fetchJSON('/items', {
+      method: 'POST',
+      body: JSON.stringify(datos),
+    });
+    await loadItems();          // ← recargar SIEMPRE
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function borrar(item) {
+  try {
+    await fetchJSON('/items/' + item.id, { method: 'DELETE' });
+    await loadItems();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/* ─── 5. El arranque ────────────────────────────────────────── */
+async function onLoad() {
+  await loadItems();
+}` },
+    { nombre: "index.html", lenguaje: "html", codigo:
+`<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejercicio 03</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- El script está en el HEAD: cuando corre, el body TODAVÍA NO existe.
+       Por eso el arranque va en el onload del body y no suelto en el archivo. -->
+  <script src="ej03.js"><\/script>
+</head>
+
+<body onload="onLoad()">
+  <div id="content">
+    <h1>Título</h1>
+
+    <!-- El contenedor arranca VACÍO. Lo llena el JS.
+         Borrá los ejemplos que trae la plantilla. -->
+    <div id="lista"></div>
+  </div>
+</body>
+
+</html>
+
+
+<!-- ── ALTERNATIVA: script al final del body ────────────────────
+     Ahí el DOM ya existe y podés llamar a loadItems() directo,
+     sin onload. Es lo que hace el ejercicio del Gestor de Tareas.
+
+     <body>
+       ...
+       <script src="ej04.js"><\/script>
+     </body>
+                                                                  -->` },
+  ],
+  demo: {
+    db: `{ "items": [ { "id": 1, "nombre": "Primer item" }, { "id": 2, "nombre": "Segundo item" } ] }`,
+    aviso: "La plantilla funcionando de verdad. Agregá y borrá: cada operación recarga desde la API falsa.",
+    html:
+`<h3>Plantilla</h3>
+<div id="form">
+  <input id="nombre" placeholder="Nombre del item">
+  <button type="button" onclick="onAdd()">Agregar</button>
+</div>
+<div id="lista"></div>`,
+    css:
+`body { font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 14px; }
+h3 { margin: 0 0 .8em; }
+#form { display: flex; gap: .5em; margin-bottom: 1em; }
+#form input { flex: 1; padding: .4em; }
+#form button, .item button { cursor: pointer; padding: .35em .8em; }
+.item { align-items: center; background: #f4f4f4; border-radius: 6px; display: flex;
+        justify-content: space-between; margin-bottom: .4em; padding: .5em .8em; }`,
+    js:
+`async function fetchJSON(path, options) {
+  const resource = new URL(path, window.location);
+  const response = await window.fetch(resource, {
+    ...options,
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+  });
+  if (!response.ok) throw new Error('Error ' + response.status);
+  return response.status === 204 ? null : await response.json();
+}
+async function loadItems() {
+  const contenedor = document.getElementById('lista');
+  try {
+    const items = await fetchJSON('/items');
+    contenedor.replaceChildren(...items.map(itemElement));
+  } catch (e) { console.error(e); contenedor.replaceChildren(); }
+}
+function itemElement(item) {
+  const div = document.createElement('div');
+  div.className = 'item';
+  const t = document.createElement('span');
+  t.textContent = item.nombre;
+  div.append(t, button('Borrar', () => borrar(item)));
+  return div;
+}
+function button(label, onClick) {
+  const b = document.createElement('button');
+  b.type = 'button'; b.textContent = label;
+  b.addEventListener('click', onClick);
+  return b;
+}
+async function onAdd() {
+  const input = document.getElementById('nombre');
+  if (!input.value.trim()) return;
+  try {
+    await fetchJSON('/items', { method: 'POST', body: JSON.stringify({ nombre: input.value.trim() }) });
+    input.value = '';
+    await loadItems();
+  } catch (e) { console.error(e); }
+}
+async function borrar(item) {
+  try {
+    await fetchJSON('/items/' + item.id, { method: 'DELETE' });
+    await loadItems();
+  } catch (e) { console.error(e); }
+}
+async function onLoad() { await loadItems(); }`,
+    init: "onLoad()",
+  },
+},
+
+{
+  id: "esq-ciclo",
+  titulo: "El ciclo: la API es la fuente de verdad",
+  resumen: "La regla que resuelve la mitad de los bugs de este ejercicio: nunca actualices la pantalla a mano después de una operación. Guardá, y después volvé a PEDIR los datos y redibujá todo. Es más lento y no importa.",
+  puntos: [
+    { tipo: "error", t: "El bug clásico: actualizar el DOM a mano", d: "Borrás el <code>&lt;li&gt;</code> con <code>li.remove()</code> después del DELETE. Si el servidor falló, la fila desapareció de la pantalla pero sigue en la base. Tu UI está mintiendo." },
+    { t: "El patrón correcto: guardar y recargar", d: "<code>await fetchJSON(..., {method});</code> seguido de <code>await loadItems();</code>. Si el POST falla, salta al <code>catch</code> y la recarga nunca ocurre: la pantalla queda como estaba, que es lo correcto." },
+    { tipo: "trampa", t: "Sin await, recargás antes de tiempo", d: "Si te olvidás el <code>await</code> del POST, la recarga sale disparada antes de que el servidor haya guardado. Ves la lista vieja y parece que «no hizo nada»." },
+    { t: "replaceChildren limpia y llena de una", d: "<code>contenedor.replaceChildren(...items.map(itemElement))</code>. Vacía lo que había y pone lo nuevo en una sola línea. Sin él, cada recarga duplicaría la lista." },
+    { t: "El catch también tiene que dejar la UI usable", d: "<code>contenedor.replaceChildren()</code> sin argumentos vacía el contenedor. Mejor una lista vacía que una lista con datos viejos que ya no son ciertos." },
+  ],
+  archivos: [
+    { nombre: "ciclo.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   ✅ EL PATRÓN CORRECTO
+   ══════════════════════════════════════════════════════════════ */
+
+async function borrar(item) {
+  try {
+    await fetchJSON('/items/' + item.id, { method: 'DELETE' });
+    await loadItems();        // ← volver a PEDIR y redibujar TODO
+  } catch (error) {
+    console.error(error);
+    // Si falló, no recargamos: la pantalla queda como estaba. Correcto.
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ❌ LOS TRES ERRORES
+   ══════════════════════════════════════════════════════════════ */
+
+// ── 1. Actualizar el DOM a mano ────────────────────────────────
+async function borrarMal1(item, li) {
+  await fetchJSON('/items/' + item.id, { method: 'DELETE' });
+  li.remove();               // ❌ si el server falló, la UI miente
+}
+
+// ── 2. Olvidar el await ────────────────────────────────────────
+async function borrarMal2(item) {
+  fetchJSON('/items/' + item.id, { method: 'DELETE' });  // ❌ sin await
+  await loadItems();         // corre ANTES de que el server haya borrado
+}                            // -> ves la lista vieja
+
+// ── 3. Appendear en vez de reemplazar ──────────────────────────
+async function loadMal(items) {
+  const c = document.getElementById('lista');
+  for (const item of items) {
+    c.append(itemElement(item));   // ❌ cada recarga DUPLICA la lista
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   EL CICLO, DIBUJADO
+   ══════════════════════════════════════════════════════════════
+
+     el usuario hace click
+              │
+              ▼
+     await fetchJSON(POST/PATCH/DELETE)   ← la operación
+              │
+              ├── falla ──► catch: console.error, no se recarga
+              │
+              ▼ ok
+     await loadItems()                    ← volver a PEDIR
+              │
+              ▼
+     GET /items
+              │
+              ▼
+     contenedor.replaceChildren(...)      ← redibujar TODO
+                                                                  */` },
+  ],
+  demo: {
+    db: `{ "items": [ { "id": 1, "nombre": "Item A" }, { "id": 2, "nombre": "Item B" }, { "id": 3, "nombre": "Item C" } ] }`,
+    aviso: "El botón rojo simula un servidor que falla: fijate que la fila NO desaparece, porque la recarga nunca ocurre.",
+    html:
+`<h3>Recargar siempre desde la API</h3>
+<p class="nota">Borrar (bien) hace DELETE y recarga. Borrar (falla) simula un
+error del servidor: la UI queda como estaba, que es lo correcto.</p>
+<div id="lista"></div>`,
+    css:
+`body { font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 14px; }
+h3 { margin: 0 0 .5em; }
+.nota { color: #666; font-size: .82em; line-height: 1.5; margin: 0 0 1em; }
+.item { align-items: center; background: #f4f4f4; border-radius: 6px; display: flex;
+        gap: .5em; justify-content: space-between; margin-bottom: .4em; padding: .5em .8em; }
+.item button { cursor: pointer; font-size: .82em; padding: .3em .7em; }
+.item button.malo { border-color: #c66; color: #b3261e; }`,
+    js:
+`async function fetchJSON(path, options) {
+  const resource = new URL(path, window.location);
+  const response = await window.fetch(resource, {
+    ...options,
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+  });
+  if (!response.ok) throw new Error('Error ' + response.status + ': ' + response.statusText);
+  return response.status === 204 ? null : await response.json();
+}
+async function loadItems() {
+  const c = document.getElementById('lista');
+  try {
+    const items = await fetchJSON('/items');
+    c.replaceChildren(...items.map(itemElement));
+  } catch (e) { console.error(e); c.replaceChildren(); }
+}
+function itemElement(item) {
+  const div = document.createElement('div');
+  div.className = 'item';
+  const t = document.createElement('span');
+  t.textContent = item.nombre;
+  div.append(t, button('Borrar (bien)', () => borrar(item)), button('Borrar (falla)', () => borrarFallando(item), true));
+  return div;
+}
+function button(label, onClick, malo) {
+  const b = document.createElement('button');
+  b.type = 'button'; b.textContent = label;
+  if (malo) b.className = 'malo';
+  b.addEventListener('click', onClick);
+  return b;
+}
+async function borrar(item) {
+  try {
+    await fetchJSON('/items/' + item.id, { method: 'DELETE' });
+    await loadItems();
+  } catch (e) { console.error(e); }
+}
+async function borrarFallando(item) {
+  try {
+    // /items-que-no-existen devuelve 404: el catch corta antes de recargar
+    await fetchJSON('/rutaInexistente/' + item.id, { method: 'DELETE' });
+    await loadItems();
+  } catch (e) { console.error('Falló el borrado:', e.message, '— la UI queda como estaba'); }
+}
+loadItems();`,
+  },
+},
+
+  ],
+};
+
+/* ==========================================================================
+   TAB 3 — Crear y pintar el DOM
+   ========================================================================== */
+const DOM = {
+  id: "dom",
+  tab: "Crear y pintar el DOM",
+  ayuda: "Construir nodos desde JavaScript: los seis métodos que se usan, y los tres errores que aparecen siempre.",
+  items: [
+
+{
+  id: "dom-crear",
+  titulo: "Crear un nodo y meterlo en la página",
+  resumen: "Los métodos que necesitás son seis y no cambian nunca. Lo importante es replaceChildren para redibujar listas y textContent en vez de innerHTML.",
+  puntos: [
+    { t: "createElement + propiedades + append", d: "Creás, le ponés clase y texto, y lo metés. <code>append</code> acepta varios hijos y también strings sueltos." },
+    { tipo: "trampa", t: "textContent, no innerHTML", d: "<code>textContent</code> pone texto plano y es seguro. <code>innerHTML</code> interpreta HTML: si el dato viene de la API o de un input, alguien puede meter etiquetas. Usá <code>innerHTML</code> solo si de verdad necesitás HTML." },
+    { tipo: "trampa", t: "Para un input es .value, no .textContent", d: "<code>document.getElementById('nombre').value</code>. Los <code>&lt;input&gt;</code> y <code>&lt;select&gt;</code> no tienen contenido de texto: tienen valor." },
+    { t: "replaceChildren es el que querés", d: "Vacía y llena de una: <code>c.replaceChildren(...items.map(f))</code>. Sin argumentos, vacía. La alternativa <code>innerHTML = ''</code> + appends funciona pero es más torpe." },
+    { t: "className vs classList", d: "<code>className = 'a b'</code> reemplaza todas las clases. <code>classList.add/remove/toggle</code> tocan una sola sin pisar las demás." },
+  ],
+  archivos: [
+    { nombre: "crear-nodos.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   CREAR
+   ══════════════════════════════════════════════════════════════ */
+const div = document.createElement('div');
+
+div.className = 'duelo';               // reemplaza TODAS las clases
+div.classList.add('destacado');        // agrega una sin pisar las otras
+div.classList.remove('destacado');
+div.classList.toggle('oculto');        // pone/saca
+div.id = 'algo';
+div.dataset.id = item.id;              // queda como data-id="..."
+
+div.textContent = 'texto plano';       // ✅ seguro
+div.innerHTML = '<b>ojo</b>';          // ⚠ interpreta HTML
+
+/* ══════════════════════════════════════════════════════════════
+   METER EN LA PÁGINA
+   ══════════════════════════════════════════════════════════════ */
+padre.append(hijo1, hijo2, 'texto suelto');   // al final, varios de una
+padre.prepend(hijo);                          // al principio
+padre.replaceChildren(...nodos);              // ⭐ VACÍA y rellena
+padre.replaceChildren();                      // vaciar
+hijo.remove();                                // se borra a sí mismo
+
+/* ══════════════════════════════════════════════════════════════
+   BUSCAR
+   ══════════════════════════════════════════════════════════════ */
+document.getElementById('lista')          // por id (el más usado)
+document.querySelector('.duelo')          // el PRIMERO que matchea
+document.querySelectorAll('.duelo')       // todos (recorrer con forEach)
+elemento.closest('.duelo')                // sube buscando un ancestro
+
+/* ══════════════════════════════════════════════════════════════
+   LEER Y ESCRIBIR VALORES
+   ══════════════════════════════════════════════════════════════ */
+input.value                    // ✅ el contenido de un input o select
+input.value = '';              // limpiar
+input.textContent              // ❌ vacío siempre: los inputs no tienen texto
+select.value                   // el value de la <option> elegida
+select.selectedIndex = 0;      // volver a la primera opción
+checkbox.checked               // booleano
+boton.disabled = true;
+
+/* ══════════════════════════════════════════════════════════════
+   ATRIBUTOS Y ESTILOS
+   ══════════════════════════════════════════════════════════════ */
+img.src = 'foto.png';
+img.alt = 'descripción';
+span.title = 'tooltip';
+el.setAttribute('aria-label', 'x');
+
+// Las propiedades CSS van en camelCase:
+el.style.backgroundColor = '#f5a623';   // background-color
+el.style.fontSize = '1.2em';            // font-size
+el.style.visibility = 'hidden';
+
+// Casi siempre es mejor una clase que tocar el style:
+el.classList.toggle('completed', task.completed);` },
+    { nombre: "construir-fila.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   EL PATRÓN COMPLETO: construir la fila de un dato
+   ══════════════════════════════════════════════════════════════ */
+
+function itemElement(item) {
+  const li = document.createElement('li');
+  // El estado visual sale del DATO
+  li.className = item.completed ? 'completed' : '';
+
+  const titulo = document.createElement('span');
+  titulo.className = 'titulo';
+  titulo.textContent = item.title;
+
+  const acciones = document.createElement('div');
+  acciones.className = 'acciones';
+  acciones.append(
+    button(item.completed ? 'Reabrir' : 'Completar', () => toggle(item)),
+    button('Borrar', () => borrar(item)),
+  );
+
+  li.append(titulo, acciones);
+  return li;                     // ← devolver el nodo, no meterlo acá
+}
+
+/* Devolver el nodo en vez de insertarlo deja usar .map():
+
+     contenedor.replaceChildren(...items.map(itemElement));
+
+   Que es la línea que redibuja la lista entera.                 */
+
+/* ══════════════════════════════════════════════════════════════
+   LA FÁBRICA DE BOTONES
+   ══════════════════════════════════════════════════════════════ */
+
+function button(label, onClick, disabled = false) {
+  const b = document.createElement('button');
+  b.type = 'button';           // dentro de un <form>, sin esto es submit
+  b.textContent = label;
+  b.disabled = disabled;
+  b.addEventListener('click', onClick);
+  return b;
+}
+
+// La flecha se acuerda de QUÉ item era: eso es un closure.
+// Por eso no hace falta guardar el id en un data-attribute.
+button('Borrar', () => borrar(item))` },
+  ],
+  demo: {
+    aviso: "Comparación en vivo de textContent vs innerHTML, y de append vs replaceChildren.",
+    html:
+`<h3>textContent vs innerHTML</h3>
+<p class="nota">El "dato" es: <code>&lt;b&gt;Hola&lt;/b&gt; &lt;img src=x onerror="alert(1)"&gt;</code></p>
+<div class="caja"><strong>textContent:</strong> <span id="a"></span></div>
+<div class="caja"><strong>innerHTML:</strong> <span id="b"></span></div>
+
+<h3>append vs replaceChildren</h3>
+<p class="nota">Tocá los botones varias veces y mirá la diferencia.</p>
+<div class="botones">
+  <button type="button" onclick="conAppend()">append (duplica)</button>
+  <button type="button" onclick="conReplace()">replaceChildren (bien)</button>
+</div>
+<div id="lista"></div>`,
+    css:
+`body { font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 14px; }
+h3 { font-size: 1em; margin: 1.2em 0 .4em; }
+h3:first-child { margin-top: 0; }
+.nota { color: #666; font-size: .82em; margin: 0 0 .7em; }
+.nota code { background: #eee; border-radius: 3px; padding: 1px 4px; }
+.caja { background: #f4f4f4; border-radius: 6px; margin-bottom: .4em; padding: .5em .8em; }
+.botones { display: flex; gap: .5em; margin-bottom: .7em; }
+button { cursor: pointer; padding: .4em .8em; }
+#lista { display: flex; flex-wrap: wrap; gap: .4em; }
+.item { background: #e7ecf3; border: 1px solid #9fb3cc; border-radius: 6px; padding: .3em .7em; }`,
+    js:
+`const DATO = '<b>Hola</b> <img src=x onerror="document.body.style.background=\\'red\\'">';
+
+// textContent: lo muestra tal cual, como texto
+document.getElementById('a').textContent = DATO;
+// innerHTML: lo INTERPRETA. La <b> se pone en negrita y la <img> rota
+// dispara su onerror. Con datos de un input o de la API, es un agujero.
+document.getElementById('b').innerHTML = DATO;
+
+const ITEMS = ['uno', 'dos', 'tres'];
+function nodos() {
+  return ITEMS.map((t) => {
+    const d = document.createElement('div');
+    d.className = 'item';
+    d.textContent = t;
+    return d;
+  });
+}
+function conAppend() { document.getElementById('lista').append(...nodos()); }
+function conReplace() { document.getElementById('lista').replaceChildren(...nodos()); }
+conReplace();`,
+  },
+},
+
+{
+  id: "dom-listas",
+  titulo: "Redibujar una lista sin duplicar ni desincronizar",
+  resumen: "La operación central del ejercicio: convertir un array de datos en un montón de nodos. Una línea, y tres formas de hacerla mal.",
+  puntos: [
+    { t: "La línea", d: "<code>contenedor.replaceChildren(...items.map(itemElement))</code>. <code>map</code> convierte cada dato en un nodo, el spread los pasa como argumentos sueltos, y <code>replaceChildren</code> vacía y llena." },
+    { tipo: "trampa", t: "Los tres puntos son obligatorios", d: "<code>replaceChildren(items.map(f))</code> sin spread le pasa UN array como hijo, no los nodos. No funciona." },
+    { t: "itemElement devuelve, no inserta", d: "Si dentro de <code>itemElement</code> hicieras <code>contenedor.append(li)</code>, no podrías usar <code>map</code> ni reordenar. Que devuelva el nodo y decida el que llama." },
+    { t: "Ordenar antes de dibujar", d: "El de países hace <code>[...favoritos, ...noFavoritos].map(...)</code>. Reordenás los DATOS y redibujás: nunca muevas nodos del DOM a mano." },
+    { t: "Lista vacía es un caso válido", d: "Si la API devuelve <code>[]</code>, <code>replaceChildren()</code> deja el contenedor vacío y ya está. Si querés un mensaje, un <code>if (items.length === 0)</code> antes." },
+  ],
+  archivos: [
+    { nombre: "listas.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   LA LÍNEA QUE REDIBUJA UNA LISTA
+   ══════════════════════════════════════════════════════════════ */
+
+contenedor.replaceChildren(...items.map(itemElement));
+//                        ↑ el spread es OBLIGATORIO
+
+// Paso a paso:
+const nodos = items.map(itemElement);      // [<li>, <li>, <li>]
+contenedor.replaceChildren(...nodos);      // vacía y mete los tres
+
+// ❌ Sin spread: le pasás UN array como único hijo. No funciona.
+contenedor.replaceChildren(items.map(itemElement));
+
+/* ══════════════════════════════════════════════════════════════
+   CON UN MENSAJE PARA LA LISTA VACÍA
+   ══════════════════════════════════════════════════════════════ */
+
+async function loadItems() {
+  const c = document.getElementById('lista');
+  try {
+    const items = await fetchJSON('/items');
+    if (items.length === 0) {
+      const p = document.createElement('p');
+      p.textContent = 'Todavía no hay nada.';
+      c.replaceChildren(p);
+      return;
+    }
+    c.replaceChildren(...items.map(itemElement));
+  } catch (error) {
+    console.error(error);
+    c.replaceChildren();
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   REORDENAR: cambiá los DATOS, no los nodos
+   ══════════════════════════════════════════════════════════════ */
+
+// El ejercicio de países: los favoritos primero
+function render() {
+  const ordered = [
+    ...countries.filter((c) => favorites.has(c.cca2)),
+    ...countries.filter((c) => !favorites.has(c.cca2)),
+  ];
+  document.getElementById('countries')
+    .replaceChildren(...ordered.map(countryElement));
+}
+
+// Otros ordenamientos:
+[...items].sort((a, b) => a.nombre.localeCompare(b.nombre))   // alfabético
+[...items].sort((a, b) => b.precio - a.precio)                // por número
+items.filter((i) => !i.completed)                             // filtrar
+
+/* ══════════════════════════════════════════════════════════════
+   ANIDAR: una lista dentro de cada elemento
+   ══════════════════════════════════════════════════════════════ */
+
+function grupoElement(grupo) {
+  const div = document.createElement('div');
+
+  const h3 = document.createElement('h3');
+  h3.textContent = grupo.nombre;
+
+  const ul = document.createElement('ul');
+  ul.append(...grupo.items.map(itemElement));   // ← el mismo patrón adentro
+
+  div.append(h3, ul);
+  return div;
+}` },
+  ],
+  demo: {
+    db: `{ "modelos": [
+      { "id": 1, "nombre": "ChatGPT", "empresa": "OpenAI", "votos": 8, "fav": false },
+      { "id": 2, "nombre": "Claude", "empresa": "Anthropic", "votos": 12, "fav": true },
+      { "id": 3, "nombre": "Gemini", "empresa": "Google", "votos": 5, "fav": false },
+      { "id": 4, "nombre": "DeepSeek", "empresa": "DeepSeek", "votos": 9, "fav": true }
+    ] }`,
+    aviso: "El mismo array, reordenado de tres formas. Solo cambian los DATOS: el redibujado es siempre la misma línea.",
+    html:
+`<h3>Cambiá los datos, redibujá todo</h3>
+<div class="botones">
+  <button type="button" onclick="ordenar('original')">Original</button>
+  <button type="button" onclick="ordenar('alfabetico')">Alfabético</button>
+  <button type="button" onclick="ordenar('votos')">Por votos</button>
+  <button type="button" onclick="ordenar('favoritos')">Favoritos primero</button>
+</div>
+<div id="lista"></div>`,
+    css:
+`body { font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 14px; }
+h3 { font-size: 1em; margin: 0 0 .6em; }
+.botones { display: flex; flex-wrap: wrap; gap: .4em; margin-bottom: .9em; }
+button { cursor: pointer; font-size: .85em; padding: .35em .7em; }
+button.activo { background: #1b4f9c; border-color: #1b4f9c; color: #fff; }
+.item { align-items: center; background: #f4f4f4; border-radius: 6px; display: flex;
+        gap: .6em; justify-content: space-between; margin-bottom: .4em; padding: .5em .8em; }
+.item.fav { background: #fff6e0; border: 1px solid #f0d79a; }
+.item .sub { color: #666; font-size: .82em; }`,
+    js:
+`let modelos = [];
+let modo = 'original';
+
+async function cargar() {
+  const r = await window.fetch('/modelos');
+  modelos = await r.json();
+  render();
+}
+
+function ordenar(nuevo) { modo = nuevo; render(); }
+
+function render() {
+  let lista = modelos;
+  if (modo === 'alfabetico') lista = [...modelos].sort((a, b) => a.nombre.localeCompare(b.nombre));
+  if (modo === 'votos')      lista = [...modelos].sort((a, b) => b.votos - a.votos);
+  if (modo === 'favoritos')  lista = [...modelos.filter((m) => m.fav), ...modelos.filter((m) => !m.fav)];
+
+  // ← SIEMPRE la misma línea, no importa el orden
+  document.getElementById('lista').replaceChildren(...lista.map(itemElement));
+
+  for (const b of document.querySelectorAll('.botones button')) {
+    b.classList.toggle('activo', b.textContent.toLowerCase().startsWith(modo.slice(0, 4)));
+  }
+}
+
+function itemElement(m) {
+  const div = document.createElement('div');
+  div.className = m.fav ? 'item fav' : 'item';
+  const izq = document.createElement('span');
+  izq.textContent = (m.fav ? '❤️ ' : '') + m.nombre;
+  const der = document.createElement('span');
+  der.className = 'sub';
+  der.textContent = m.empresa + ' · ' + m.votos + ' votos';
+  div.append(izq, der);
+  return div;
+}
+cargar();`,
+  },
+},
+
+  ],
+};
+
+/* ==========================================================================
+   TAB 4 — fetch y el CRUD
+   ========================================================================== */
+const FETCH = {
+  id: "fetch",
+  tab: "fetch y el CRUD",
+  ayuda: "Los cuatro verbos contra json-server, el helper que conviene escribir siempre, y los errores que hacen que «no guarde nada».",
+  items: [
+
+{
+  id: "fet-verbos",
+  titulo: "Los cuatro verbos contra json-server",
+  resumen: "GET para listar, POST para crear, PATCH o PUT para modificar, DELETE para borrar. La diferencia entre PATCH y PUT es la que más se paga: PUT reemplaza el objeto ENTERO.",
+  puntos: [
+    { tipo: "trampa", t: "PATCH modifica, PUT reemplaza", d: "<code>PATCH /users/3</code> con <code>{ role: 'Admin' }</code> cambia solo el rol. <code>PUT</code> con lo mismo te BORRA name y email. Si usás PUT, mandá el objeto completo con spread: <code>{ ...user, role: 'Admin' }</code>." },
+    { tipo: "error", t: "No mandes el id en el POST", d: "Lo genera json-server. Si mandás uno que ya existe, podés pisar un registro." },
+    { t: "El id va en la URL, no en el body", d: "<code>fetch('/users/' + user.id, { method: 'DELETE' })</code>. Para GET, POST y las listas, la URL es la colección sin id." },
+    { t: "json-server acepta query params", d: "<code>/tasks?completed=false</code>, <code>/tasks?_sort=title</code>, <code>/tasks?_limit=5</code>. Útiles si el enunciado pide filtrar, aunque casi siempre conviene filtrar en JS." },
+    { t: "URL relativa cuando json-server sirve la página", d: "Si arrancás con <code>npm start</code> y la página sale de <code>public/</code>, la API está en el mismo origen: alcanza <code>'/duelos'</code>. Si abrís el HTML a mano con doble click, necesitás la URL completa <code>http://localhost:3000/duelos</code>." },
+  ],
+  archivos: [
+    { nombre: "verbos.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   LOS CUATRO VERBOS
+   ══════════════════════════════════════════════════════════════ */
+
+// ── LISTAR ─────────────────────────────────────────────────────
+const items = await fetchJSON('/users');
+// GET /users -> [{id:1,...}, {id:2,...}]
+
+// ── UNO SOLO ───────────────────────────────────────────────────
+const user = await fetchJSON('/users/3');
+
+// ── CREAR ──────────────────────────────────────────────────────
+await fetchJSON('/users', {
+  method: 'POST',
+  body: JSON.stringify({ name: 'Ana', email: 'a@x.com', role: 'Viewer' }),
+});
+// El id lo pone json-server. NO lo mandes.
+
+// ── MODIFICAR SOLO ALGUNOS CAMPOS ──────────────────────────────
+await fetchJSON('/users/3', {
+  method: 'PATCH',
+  body: JSON.stringify({ role: 'Admin' }),
+});
+// name y email quedan intactos ✔
+
+// ── REEMPLAZAR EL OBJETO ENTERO ────────────────────────────────
+await fetchJSON('/users/3', {
+  method: 'PUT',
+  body: JSON.stringify({ ...user, role: 'Admin' }),
+  //                    ↑ el spread es OBLIGATORIO con PUT
+});
+
+// ❌ Esto con PUT te borra name y email:
+//    body: JSON.stringify({ role: 'Admin' })
+
+// ── BORRAR ─────────────────────────────────────────────────────
+await fetchJSON('/users/3', { method: 'DELETE' });
+
+/* ══════════════════════════════════════════════════════════════
+   PATCH vs PUT, dibujado
+   ══════════════════════════════════════════════════════════════
+
+   Estado inicial:
+     { id: 3, name: "Ana", email: "a@x.com", role: "Viewer" }
+
+   PATCH { role: "Admin" }
+     -> { id: 3, name: "Ana", email: "a@x.com", role: "Admin" }  ✔
+
+   PUT { role: "Admin" }
+     -> { id: 3, role: "Admin" }                                 ✘
+
+   PUT { ...user, role: "Admin" }
+     -> { id: 3, name: "Ana", email: "a@x.com", role: "Admin" }  ✔
+
+   → Si dudás, usá PATCH.                                        */
+
+/* ══════════════════════════════════════════════════════════════
+   QUERY PARAMS DE json-server
+   ══════════════════════════════════════════════════════════════ */
+
+'/tasks?completed=false'      // filtrar por un campo
+'/tasks?_sort=title'          // ordenar
+'/tasks?_sort=title&_order=desc'
+'/tasks?_limit=5'             // los primeros 5
+'/tasks?q=flexbox'            // búsqueda de texto completo` },
+  ],
+  demo: {
+    db: `{ "users": [
+      { "id": 1, "name": "Ana García", "email": "ana@ucu.edu.uy", "role": "Viewer" }
+    ] }`,
+    aviso: "Tocá los botones y mirá el objeto resultante. Fijate qué le pasa a name y email con cada verbo.",
+    html:
+`<h3>PATCH vs PUT, en vivo</h3>
+<p class="nota">Estado del usuario id 1 en la API:</p>
+<pre id="estado"></pre>
+<div class="botones">
+  <button type="button" onclick="conPatch()">PATCH { role: "Admin" }</button>
+  <button type="button" onclick="conPutMal()">PUT { role: "Admin" }</button>
+  <button type="button" onclick="conPutBien()">PUT { ...user, role: "Admin" }</button>
+  <button type="button" onclick="reset()">Reiniciar</button>
+</div>
+<p class="nota" id="msg"></p>`,
+    css:
+`body { font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 14px; }
+h3 { font-size: 1em; margin: 0 0 .5em; }
+.nota { color: #666; font-size: .84em; line-height: 1.5; margin: .6em 0; }
+pre { background: #1b1f24; border-radius: 6px; color: #e6e9ef; font-size: 12px;
+      margin: 0; overflow-x: auto; padding: .7em .9em; }
+.botones { display: flex; flex-direction: column; gap: .4em; margin-top: .8em; }
+button { cursor: pointer; font-size: .85em; padding: .4em .8em; text-align: left; }`,
+    js:
+`async function fetchJSON(path, options) {
+  const r = await window.fetch(new URL(path, window.location), {
+    ...options, headers: { 'Content-Type': 'application/json', ...options?.headers },
+  });
+  if (!r.ok) throw new Error('Error ' + r.status);
+  return r.status === 204 ? null : await r.json();
+}
+async function mostrar(msg) {
+  const user = await fetchJSON('/users/1');
+  document.getElementById('estado').textContent = JSON.stringify(user, null, 2);
+  document.getElementById('msg').textContent = msg || '';
+}
+async function conPatch() {
+  await fetchJSON('/users/1', { method: 'PATCH', body: JSON.stringify({ role: 'Admin' }) });
+  await mostrar('PATCH: cambió solo role. name y email siguen ahí ✔');
+}
+async function conPutMal() {
+  await fetchJSON('/users/1', { method: 'PUT', body: JSON.stringify({ role: 'Admin' }) });
+  await mostrar('PUT sin spread: se llevó puestos name y email ✘');
+}
+async function conPutBien() {
+  const user = await fetchJSON('/users/1');
+  await fetchJSON('/users/1', { method: 'PUT', body: JSON.stringify({ ...user, role: 'Admin' }) });
+  await mostrar('PUT con spread: mandaste el objeto completo ✔');
+}
+async function reset() {
+  await fetchJSON('/users/1', { method: 'PUT',
+    body: JSON.stringify({ id: 1, name: 'Ana García', email: 'ana@ucu.edu.uy', role: 'Viewer' }) });
+  await mostrar('');
+}
+mostrar();`,
+  },
+},
+
+{
+  id: "fet-helper",
+  titulo: "El helper fetchJSON, línea por línea",
+  resumen: "Aparece idéntico en los cinco parciales con API. Vale la pena entender qué hace cada línea, porque los tres bugs más comunes de este ejercicio están todos acá adentro.",
+  puntos: [
+    { tipo: "error", t: "Olvidar JSON.stringify", d: "Si le pasás el objeto pelado al <code>body</code>, se envía <code>[object Object]</code> y la API guarda basura o tira 400." },
+    { tipo: "error", t: "Olvidar Content-Type: application/json", d: "Sin ese header, json-server no parsea el cuerpo. Guarda un registro vacío o tira 400." },
+    { tipo: "error", t: "Olvidar el await", d: "<code>const datos = fetchJSON(...)</code> sin await te deja una <code>Promise</code>, y <code>datos.map</code> explota con «map is not a function». Es el síntoma clásico." },
+    { t: "response.ok no es lo mismo que «no falló»", d: "<code>fetch</code> solo rechaza si no hay red. Un 404 o un 500 llegan como respuesta normal con <code>ok: false</code>. Si no chequeás <code>ok</code>, tratás un error como si fuera un dato." },
+    { t: "El 204 sin cuerpo", d: "<code>DELETE</code> puede devolver 204 No Content. <code>response.json()</code> explota con un cuerpo vacío: por eso el <code>status === 204 ? null : ...</code>." },
+  ],
+  archivos: [
+    { nombre: "fetchJSON.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   EL HELPER, EXPLICADO
+   ══════════════════════════════════════════════════════════════ */
+
+async function fetchJSON(path, options) {
+
+  // ① new URL(path, window.location)
+  //    Resuelve '/duelos' contra la dirección actual. Sirve tanto si la
+  //    página se sirve desde json-server como si está en otro puerto.
+  const resource = new URL(path, window.location);
+
+  const response = await window.fetch(resource, {
+
+    // ② Copiamos lo que nos pasaron: method, body, etc.
+    ...options,
+
+    // ③ Los headers se arman aparte para no pisar los del llamador.
+    //    SIN Content-Type, json-server no parsea el body.
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
+    },
+  });
+
+  // ④ fetch NO rechaza con 404 ni con 500: solo si no hay red.
+  //    Hay que mirar response.ok a mano.
+  if (!response.ok) {
+    throw new Error('Error ' + response.status + ': ' + response.statusText);
+  }
+
+  // ⑤ DELETE puede devolver 204 sin cuerpo: json() explotaría.
+  return response.status === 204 ? null : await response.json();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CÓMO SE USA
+   ══════════════════════════════════════════════════════════════ */
+
+// Leer
+const items = await fetchJSON('/items');
+
+// Escribir: el body SIEMPRE va con JSON.stringify
+await fetchJSON('/items', {
+  method: 'POST',
+  body: JSON.stringify({ nombre: 'x' }),
+});
+
+/* ══════════════════════════════════════════════════════════════
+   LOS TRES ERRORES, Y SU SÍNTOMA
+   ══════════════════════════════════════════════════════════════
+
+   ❌ body: { nombre: 'x' }                  (sin JSON.stringify)
+      → se envía "[object Object]". La API guarda basura o tira 400.
+
+   ❌ sin el header Content-Type
+      → json-server no parsea el cuerpo: guarda {} o tira 400.
+
+   ❌ const datos = fetchJSON('/items');     (sin await)
+      → datos es una Promise.
+      → "datos.map is not a function"
+
+   ❌ if (response.ok) { ... } sin else
+      → un 404 pasa en silencio y te quedás sin saber por qué.  */
+
+/* ══════════════════════════════════════════════════════════════
+   VERSIÓN CON URL ABSOLUTA (2025sem2)
+   ══════════════════════════════════════════════════════════════ */
+
+const API = 'http://localhost:3000/users';
+
+async function fetchJSON(url, options) {
+  const response = await fetch(url, {
+    ...options,
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+  });
+  if (!response.ok) {
+    throw new Error('Error ' + response.status + ': ' + response.statusText);
+  }
+  return response.status === 204 ? null : await response.json();
+}
+
+// Se usa igual, con la URL completa:
+await fetchJSON(API + '/' + user.id, { method: 'DELETE' });` },
+    { nombre: "async-await.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   async / await: lo mínimo
+   ══════════════════════════════════════════════════════════════ */
+
+// await SOLO se puede usar dentro de una función async.
+async function f() {
+  const x = await algoQueDevuelvePromesa();
+  return x;              // f() devuelve una Promise igual
+}
+
+// Manejar errores: try/catch alrededor del await
+try {
+  const datos = await fetchJSON('/items');
+} catch (error) {
+  console.error(error);  // ← logueá SIEMPRE, no te lo comas en silencio
+}
+
+// Llamar a una async desde un onclick del HTML:
+function onWinA() { return saveCombo('A'); }
+// No hace falta await si no te importa el resultado. El return deja
+// que la promesa se propague por si alguien la quiere esperar.
+
+/* ══════════════════════════════════════════════════════════════
+   EL SÍNTOMA DE OLVIDAR UN await
+   ══════════════════════════════════════════════════════════════ */
+
+const datos = fetchJSON('/items');       // ❌ falta await
+datos.map(itemElement);
+// TypeError: datos.map is not a function
+//   (datos es una Promise, no un array)
+
+console.log(datos);
+// Promise { <pending> }   ← si ves esto, te falta un await
+
+/* ══════════════════════════════════════════════════════════════
+   ENCADENAR OPERACIONES
+   ══════════════════════════════════════════════════════════════ */
+
+// ✅ La recarga espera a que el POST termine
+async function guardar(datos) {
+  await fetchJSON('/items', { method: 'POST', body: JSON.stringify(datos) });
+  await loadItems();
+}
+
+// ❌ Sin await, la recarga sale disparada antes de que el server guarde:
+//    ves la lista vieja y parece que no hizo nada.
+async function guardarMal(datos) {
+  fetchJSON('/items', { method: 'POST', body: JSON.stringify(datos) });
+  await loadItems();
+}` },
+  ],
+  demo: {
+    db: `{ "items": [ { "id": 1, "nombre": "Item existente" } ] }`,
+    aviso: "Cada botón hace la misma operación con un error distinto. Mirá qué llega a guardarse.",
+    html:
+`<h3>Los errores de fetch, en vivo</h3>
+<div class="botones">
+  <button type="button" onclick="bien()">✔ Con stringify y Content-Type</button>
+  <button type="button" onclick="sinStringify()">✘ Sin JSON.stringify</button>
+  <button type="button" onclick="sinAwait()">✘ Sin await antes de recargar</button>
+  <button type="button" onclick="rutaMala()">✘ Ruta que da 404</button>
+</div>
+<p class="nota">Lo que hay en la API:</p>
+<pre id="estado"></pre>
+<p class="nota" id="msg"></p>`,
+    css:
+`body { font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 14px; }
+h3 { font-size: 1em; margin: 0 0 .6em; }
+.nota { color: #666; font-size: .84em; line-height: 1.5; margin: .7em 0 .3em; }
+pre { background: #1b1f24; border-radius: 6px; color: #e6e9ef; font-size: 11.5px;
+      margin: 0; max-height: 150px; overflow: auto; padding: .7em .9em; }
+.botones { display: flex; flex-direction: column; gap: .4em; }
+button { cursor: pointer; font-size: .85em; padding: .4em .8em; text-align: left; }`,
+    js:
+`async function mostrar(msg) {
+  const r = await window.fetch('/items');
+  document.getElementById('estado').textContent = JSON.stringify(await r.json(), null, 2);
+  document.getElementById('msg').textContent = msg || '';
+}
+async function bien() {
+  await window.fetch('/items', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nombre: 'Correcto' }),
+  });
+  await mostrar('Se guardó { nombre: "Correcto" } ✔');
+}
+async function sinStringify() {
+  await window.fetch('/items', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: { nombre: 'Roto' },     // ← sin JSON.stringify
+  });
+  await mostrar('Se envió "[object Object]": la API no pudo parsearlo. ✘');
+}
+async function sinAwait() {
+  window.fetch('/items', {       // ← sin await
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nombre: 'Tarde' }),
+  });
+  await mostrar('Recargamos antes de que el POST terminara: no aparece todavía. Volvé a tocar otro botón y ahí sí. ✘');
+}
+async function rutaMala() {
+  const r = await window.fetch('/rutaInexistente');
+  document.getElementById('msg').textContent =
+    'fetch NO tiró error: devolvió status ' + r.status + ' con ok=' + r.ok +
+    '. Por eso hay que chequear response.ok a mano. ✘';
+}
+mostrar();`,
+  },
+},
+
+  ],
+};
+
+/* ==========================================================================
+   TAB 5 — Eventos y formularios
+   ========================================================================== */
+const EVENTOS = {
+  id: "eventos",
+  tab: "Eventos y formularios",
+  ayuda: "Cómo se enganchan los clicks, cómo se lee un formulario, y por qué a veces la página se recarga sola.",
+  items: [
+
+{
+  id: "ev-enganchar",
+  titulo: "Las tres formas de enganchar un evento",
+  resumen: "Las plantillas de los parciales usan onclick en el HTML. addEventListener desde JS es igual de válido y es lo que necesitás para los botones que creás vos. La tercera, la delegación, resuelve el caso de las listas que se redibujan.",
+  puntos: [
+    { t: "onclick en el HTML: lo que trae la plantilla", d: "<code>&lt;button onclick=\"onWinA()\"&gt;</code>. La función tiene que ser GLOBAL: si la declarás dentro de otra o en un módulo, el HTML no la ve." },
+    { t: "addEventListener: para lo que creás desde JS", d: "Es la única opción para los botones de cada fila. Y permite varios handlers sobre el mismo elemento." },
+    { t: "Closure en vez de data-attributes", d: "<code>b.addEventListener('click', () =&gt; borrar(item))</code>. La flecha se acuerda de QUÉ item era. No hace falta <code>data-id</code> ni buscar el objeto de nuevo." },
+    { t: "Delegación: un listener para toda la lista", d: "Un handler en el contenedor + <code>e.target.closest('.item')</code>. Sirve cuando la lista se redibuja seguido, porque el listener sobrevive al redibujado. En estos ejercicios no hace falta, pero está bueno conocerlo." },
+    { tipo: "trampa", t: "onclick=\"f()\" vs addEventListener('click', f)", d: "En el HTML llevás los paréntesis (es código que se ejecuta). En <code>addEventListener</code> NO: pasás la función, no el resultado de llamarla. <code>addEventListener('click', f())</code> la llama al toque y engancha lo que devolvió." },
+  ],
+  archivos: [
+    { nombre: "eventos.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   1. onclick EN EL HTML (lo que traen las plantillas)
+   ══════════════════════════════════════════════════════════════ */
+
+// <body onload="onLoad()">
+// <button onclick="onWinA()">🏆</button>
+// <div id="content" onclick="showRandomDigit()">
+
+function onWinA() { return saveCombo('A'); }
+// ↑ tiene que estar en el ámbito GLOBAL para que el HTML la encuentre
+
+/* ══════════════════════════════════════════════════════════════
+   2. addEventListener (para lo que creás desde JS)
+   ══════════════════════════════════════════════════════════════ */
+
+const boton = document.getElementById('add');
+boton.addEventListener('click', addUser);
+//                              ↑ SIN paréntesis: pasás la función
+
+// ❌ addEventListener('click', addUser())
+//    Con paréntesis la llamás YA y enganchás lo que devolvió.
+
+// Con argumentos, envolvela en una flecha:
+boton.addEventListener('click', () => borrar(item));
+
+/* ══════════════════════════════════════════════════════════════
+   3. EL CLOSURE: el patrón de los botones por fila
+   ══════════════════════════════════════════════════════════════ */
+
+function itemElement(item) {
+  const li = document.createElement('li');
+  li.append(
+    button('Borrar', () => borrar(item)),
+    //                     ↑ cada flecha "se acuerda" de SU item
+  );
+  return li;
+}
+
+// Sin closure habría que guardar el id y volver a buscar el objeto:
+//   b.dataset.id = item.id;
+//   b.addEventListener('click', (e) => borrarPorId(e.target.dataset.id));
+// Funciona, pero es más código para nada.
+
+/* ══════════════════════════════════════════════════════════════
+   4. DELEGACIÓN: un listener para toda la lista
+   ══════════════════════════════════════════════════════════════ */
+
+lista.addEventListener('click', (event) => {
+  // closest sube desde donde se hizo click buscando un ancestro
+  const fila = event.target.closest('.item');
+  if (!fila) return;                       // se hizo click en el hueco
+  borrarPorId(fila.dataset.id);
+});
+
+// Ventaja: el listener sobrevive al redibujado de la lista.
+// En estos ejercicios no hace falta (redibujás todo igual), pero
+// es la respuesta correcta si alguna vez te preguntan "¿y si hay
+// mil filas?".
+
+/* ══════════════════════════════════════════════════════════════
+   CUÁNDO CORRE TU CÓDIGO
+   ══════════════════════════════════════════════════════════════ */
+
+// <script src="ej03.js"> en el <head>:
+//   el body TODAVÍA no existe -> getElementById devuelve null.
+//   Solución: el arranque va en <body onload="onLoad()">.
+
+// <script src="ej04.js"> al final del <body>:
+//   el DOM ya existe -> podés llamar a loadTasks() directo.
+
+// <script src="x.js" defer> en el <head>:
+//   se descarga en paralelo y corre cuando el DOM está listo.
+//   Es lo mejor de los dos mundos.
+
+// Y la versión con evento:
+document.addEventListener('DOMContentLoaded', onLoad);` },
+  ],
+  demo: {
+    aviso: "Los tres enganches funcionando. La lista de abajo usa delegación: mirá que el listener sobrevive al redibujado.",
+    html:
+`<h3>1 · onclick en el HTML</h3>
+<button type="button" onclick="saludar()">Tocame</button>
+<span id="salida1"></span>
+
+<h3>2 · addEventListener + closure</h3>
+<div id="items"></div>
+
+<h3>3 · Delegación</h3>
+<p class="nota">Un solo listener en el contenedor. Redibujá y seguí funcionando.</p>
+<button type="button" onclick="redibujar()">Redibujar la lista</button>
+<div id="delegada"></div>
+<p class="nota" id="salida3"></p>`,
+    css:
+`body { font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 14px; }
+h3 { font-size: .95em; margin: 1.3em 0 .5em; }
+h3:first-child { margin-top: 0; }
+.nota { color: #666; font-size: .82em; margin: .4em 0; }
+button { cursor: pointer; font-size: .85em; padding: .35em .8em; }
+#items, #delegada { display: flex; flex-wrap: wrap; gap: .4em; margin-top: .5em; }
+.chip { background: #e7ecf3; border: 1px solid #9fb3cc; border-radius: 6px;
+        cursor: pointer; padding: .35em .8em; }
+.chip:hover { background: #d6e0ec; }
+span { margin-left: .6em; }`,
+    js:
+`let n = 0;
+function saludar() {
+  n += 1;
+  document.getElementById('salida1').textContent = 'Click nº ' + n;
+}
+
+// ── 2. addEventListener con closure ──
+const ITEMS = [{ id: 1, nombre: 'Uno' }, { id: 2, nombre: 'Dos' }, { id: 3, nombre: 'Tres' }];
+const cont = document.getElementById('items');
+for (const item of ITEMS) {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'chip';
+  b.textContent = item.nombre;
+  // la flecha se acuerda de SU item
+  b.addEventListener('click', () => {
+    document.getElementById('salida1').textContent = 'Closure: era el item id ' + item.id;
+  });
+  cont.append(b);
+}
+
+// ── 3. Delegación ──
+const del = document.getElementById('delegada');
+let vuelta = 0;
+function redibujar() {
+  vuelta += 1;
+  del.replaceChildren(...ITEMS.map((item) => {
+    const d = document.createElement('div');
+    d.className = 'chip';
+    d.dataset.id = item.id;
+    d.textContent = item.nombre + ' (v' + vuelta + ')';
+    return d;
+  }));
+}
+// UN solo listener, puesto una vez. Sobrevive a todos los redibujados.
+del.addEventListener('click', (event) => {
+  const chip = event.target.closest('.chip');
+  if (!chip) return;
+  document.getElementById('salida3').textContent =
+    'Delegación: id ' + chip.dataset.id + ' (la lista se redibujó ' + vuelta + ' veces y el listener sigue vivo)';
+});
+redibujar();`,
+  },
+},
+
+{
+  id: "ev-formularios",
+  titulo: "Formularios: preventDefault y leer los valores",
+  resumen: "Si el botón «no hace nada» y la página parpadea, es que falta preventDefault. Y todo lo que sale de un input es string, aunque el input sea de tipo number.",
+  puntos: [
+    { tipo: "error", t: "event.preventDefault() como primera línea", d: "El comportamiento por defecto de un <code>&lt;form&gt;</code> es navegar. Sin esto la página se recarga, se pierde el estado y parece que el botón no funciona." },
+    { tipo: "error", t: "Un botón dentro de un form es submit por defecto", d: "<code>&lt;button&gt;Agregar&lt;/button&gt;</code> dentro de un <code>&lt;form&gt;</code> envía el formulario. O le ponés <code>type=\"button\"</code>, o manejás el <code>submit</code> con <code>preventDefault</code>." },
+    { tipo: "trampa", t: "input.value siempre es string", d: "Incluso con <code>type=\"number\"</code>. Convertí con <code>Number(...)</code> antes de mandarlo a la API, o guardarás <code>\"220\"</code> en vez de <code>220</code>." },
+    { t: "trim() antes de validar y de guardar", d: "<code>if (!input.value.trim()) return;</code>. Sin eso se crean registros de puros espacios." },
+    { t: "reportValidity() usa la validación del HTML", d: "Si el HTML ya tiene <code>required</code>, <code>min</code>, <code>max</code>, <code>form.reportValidity()</code> devuelve <code>false</code> y muestra el globito del navegador. Validación gratis." },
+    { t: "Limpiar DESPUÉS del await", d: "Si limpiás antes y el POST falla, el usuario perdió lo que escribió." },
+  ],
+  archivos: [
+    { nombre: "formularios.js", codigo:
+`/* ══════════════════════════════════════════════════════════════
+   A. CON <form> Y submit
+   ══════════════════════════════════════════════════════════════ */
+
+// <form id="task-form">
+//   <input type="text" id="task-input" required />
+//   <button type="submit">Agregar</button>
+// </form>
+
+form.addEventListener('submit', async (event) => {
+  // ⚠ LA LÍNEA MÁS IMPORTANTE. Sin esto la página se recarga.
+  event.preventDefault();
+
+  const title = input.value.trim();
+  if (!title) return;
+
+  try {
+    await fetchJSON('/tasks', {
+      method: 'POST',
+      body: JSON.stringify({ title, completed: false }),
+    });
+    input.value = '';       // limpiar DESPUÉS del await
+    await loadTasks();
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+// Ventaja de usar submit: Enter en el input también dispara el alta.
+
+/* ══════════════════════════════════════════════════════════════
+   B. CON UN BOTÓN SUELTO (sin submit)
+   ══════════════════════════════════════════════════════════════ */
+
+// <button type="button" onclick="onAddColor()">Agregar</button>
+//         ↑ type="button" es OBLIGATORIO si está dentro de un <form>
+
+async function onAddColor() {
+  const form = document.getElementById('color-form');
+
+  // Aprovecha required / min / max del HTML y muestra el globito
+  if (!form.reportValidity()) return;
+
+  const color = {
+    // Number(): input.value es string SIEMPRE, aunque sea type="number"
+    red:   Number(document.getElementById('red').value),
+    green: Number(document.getElementById('green').value),
+    blue:  Number(document.getElementById('blue').value),
+  };
+
+  await fetchJSON('/colors', { method: 'POST', body: JSON.stringify(color) });
+  await loadColors();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LEER LOS CAMPOS
+   ══════════════════════════════════════════════════════════════ */
+
+input.value                    // string, siempre
+Number(input.value)            // número
+input.value.trim()             // sin espacios de sobra
+select.value                   // el value de la <option> elegida
+checkbox.checked               // booleano
+input.valueAsNumber            // alternativa a Number() para type="number"
+
+// Varios campos de una:
+const campos = ['title', 'price', 'stock']
+  .map((id) => document.getElementById(id));
+
+if (campos.some((f) => f.value.trim() === '')) return;   // validar todos
+campos.forEach((f) => { f.value = ''; });                // limpiar todos
+
+// O de golpe con FormData:
+const datos = Object.fromEntries(new FormData(event.target));
+// { title: "x", price: "5.5" }   ← ojo, todo string igual
+
+/* ══════════════════════════════════════════════════════════════
+   LIMPIAR
+   ══════════════════════════════════════════════════════════════ */
+
+input.value = '';
+select.selectedIndex = 0;
+form.reset();                  // limpia el formulario entero de una` },
+  ],
+  demo: {
+    db: `{ "tasks": [] }`,
+    aviso: "El form de arriba NO tiene preventDefault: fijate que la página se recarga y se pierde todo. El de abajo sí.",
+    html:
+`<h3>✘ Sin preventDefault</h3>
+<p class="nota">Escribí algo y dale Enter o Agregar: la página se recarga
+y la tarea nunca llega a guardarse.</p>
+<form id="form-malo">
+  <input type="text" id="input-malo" placeholder="Nueva tarea..." required>
+  <button type="submit">Agregar</button>
+</form>
+
+<h3>✔ Con preventDefault</h3>
+<form id="form-bueno">
+  <input type="text" id="input-bueno" placeholder="Nueva tarea..." required>
+  <button type="submit">Agregar</button>
+</form>
+
+<h3>Guardadas en la API</h3>
+<ul id="lista"></ul>
+
+<h3>Number(input.value)</h3>
+<input type="number" id="num" value="220">
+<button type="button" onclick="verTipo()">Ver qué tipo es</button>
+<p class="nota" id="tipo"></p>`,
+    css:
+`body { font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 14px; }
+h3 { font-size: .95em; margin: 1.2em 0 .4em; }
+h3:first-child { margin-top: 0; }
+.nota { color: #666; font-size: .82em; line-height: 1.5; margin: .3em 0 .6em; }
+form { display: flex; gap: .4em; }
+input { flex: 1; padding: .4em; }
+input[type=number] { flex: 0 0 100px; }
+button { cursor: pointer; padding: .4em .9em; }
+ul { list-style: none; margin: .3em 0 0; padding: 0; }
+li { background: #f4f4f4; border-radius: 6px; margin-bottom: .3em; padding: .4em .8em; }`,
+    js:
+`async function fetchJSON(path, options) {
+  const r = await window.fetch(new URL(path, window.location), {
+    ...options, headers: { 'Content-Type': 'application/json', ...options?.headers },
+  });
+  if (!r.ok) throw new Error('Error ' + r.status);
+  return r.status === 204 ? null : await r.json();
+}
+async function loadTasks() {
+  const ul = document.getElementById('lista');
+  const tasks = await fetchJSON('/tasks');
+  ul.replaceChildren(...tasks.map((t) => {
+    const li = document.createElement('li');
+    li.textContent = t.title;
+    return li;
+  }));
+}
+
+// ✘ Sin preventDefault: el navegador navega y se recarga todo.
+document.getElementById('form-malo').addEventListener('submit', async () => {
+  const input = document.getElementById('input-malo');
+  await fetchJSON('/tasks', { method: 'POST', body: JSON.stringify({ title: input.value }) });
+  await loadTasks();
+});
+
+// ✔ Con preventDefault
+document.getElementById('form-bueno').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const input = document.getElementById('input-bueno');
+  const title = input.value.trim();
+  if (!title) return;
+  await fetchJSON('/tasks', { method: 'POST', body: JSON.stringify({ title }) });
+  input.value = '';
+  await loadTasks();
+});
+
+function verTipo() {
+  const v = document.getElementById('num').value;
+  document.getElementById('tipo').textContent =
+    'input.value = ' + JSON.stringify(v) + '  (typeof ' + typeof v + ')   →   ' +
+    'Number(input.value) = ' + Number(v) + '  (typeof ' + typeof Number(v) + ')';
+}
+loadTasks();`,
+  },
+},
+
+  ],
+};
+
+/* ==========================================================================
+   TAB 6 — Comparativa y chuleta
+   ========================================================================== */
+const CHULETA = {
+  id: "chuleta",
+  tab: "Comparativa y chuleta",
+  ayuda: "Qué pidió cada prueba, cómo se levanta el servidor, y la lista de errores que cuestan puntos.",
+  items: [
+
+{
+  id: "chu-comparativa",
+  titulo: "Qué pidió cada prueba",
+  resumen: "Revisé los 6 parciales/pruebas 1 del repo. En 2025sem2 había DOS ejercicios de JavaScript en la página (ej3 solo DOM y ej4 con API); desde 2026 se fusionaron en un único ej03 que lleva las dos cosas. Y desde 2026 la API la sirve el mismo json-server que sirve la página, así que las URLs son relativas.",
+  puntos: [
+    { t: "Desde 2026: un solo ej03 con DOM + API", d: "La prueba pasó de 4 ejercicios a 3. El ej03 junta lo que antes eran el ej3 (manipular el DOM) y el ej4 (consumir la API)." },
+    { t: "El molde de 2026 es siempre el mismo", d: "Generar algo (aleatorio o desde un formulario) → mostrarlo → el usuario decide → POST → recargar el historial. Los tres son ese archivo con otros nombres." },
+    { tipo: "trampa", t: "2026: URL relativa. 2025: URL absoluta", d: "En 2026 json-server sirve la página desde <code>public/</code>, así que la API está en el mismo origen: <code>fetchJSON('/duelos')</code>. En 2025 la página se abría aparte y había que poner <code>http://localhost:3000/users</code>." },
+    { t: "Los verbos que salieron", d: "GET y POST en los tres de 2026. GET + POST + PATCH + DELETE en Mini-Contacts. GET + POST + PUT + DELETE en Mini-Products. GET + POST + PATCH + DELETE en el Gestor de Tareas." },
+    { t: "Dónde apostar", d: "Al molde de 2026: aleatorio o formulario, POST, recarga del historial. Pero tené el CRUD completo fresco: PATCH y DELETE aparecieron tres veces." },
+  ],
+  archivos: [
+    { nombre: "comparativa.txt", lenguaje: "texto", codigo:
+`═══════════════════════════════════════════════════════════════════════
+ EL EJERCICIO DE DOM + API EN CADA PRUEBA
+═══════════════════════════════════════════════════════════════════════
+
+ PRUEBA                    Nº     QUÉ                       VERBOS
+ ──────────────────────────────────────────────────────────────────────
+ Simulacro 2026sem2       ej03    Arena de Prompts          GET, POST
+   (el más reciente)              duelo aleatorio + 🏆
+                                  entidad: duelos
+
+ Prueba 2026sem1          ej03    Combinaciones de color    GET, POST
+                                  aleatorio + 👍 / 👎
+                                  entidad: combos
+
+ Simulacro 2026sem1       ej03    Lista de colores RGB      GET, POST
+                                  formulario
+                                  entidad: colors
+
+ Parcial 2025sem2 mat.     ej3    Display LED 7 segmentos   — (solo DOM)
+                           ej4    Mini-Contacts API         GET, POST,
+                                  entidad: users            PATCH, DELETE
+
+ Parcial 2025sem2 vesp.    ej3    Dado                      — (solo DOM)
+                           ej4    Mini-Products API         GET, POST,
+                                  entidad: products         PUT, DELETE
+
+ Simulacro 2025sem2        ej03   Países + favoritos        GET (API
+                                  API pública                pública)
+                           ej04   Gestor de Tareas          GET, POST,
+                                  entidad: tasks            PATCH, DELETE
+
+
+═══════════════════════════════════════════════════════════════════════
+ LOS DOS MOLDES
+═══════════════════════════════════════════════════════════════════════
+
+ ┌──────────────────┬────────────────────────┬───────────────────────┐
+ │                  │ 2026 (los 3)           │ 2025sem2 (ej4)        │
+ ├──────────────────┼────────────────────────┼───────────────────────┤
+ │ nº de ejercicios │ 3 en la prueba         │ 4 en la prueba        │
+ │ DOM y API        │ juntos en el ej03      │ separados: ej3 y ej4  │
+ │ URL de la API    │ relativa: '/duelos'    │ absoluta: http://...  │
+ │ arranque         │ <body onload="...">    │ onload o script final │
+ │ el alta viene de │ aleatorio o formulario │ formulario            │
+ │ verbos           │ GET, POST              │ los cuatro            │
+ │ levantar         │ npm install && npm start│ npx json-server db.json│
+ └──────────────────┴────────────────────────┴───────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════
+ LO QUE SE REPITE EN TODOS
+═══════════════════════════════════════════════════════════════════════
+
+   · el helper fetchJSON, palabra por palabra          5/5 con API
+   · contenedor.replaceChildren(...datos.map(f))       5/5
+   · una función xElement(dato) que devuelve un nodo   5/5
+   · recargar desde la API después de cada operación   5/5
+   · try / catch con console.error                     5/5
+   · botones creados desde JS con closure              3/5
+   · Math.random() para algo                           5/6
+   · borrar el HTML de ejemplo de la plantilla         6/6` },
+  ],
+},
+
+{
+  id: "chu-levantar",
+  titulo: "Levantar el servidor y no perder tiempo",
+  resumen: "Lo primero que hacés al abrir el ejercicio, antes de leer nada: npm install y npm start. Si eso no anda, no vas a poder probar nada de lo que escribas.",
+  puntos: [
+    { t: "npm install una sola vez", d: "Instala <code>json-server</code>. Sin internet en la prueba, si el <code>node_modules</code> no está y no hay caché, estás en problemas: probalo en casa antes." },
+    { t: "npm start levanta todo", d: "json-server sirve la API desde <code>api/db.json</code> Y la página desde <code>public/</code>, en <code>http://localhost:3000/</code>. Una sola cosa que arrancar." },
+    { t: "Verificá la API en el navegador", d: "Entrá a <code>http://localhost:3000/duelos</code> directamente. Si ves el JSON, la API anda y el problema es tu código." },
+    { t: "La consola del navegador es tu amiga", d: "F12 → Console para los <code>console.error</code>, y F12 → Network para ver cada request: qué mandaste, qué status volvió, qué cuerpo. Ahí se ve al toque si falta el Content-Type o si el body salió mal." },
+    { t: "db.json se modifica de verdad", d: "Los POST quedan escritos en el archivo. Si querés arrancar limpio, editalo a mano y volvé a levantar." },
+  ],
+  archivos: [
+    { nombre: "levantar.txt", lenguaje: "texto", codigo:
+`═══════════════════════════════════════════════════════════════
+ 2026: json-server sirve la API Y la página
+═══════════════════════════════════════════════════════════════
+
+   cd ej03
+   npm install          # una sola vez: instala json-server
+   npm start            # levanta todo
+
+   → http://localhost:3000/          la página (public/index.html)
+   → http://localhost:3000/duelos    la API   (api/db.json)
+
+   Estructura:
+
+     ej03/
+       package.json
+       api/
+         db.json          ← la "base de datos". Se modifica de verdad.
+       public/
+         index.html       ← ACÁ trabajás
+         ej03.js          ← ACÁ trabajás
+         styles.css       ← ACÁ trabajás
+
+   Los archivos fuera de public/ se dejan como están.
+
+
+═══════════════════════════════════════════════════════════════
+ 2025sem2: json-server suelto
+═══════════════════════════════════════════════════════════════
+
+   npx json-server db.json            # solo la API, puerto 3000
+   npx json-server db.json -s .       # además sirve la carpeta actual
+
+   Con la primera forma, la página la abrís aparte y en el JS
+   usás la URL absoluta:
+
+     const API = 'http://localhost:3000/users';
+
+
+═══════════════════════════════════════════════════════════════
+ CHEQUEOS RÁPIDOS CUANDO ALGO NO ANDA
+═══════════════════════════════════════════════════════════════
+
+ 1. ¿La API responde?
+      Entrá a http://localhost:3000/duelos en el navegador.
+      Si ves el JSON, la API está bien.
+
+ 2. ¿Tu JS se está cargando?
+      Poné un console.log('hola') arriba de todo y mirá la consola.
+      Si no aparece: el src del <script> está mal.
+
+ 3. ¿El elemento existe cuando lo buscás?
+      Si getElementById devuelve null, el script corrió antes que
+      el body. Usá <body onload> o poné el script al final.
+
+ 4. ¿Qué se está mandando de verdad?
+      F12 → Network → click en la request:
+        Headers  → ¿está el Content-Type: application/json?
+        Payload  → ¿el body es el JSON esperado o "[object Object]"?
+        Response → ¿qué status volvió?
+
+ 5. ¿"map is not a function"?
+      Te falta un await antes del fetchJSON.
+
+ 6. ¿La lista se duplica en cada recarga?
+      Estás usando append en vez de replaceChildren.
+
+ 7. ¿La página parpadea y se pierde todo?
+      Falta event.preventDefault() en el submit del form.` },
+  ],
+},
+
+{
+  id: "chu-errores",
+  titulo: "Los errores que cuestan puntos",
+  resumen: "Ordenados por frecuencia en las correcciones. Repasá esta lista antes de entregar: cada uno de estos se ve al primer click del corrector.",
+  puntos: [
+    { tipo: "error", t: "Dejar el HTML de ejemplo de la plantilla", d: "Los <code>&lt;div class=\"duelo\"&gt;</code> hardcodeados y los párrafos que explican la consigna. El contenedor arranca vacío y el enunciado no va en el resultado." },
+    { tipo: "error", t: "No recargar después de la operación", d: "La consigna de 2025sem2 lo dice tres veces: «tras éxito, actualizar la UI»." },
+    { tipo: "error", t: "Usar un nombre de propiedad distinto al de la consigna", d: "El bug de tu simulacro actual: <code>result</code> en vez de <code>ganador</code>. Copiá los nombres LITERAL del README." },
+    { tipo: "error", t: "Falta event.preventDefault()", d: "La página se recarga y parece que nada funciona." },
+    { tipo: "error", t: "Falta JSON.stringify o el Content-Type", d: "Se guarda basura o tira 400." },
+    { tipo: "error", t: "Falta un await", d: "«map is not a function», o la lista no se actualiza." },
+    { tipo: "error", t: "append en vez de replaceChildren", d: "La lista se duplica en cada recarga." },
+    { tipo: "error", t: "Sin try/catch", d: "Si la API falla, la página queda rota y sin ningún mensaje." },
+    { tipo: "error", t: "Mandar el id en el POST", d: "Lo genera el servidor." },
+  ],
+  archivos: [
+    { nombre: "checklist.txt", lenguaje: "texto", codigo:
+`═══════════════════════════════════════════════════════════════
+ ANTES DE ENTREGAR
+═══════════════════════════════════════════════════════════════
+
+ FUNCIONA
+   [ ] npm install && npm start levanta sin errores
+   [ ] http://localhost:3000/ muestra la página
+   [ ] la lista se ve al cargar, sin tocar nada
+   [ ] cada botón hace lo suyo Y la lista se actualiza sola
+   [ ] probaste con la API VACÍA ("duelos": []) y con datos
+   [ ] recargaste la página: lo guardado sigue estando
+
+ LOS DATOS
+   [ ] los nombres de las propiedades son LITERAL los del README
+   [ ] no mandás el id en el POST
+   [ ] los números van como number, no como string
+   [ ] JSON.stringify en todos los body
+   [ ] Content-Type: application/json en todos los headers
+
+ EL CÓDIGO
+   [ ] await antes de cada fetchJSON
+   [ ] await loadX() después de cada POST / PATCH / DELETE
+   [ ] replaceChildren, no append, para redibujar
+   [ ] try / catch con console.error en cada operación
+   [ ] event.preventDefault() si hay un <form>
+   [ ] los botones que creás llevan type="button"
+
+ LIMPIEZA
+   [ ] borraste los elementos de ejemplo del contenedor
+   [ ] borraste los párrafos del enunciado de index.html
+   [ ] no quedaron console.log de debug
+   [ ] no tocaste nada fuera de public/
+
+ LA CONSOLA
+   [ ] F12 → Console: sin errores rojos
+   [ ] F12 → Network: los requests salen con el body correcto
+
+
+═══════════════════════════════════════════════════════════════
+ PLAN DE ATAQUE (25 min)
+═══════════════════════════════════════════════════════════════
+
+ min 0-2    npm install && npm start. Abrí la página y
+            http://localhost:3000/<entidad> para ver el JSON.
+
+ min 2-4    Leé el README: anotá el nombre EXACTO de las
+            propiedades y de los endpoints.
+
+ min 4-6    Escribí fetchJSON de memoria. Probalo en la consola
+            del navegador: await fetchJSON('/duelos')
+
+ min 6-12   loadX() + xElement(). Con eso ya ves los datos
+            en pantalla: medio ejercicio hecho.
+
+ min 12-18  Las operaciones (POST / PATCH / DELETE), cada una
+            con su await loadX() al final.
+
+ min 18-22  El caso de generar/leer el formulario, y el arranque
+            en onLoad.
+
+ min 22-25  Borrá el HTML de ejemplo y los párrafos del enunciado.
+            Recargá la página. Repasá el checklist.` },
+  ],
+},
+
+  ],
+};
+
+/* ==========================================================================
+   MOTOR
+   ========================================================================== */
+const VISTAS = [PARCIALES, ESQUELETO, DOM, FETCH, EVENTOS, CHULETA];
+
+/* ---------- escapado y resaltado ---------- */
+function escapar(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+const PALABRAS = new RegExp(
+  "\\b(const|let|var|function|return|if|else|for|of|in|while|switch|case|default|" +
+  "break|continue|throw|new|typeof|instanceof|export|import|from|with|class|" +
+  "try|catch|finally|async|await|true|false|null|undefined|this|document|window)\\b", "g");
+
+function resaltar(codigo, lenguaje) {
+  let out = escapar(codigo);
+  if (lenguaje === "texto") return out;
+
+  // Los comentarios y los strings se guardan primero detrás de un marcador
+  // del area de uso privado de Unicode, para que los pasos siguientes no
+  // los toquen.
+  const guardado = [];
+  const guardar = (clase) => (m) => {
+    guardado.push('<span class="' + clase + '">' + m + "</span>");
+    return String.fromCharCode(0xE100 + guardado.length - 1);
+  };
+
+  if (lenguaje === "html") {
+    out = out.replace(/&lt;!--[\s\S]*?--&gt;/g, guardar("cmt"));
+    out = out.replace(/"(?:[^"\\\n]|\\.)*"/g, guardar("str"));
+    // El orden importa: primero los atributos, después los nombres de
+    // etiqueta. Al revés, el segundo replace matchearía el class="tag"
+    // que acabamos de insertar nosotros.
+    out = out.replace(/\b([a-zA-Z-]+)(?==)/g, '<span class="atr">$1</span>');
+    out = out.replace(/&lt;(\/?)([a-zA-Z0-9-]+)/g, '&lt;$1<span class="tag">$2</span>');
+  } else {
+    out = out.replace(/\/\*[\s\S]*?\*\//g, guardar("cmt"));
+    out = out.replace(/\/\/[^\n]*/g, guardar("cmt"));
+    out = out.replace(/`(?:[^`\\]|\\.)*`/g, guardar("str"));
+    out = out.replace(/"(?:[^"\\\n]|\\.)*"/g, guardar("str"));
+    out = out.replace(/'(?:[^'\\\n]|\\.)*'/g, guardar("str"));
+
+    if (lenguaje !== "json" && lenguaje !== "css") {
+      out = out.replace(PALABRAS, '<span class="kw">$1</span>');
+      out = out.replace(/\b([a-zA-Z_$][\w$]*)(?=\()/g, '<span class="fn">$1</span>');
+    }
+    if (lenguaje === "css") {
+      out = out.split("\n").map((l) =>
+        l.indexOf("<span") !== -1 ? l : l.replace(/^(\s*)([a-z-]+)(\s*:)/, '$1<span class="fn">$2</span>$3')
+      ).join("\n");
+    }
+    out = out.replace(/\b(\d[\d_.]*)\b/g, '<span class="num">$1</span>');
+  }
+
+  return out.replace(/[\uE100-\uF8FF]/g, (ch) => guardado[ch.charCodeAt(0) - 0xE100]);
+}
+
+/* ==========================================================================
+   LA API FALSA
+   Se inyecta dentro del iframe del demo y reemplaza window.fetch por una
+   funcion que guarda los datos en memoria y responde igual que json-server.
+   Asi el CRUD de los demos funciona sin levantar ningun servidor.
+   ========================================================================== */
+const API_FALSA = `
+(function () {
+  const db = __DB__;
+  let seq = 1000;
+  const nuevoId = () => "gen" + (seq += 1);
+
+  const log = (txt, clase) => {
+    try { window.parent.postMessage({ tipo: "demo-log", txt: txt, clase: clase }, "*"); } catch (e) {}
+  };
+
+  // El codigo real hace new URL(path, window.location). Dentro de este
+  // iframe window.location es "about:srcdoc" y eso hace explotar a URL.
+  // Le damos un origen ficticio para que el codigo del ejercicio corra
+  // tal cual esta escrito, sin tocarle una linea.
+  const OrigURL = window.URL;
+  function URLDemo(u, base) {
+    try { return new OrigURL(u, base); }
+    catch (e) { return new OrigURL(String(u), "https://demo.local/"); }
+  }
+  URLDemo.prototype = OrigURL.prototype;
+  if (OrigURL.createObjectURL) URLDemo.createObjectURL = OrigURL.createObjectURL.bind(OrigURL);
+  window.URL = URLDemo;
+
+  function respuesta(status, cuerpo) {
+    const textos = { 200: "OK", 201: "Created", 404: "Not Found", 400: "Bad Request" };
+    return {
+      ok: status >= 200 && status < 300,
+      status: status,
+      statusText: textos[status] || "",
+      json: async () => cuerpo,
+      text: async () => JSON.stringify(cuerpo),
+    };
+  }
+
+  window.fetch = async function (recurso, opciones) {
+    const opts = opciones || {};
+    const metodo = (opts.method || "GET").toUpperCase();
+
+    // El path, sin origen ni query string
+    let camino = String(recurso);
+    camino = camino.replace(/^[a-z]+:\\/\\/[^/]*/i, "").split("?")[0];
+    const partes = camino.split("/").filter(Boolean);
+    const coleccion = partes[0];
+    const id = partes[1];
+
+    let cuerpo = null;
+    if (opts.body !== undefined && opts.body !== null) {
+      // Si te olvidaste JSON.stringify, opts.body es un objeto y al
+      // convertirlo a string queda "[object Object]": no parsea.
+      try { cuerpo = JSON.parse(String(opts.body)); }
+      catch (e) {
+        log(metodo + " " + camino + "  400  (el body no es JSON valido)", "fail");
+        return respuesta(400, { error: "body invalido" });
+      }
+    }
+
+    if (!coleccion || !Object.prototype.hasOwnProperty.call(db, coleccion)) {
+      log(metodo + " " + camino + "  404", "fail");
+      return respuesta(404, {});
+    }
+
+    const lista = db[coleccion];
+    const indice = id === undefined ? -1 : lista.findIndex((x) => String(x.id) === String(id));
+
+    if (metodo === "GET") {
+      if (id === undefined) {
+        log("GET " + camino + "  200  (" + lista.length + " items)");
+        return respuesta(200, JSON.parse(JSON.stringify(lista)));
+      }
+      if (indice === -1) { log("GET " + camino + "  404", "fail"); return respuesta(404, {}); }
+      log("GET " + camino + "  200");
+      return respuesta(200, JSON.parse(JSON.stringify(lista[indice])));
+    }
+
+    if (metodo === "POST") {
+      const nuevo = Object.assign({}, cuerpo, { id: (cuerpo && cuerpo.id) || nuevoId() });
+      lista.push(nuevo);
+      log("POST " + camino + "  201  " + JSON.stringify(cuerpo));
+      return respuesta(201, nuevo);
+    }
+
+    if (indice === -1) { log(metodo + " " + camino + "  404", "fail"); return respuesta(404, {}); }
+
+    if (metodo === "PATCH") {
+      Object.assign(lista[indice], cuerpo);      // solo pisa lo que le mandes
+      log("PATCH " + camino + "  200  " + JSON.stringify(cuerpo));
+      return respuesta(200, lista[indice]);
+    }
+
+    if (metodo === "PUT") {
+      // PUT REEMPLAZA: lo unico que sobrevive es el id.
+      lista[indice] = Object.assign({}, cuerpo, { id: lista[indice].id });
+      log("PUT " + camino + "  200  " + JSON.stringify(cuerpo));
+      return respuesta(200, lista[indice]);
+    }
+
+    if (metodo === "DELETE") {
+      lista.splice(indice, 1);
+      log("DELETE " + camino + "  200");
+      return respuesta(200, {});
+    }
+
+    log(metodo + " " + camino + "  400", "fail");
+    return respuesta(400, {});
+  };
+
+  // console.log / error del demo tambien van a la consola de abajo
+  const origLog = console.log, origErr = console.error;
+  console.log = function () {
+    origLog.apply(console, arguments);
+    log([].slice.call(arguments).map(String).join(" "), "tit");
+  };
+  console.error = function () {
+    origErr.apply(console, arguments);
+    log([].slice.call(arguments).map(String).join(" "), "fail");
+  };
+})();
+`;
+
+/* ---------- armar el documento del demo ---------- */
+function documentoDemo(item) {
+  const d = item.demo || {};
+  const archivos = item.archivos || [];
+  const buscar = (ext) => (archivos.find((a) => a.nombre.endsWith(ext)) || {}).codigo || "";
+
+  let html = d.html !== undefined ? d.html : buscar(".html");
+  const css = d.css !== undefined ? d.css : buscar(".css");
+  const js = d.js !== undefined ? d.js : buscar(".js");
+
+  // Del archivo .html solo interesa el contenido del <body> y su onload.
+  let init = d.init || "";
+  const m = /<body([^>]*)>([\s\S]*?)<\/body>/i.exec(html);
+  if (m) {
+    html = m[2];
+    const attr = /onload\s*=\s*"([^"]*)"/i.exec(m[1]);
+    if (attr && !init) init = attr[1];
+  }
+  // Los <script src="..."> del HTML apuntan a archivos que no existen aca.
+  html = html.replace(/<script[\s\S]*?<\/script>/gi, "");
+
+  const mock = d.db ? API_FALSA.replace("__DB__", d.db) : "";
+
+  return '<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">' +
+    '<meta name="viewport" content="width=device-width, initial-scale=1">' +
+    "<style>" + css + "</style></head><body>" + html +
+    (mock ? "<script>" + mock + "<\/script>" : "") +
+    "<script>try{" + js + "\n" + init + "}catch(e){console.error(e.message)}<\/script>" +
+    "</body></html>";
+}
+
+/* ---------- construccion de una vista ---------- */
+function construirVista(def) {
+  const vista = document.createElement("div");
+  vista.className = "vista";
+  vista.id = "vista-" + def.id;
+
+  /* --- columna 1: la lista --- */
+  const colLista = document.createElement("div");
+  colLista.className = "lista";
+  const cab = document.createElement("div");
+  cab.className = "cab";
+  const ayuda = document.createElement("p");
+  ayuda.textContent = def.ayuda;
+  cab.append(ayuda);
+  const nav = document.createElement("nav");
+  colLista.append(cab, nav);
+
+  /* --- columna 2: la descripcion --- */
+  const colDesc = document.createElement("div");
+  colDesc.className = "desc";
+
+  /* --- columna 3: el editor y el demo --- */
+  const colEd = document.createElement("div");
+  colEd.className = "editor";
+  const barra = document.createElement("div");
+  barra.className = "barra-arch";
+  const pre = document.createElement("pre");
+  const code = document.createElement("code");
+  pre.append(code);
+  const zonaDemo = document.createElement("div");
+  zonaDemo.className = "zona-demo";
+  const avisoDemo = document.createElement("div");
+  avisoDemo.className = "aviso-demo";
+  const marco = document.createElement("iframe");
+  marco.title = "Demo";
+  zonaDemo.append(avisoDemo, marco);
+  const consola = document.createElement("div");
+  consola.className = "consola";
+  colEd.append(barra, pre, zonaDemo, consola);
+
+  vista.append(colLista, colDesc, colEd);
+
+  let actual = def.items[0];
+  let archivoActual = 0;
+  let enDemo = false;
+
+  function pintarNav() {
+    nav.replaceChildren();
+    let grupo = null;
+    for (const item of def.items) {
+      if (item.grupo && item.grupo !== grupo) {
+        grupo = item.grupo;
+        const h = document.createElement("div");
+        h.className = "grupo";
+        h.textContent = grupo;
+        nav.append(h);
+      }
+      const b = document.createElement("button");
+      b.textContent = item.titulo;
+      if (item.origen) {
+        const n = document.createElement("span");
+        n.className = "n";
+        n.textContent = item.origen;
+        b.append(n);
+      }
+      b.classList.toggle("activo", item.id === actual.id);
+      b.addEventListener("click", () => mostrar(item));
+      nav.append(b);
+    }
+  }
+
+  function pintarDesc() {
+    colDesc.replaceChildren();
+    colDesc.scrollTop = 0;
+
+    const h2 = document.createElement("h2");
+    h2.textContent = actual.titulo;
+    colDesc.append(h2);
+
+    if (actual.origen) {
+      const badge = document.createElement("span");
+      badge.className = "origen";
+      badge.textContent = actual.origen;
+      colDesc.append(badge);
+    }
+    if (actual.firma) {
+      const f = document.createElement("code");
+      f.className = "firma";
+      f.textContent = actual.firma;
+      colDesc.append(f);
+    }
+
+    const res = document.createElement("p");
+    res.className = "resumen";
+    res.textContent = actual.resumen;
+    colDesc.append(res);
+
+    if (actual.puntos && actual.puntos.length) {
+      const h3 = document.createElement("h3");
+      h3.textContent = "A tener en cuenta";
+      colDesc.append(h3);
+      for (const p of actual.puntos) {
+        const d = document.createElement("div");
+        d.className = "punto" + (p.tipo ? " " + p.tipo : "");
+        const t = document.createElement("span");
+        t.className = "t";
+        t.textContent = (p.tipo === "trampa" ? "⚠ " : p.tipo === "error" ? "✕ " : "") + p.t;
+        const dd = document.createElement("p");
+        dd.className = "d";
+        dd.innerHTML = p.d;     // las descripciones traen <code> a proposito
+        d.append(t, dd);
+        colDesc.append(d);
+      }
+    }
+  }
+
+  function pintarBarra() {
+    barra.replaceChildren();
+
+    actual.archivos.forEach((arch, i) => {
+      const b = document.createElement("button");
+      b.className = "arch" + (!enDemo && i === archivoActual ? " activo" : "");
+      b.textContent = arch.nombre;
+      b.addEventListener("click", () => {
+        archivoActual = i;
+        enDemo = false;
+        pintarEditor();
+      });
+      barra.append(b);
+    });
+
+    const sep = document.createElement("span");
+    sep.className = "sep";
+    barra.append(sep);
+
+    if (actual.demo) {
+      const run = document.createElement("button");
+      run.className = "accion correr" + (enDemo ? " activo" : "");
+      run.textContent = enDemo ? "■ Ver el codigo" : "▶ Ver funcionando";
+      run.addEventListener("click", () => { enDemo = !enDemo; pintarEditor(); });
+      barra.append(run);
+    }
+
+    const copiar = document.createElement("button");
+    copiar.className = "accion";
+    copiar.textContent = "Copiar";
+    copiar.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(actual.archivos[archivoActual].codigo);
+        copiar.textContent = "copiado";
+      } catch (e) { copiar.textContent = "no se pudo"; }
+      setTimeout(() => { copiar.textContent = "Copiar"; }, 1200);
+    });
+    barra.append(copiar);
+  }
+
+  function pintarEditor() {
+    pintarBarra();
+
+    if (enDemo) {
+      pre.style.display = "none";
+      zonaDemo.classList.add("visible");
+      consola.classList.add("visible");
+      consola.replaceChildren();
+      avisoDemo.textContent = actual.demo.aviso || "";
+      avisoDemo.style.display = actual.demo.aviso ? "" : "none";
+      marco.srcdoc = documentoDemo(actual);
+    } else {
+      pre.style.display = "";
+      zonaDemo.classList.remove("visible");
+      consola.classList.remove("visible");
+      marco.srcdoc = "";
+      const arch = actual.archivos[archivoActual];
+      code.innerHTML = resaltar(arch.codigo, arch.lenguaje || "js");
+      pre.scrollTop = 0;
+    }
+  }
+
+  function mostrar(item) {
+    actual = item;
+    archivoActual = 0;
+    enDemo = false;
+    consola.replaceChildren();
+    pintarNav();
+    pintarDesc();
+    pintarEditor();
+  }
+
+  vista.__consola = consola;
+  mostrar(def.items[0]);
+  return vista;
+}
+
+/* ---------- pestanas ---------- */
+const app = document.getElementById("app");
+const tabsNav = document.getElementById("tabs");
+
+for (const def of VISTAS) {
+  app.append(construirVista(def));
+  const b = document.createElement("button");
+  b.textContent = def.tab;
+  b.dataset.id = def.id;
+  b.addEventListener("click", () => activar(def.id));
+  tabsNav.append(b);
+}
+
+function activar(id) {
+  document.querySelectorAll(".vista").forEach((v) => v.classList.toggle("activa", v.id === "vista-" + id));
+  tabsNav.querySelectorAll("button").forEach((b) => b.classList.toggle("activo", b.dataset.id === id));
+}
+
+/* Los demos mandan sus requests y sus console.log por postMessage. */
+window.addEventListener("message", (event) => {
+  const datos = event.data;
+  if (!datos || datos.tipo !== "demo-log") return;
+  const vista = document.querySelector(".vista.activa");
+  if (!vista || !vista.__consola) return;
+  const span = document.createElement("span");
+  if (datos.clase) span.className = datos.clase;
+  else span.className = "net";
+  span.textContent = datos.txt + "\n";
+  vista.__consola.append(span);
+  vista.__consola.scrollTop = vista.__consola.scrollHeight;
+});
+
+activar("parciales");
+</script>
+</body>
+</html>

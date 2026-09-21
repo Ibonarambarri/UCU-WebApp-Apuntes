@@ -1,0 +1,68 @@
+/* 
+  Reemplazar este código CSS con los estilos necesarios.
+*/
+body {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+}
+
+#countries ul {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 4px;
+  grid-row-gap: 4px;
+  padding: 0;
+}
+
+#countries li {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#countries img {
+  width: 128px;
+  height: 64px;
+}
+
+
+.country-container {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: inset -2px 2px hsl(0 0 100% / 1), -20px 20px 40px hsl(0 0 0 / .25);
+  padding: 8px;
+  height: 80px;
+  width: 150px;
+}
+
+.country-container p {
+  margin: 0;
+}
+
+.card-header {
+  gap: 5px;
+  display: flex;
+}
+/* --- Agregado en la resolución --- */
+.favorite {
+  cursor: pointer;
+  margin-left: auto;
+  user-select: none;
+}
+
+/* Estilo distintivo para los países marcados como favoritos */
+.country-container.favorite-card {
+  background-color: #fff1f1;
+  outline: 2px solid #e0245e;
+}
+
+.country-container.favorite-card p {
+  color: #e0245e;
+  font-weight: bold;
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulacro Prueba 1 - Ej03</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="ej03.js"></script>
+</head>
+
+<body onload="onLoad()">
+  <div id="content">
+    <h1>Ejercicio 03</h1>
+    <p>Modificar el código de esta página para mostrar los colores definidos en
+      la API. Cada color se muestra como un rectángulo con el fondo del color
+      definido y el texto con el valor RGB.
+    </p>
+    
+    <div id="colors">
+      <div class="color" style="background-color: rgb(200, 50, 50); color: contrast-color(rgb(200, 50, 50));">
+        rgb(200, 50, 50)
+      </div>
+      <div class="color" style="background-color: rgb(100, 250, 100); color: contrast-color(rgb(100, 250, 100));">
+        rgb(100, 250, 100)
+      </div>
+      <div class="color" style="background-color: rgb(80, 80, 150); color: contrast-color(rgb(80, 80, 150));">
+        rgb(80, 80, 150)
+      </div>
+    </div>
+  
+    <p>Este formulario debe permitir agregar nuevos colores, dados tres valores
+      para rojo, verde y azul. Al enviar el formulario, el nuevo color se debe
+      enviar a la API y la lista de colores de arriba se debe recargar.
+    </p>
+  
+    <form id="color-form">
+      <label for="red" style="color: red;">Rojo:</label>
+      <input type="number" id="red" name="red" min="0" max="255" required value="220">
+      <label for="green" style="color: green;">Verde:</label>
+      <input type="number" id="green" name="green" min="0" max="255" required value="220">
+      <label for="blue" style="color: blue;">Azul:</label>
+      <input type="number" id="blue" name="blue" min="0" max="255" required value="100">
+      <button type="button" onclick="onAddColor()">Agregar</button>
+    </form>
+  </div>
+</body>
+</html>

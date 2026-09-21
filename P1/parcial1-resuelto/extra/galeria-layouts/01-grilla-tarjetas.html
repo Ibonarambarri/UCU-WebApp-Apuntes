@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>01 — Grilla de tarjetas</title>
+<style>
+/* ============================================================
+   PATRÓN 1: grilla de tarjetas responsiva
+   Salió en: Apollo (2026 prueba), Menú Internacional (2026 simulacro),
+             Comidas (2025 simulacro).
+   ============================================================ */
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Comic Sans MS", "Segoe UI", Arial, sans-serif;
+  margin: 0;
+  padding: 2vh 2vw;
+}
+
+/* Marco exterior: casi todos los diseños tienen uno */
+.marco {
+  border: 2px solid #1b1b1b;
+  border-radius: 14px;
+  margin: 0 auto;
+  max-width: 1000px;
+  padding: 1.5em;
+}
+
+h1 { font-size: 2em; font-weight: normal; margin: 0.2em 0 0.8em; text-align: center; }
+
+/* --- LA LÍNEA IMPORTANTE ---------------------------------------
+   auto-fit  → usa tantas columnas como entren
+   minmax    → cada una mide como mínimo 280px y crece hasta 1fr
+   Resultado: responsivo sin una sola media query.
+   --------------------------------------------------------------- */
+.grilla {
+  display: grid;
+  gap: 1.2em;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.tarjeta {
+  border: 2px solid #1b1b1b;
+  border-radius: 14px;
+  padding: 0.8em 1em 1em;
+}
+
+/* Clase modificadora: misma tarjeta, otro fondo */
+.tarjeta.destacada { background-color: #dfe3e8; }
+
+/* Título con emoji a la izquierda */
+.tarjeta h2 { font-size: 1.25em; font-weight: normal; margin: 0 0 0.3em; }
+
+.fecha { font-size: 0.95em; margin: 0 0 0.8em; }
+
+/* Lista alineada a la derecha, sin bullets */
+.tripulacion { list-style: none; margin: 0; padding: 0; text-align: right; }
+.tripulacion li { line-height: 1.6; }
+
+/* Footer: uno a cada extremo */
+footer {
+  display: flex;
+  font-size: 0.9em;
+  justify-content: space-between;
+  margin-top: 1.5em;
+}
+
+/* Rescate para celulares muy angostos */
+@media (max-width: 480px) {
+  body { font-size: 14px; }
+  .tripulacion { text-align: left; }
+}
+</style>
+</head>
+<body>
+<main class="marco">
+  <h1>Programa Apollo (1967-1972)</h1>
+
+  <section class="grilla">
+    <article class="tarjeta">
+      <h2>🔥 Apollo 1</h2>
+      <p class="fecha">📅 27 de enero de 1967</p>
+      <ul class="tripulacion">
+        <li>Gus Grissom 🧑‍🚀</li><li>Ed White 🧑‍🚀</li><li>Roger Chaffee 🧑‍🚀</li>
+      </ul>
+    </article>
+
+    <article class="tarjeta">
+      <h2>🚀 Apollo 8</h2>
+      <p class="fecha">📅 21 de diciembre de 1968</p>
+      <ul class="tripulacion">
+        <li>Frank Borman 🧑‍🚀</li><li>Jim Lovell 🧑‍🚀</li><li>William Anders 🧑‍🚀</li>
+      </ul>
+    </article>
+
+    <article class="tarjeta destacada">
+      <h2>🌖 Apollo 11</h2>
+      <p class="fecha">📅 16 de julio de 1969</p>
+      <ul class="tripulacion">
+        <li>Neil Armstrong 🧑‍🚀</li><li>Buzz Aldrin 🧑‍🚀</li><li>Michael Collins 🧑‍🚀</li>
+      </ul>
+    </article>
+
+    <article class="tarjeta">
+      <h2>🚨 Apollo 13</h2>
+      <p class="fecha">📅 11 de abril de 1970</p>
+      <ul class="tripulacion">
+        <li>Jim Lovell 🧑‍🚀</li><li>Jack Swigert 🧑‍🚀</li><li>Fred Haise 🧑‍🚀</li>
+      </ul>
+    </article>
+
+    <article class="tarjeta destacada">
+      <h2>🌖 Apollo 17</h2>
+      <p class="fecha">📅 7 de diciembre de 1972</p>
+      <ul class="tripulacion">
+        <li>Gene Cernan 🧑‍🚀</li><li>Harrison Schmitt 🧑‍🚀</li><li>Ron Evans 🧑‍🚀</li>
+      </ul>
+    </article>
+  </section>
+
+  <footer><span>Primera prueba DWYM - FIT - UCU</span><span>15 de Abril de 2026</span></footer>
+</main>
+</body>
+</html>

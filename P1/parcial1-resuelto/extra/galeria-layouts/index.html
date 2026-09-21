@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galería de layouts — Parcial 1</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Arial, Helvetica, sans-serif; margin: 0 auto; max-width: 760px; padding: 2em 1.5em; line-height: 1.6; }
+  h1 { margin-top: 0; }
+  ul { list-style: none; padding: 0; }
+  li { border: 1px solid #ddd; border-radius: 8px; margin-bottom: 1em; padding: 1em 1.2em; }
+  a { color: #1b4f9c; font-size: 1.1em; font-weight: bold; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  p { color: #555; margin: 0.3em 0 0; }
+  code { background: #f2f2f2; border-radius: 3px; padding: 1px 5px; }
+</style>
+</head>
+<body>
+  <h1>Galería de layouts</h1>
+  <p>Los 4 diseños que salieron en los parciales 1, resueltos y comentados.
+     Cada archivo es autocontenido (HTML + CSS en el mismo lugar): abrilo en el
+     navegador y después mirá el código. <strong>Achicá la ventana</strong> para
+     ver cómo responden.</p>
+
+  <ul>
+    <li>
+      <a href="01-grilla-tarjetas.html">01 — Grilla de tarjetas responsiva</a>
+      <p>El de 2026 (Apollo, Menú Internacional) y el simulacro 2025.
+         Clave: <code>repeat(auto-fit, minmax(280px, 1fr))</code>.</p>
+    </li>
+    <li>
+      <a href="02-menu-alternado.html">02 — Secciones con imagen que alterna de lado</a>
+      <p>El menú de Los Pollos Hermanos. Clave: <code>flex</code> +
+         <code>row-reverse</code>, precio a la derecha, separador punteado.</p>
+    </li>
+    <li>
+      <a href="03-cv-dos-columnas.html">03 — CV / perfil a dos columnas</a>
+      <p>El CV de Voldemort. Clave: <code>grid-template-columns: 1fr 1fr</code>,
+         título + fecha con <code>space-between</code>, secciones separadas por línea.</p>
+    </li>
+    <li>
+      <a href="04-hero-y-tabla.html">04 — Hero de color + tabla + lista de iconos</a>
+      <p>Piezas sueltas que aparecen mezcladas: banda de color a sangre, tabla
+         legible y grilla de logos.</p>
+    </li>
+  </ul>
+</body>
+</html>

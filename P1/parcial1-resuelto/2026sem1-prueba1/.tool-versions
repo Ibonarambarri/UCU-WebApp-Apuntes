@@ -1,0 +1,2 @@
+# Configuration file for env managers. See <https://mise.jdx.dev/> or <https://asdf-vm.com/>.
+nodejs 24.4.1
