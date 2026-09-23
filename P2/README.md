@@ -6,6 +6,7 @@ entrada**: qué hay, en qué orden estudiarlo, cómo correr cada cosa y dónde v
 
 ## ⭐ Para el examen (formato 2026sem2), empezar por acá
 
+0. **[`PLAN-DE-RUTA-EXAMEN.md`](PLAN-DE-RUTA-EXAMEN.md)** — **el paso a paso DURANTE el examen** (basado en el matutino): fases con tiempos, qué copiar de la solución, cómo comprobar cada paso.
 1. **[`GUIA-ESTUDIO-TARDE.md`](GUIA-ESTUDIO-TARDE.md)** — el plan de estudio paso a paso para la tarde anterior.
 2. **[`CHULETA-EXAMEN.md`](CHULETA-EXAMEN.md)** — la hoja de fragmentos para tener abierta en el examen.
 3. **[`ESTRATEGIA-EXAMEN.md`](ESTRATEGIA-EXAMEN.md)** — primeros 5 minutos, plan de 2 h, checklist antes de entregar y **todas las trampas**.

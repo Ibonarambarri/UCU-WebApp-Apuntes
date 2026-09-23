@@ -68,7 +68,7 @@ const CLASE_NIVELES = [
 ];
 function notesTree(src) {
   const leaf = src.replace(/\//g, '~');
-  if (/^(CHULETA|ESTRATEGIA)-EXAMEN\.md$/.test(src)) return `⭐ Examen/${leaf}`;
+  if (/^(PLAN-DE-RUTA-EXAMEN|CHULETA-EXAMEN|ESTRATEGIA-EXAMEN)\.md$/.test(src)) return `⭐ Examen/${leaf}`;
   if (src.startsWith('clase/')) {
     const n = Number(src.slice(6, 8));
     if (!n) return `📘 Clase (19 temas)/${leaf}`;
@@ -90,6 +90,7 @@ function notesTree(src) {
     sources.push({ abs, src, section: 'notas', tree: notesTree(src) });
   };
   add(path.join(P2, 'README.md'));
+  add(path.join(P2, 'PLAN-DE-RUTA-EXAMEN.md'));
   add(path.join(P2, 'CHULETA-EXAMEN.md'));
   add(path.join(P2, 'ESTRATEGIA-EXAMEN.md'));
   add(path.join(P2, 'GUIA-ESTUDIO-TARDE.md'));
