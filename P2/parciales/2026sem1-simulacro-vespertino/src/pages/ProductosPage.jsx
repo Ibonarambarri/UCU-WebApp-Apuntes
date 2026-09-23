@@ -1,36 +1,36 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { productosApi } from '../api/client.js'
-import styles from './ProductosPage.module.css'
-import { ProductoCard } from '../components/ProductoCard/ProductoCard.jsx'
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { productosApi } from '../api/client.js';
+import styles from './ProductosPage.module.css';
+import { ProductoCard } from '../components/ProductoCard/ProductoCard.jsx';
 
 export function ProductosPage() {
-  const [productos, setProductos] = useState([])
-  const [cargando, setCargando] = useState(true)
-  const [error, setError] = useState('')
+  const [productos, setProductos] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     async function cargar() {
-      setCargando(true)
-      setError('')
+      setCargando(true);
+      setError('');
 
       try {
-        const data = await productosApi.listar()
-        setProductos(Array.isArray(data) ? data : [])
+        const data = await productosApi.listar();
+        setProductos(Array.isArray(data) ? data : []);
       } catch (e) {
-        setError(e.message)
+        setError(e.message);
       } finally {
-        setCargando(false)
+        setCargando(false);
       }
     }
 
-    cargar()
-  }, [])
+    cargar();
+  }, []);
 
-  if (cargando) return <p>Cargando productos...</p>
+  if (cargando) return <p>Cargando productos...</p>;
 
   if (error) {
-    return <p className={styles.error}>{error}</p>
+    return <p className={styles.error}>{error}</p>;
   }
 
   return (
@@ -52,5 +52,5 @@ export function ProductosPage() {
         ))}
       </ul>
     </main>
-  )
+  );
 }

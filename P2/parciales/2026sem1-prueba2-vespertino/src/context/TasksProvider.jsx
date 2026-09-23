@@ -1,23 +1,17 @@
 // ==============================================
-// Archivo: src/context/TasksContext.jsx
-// Qué hace: define el contexto global de tareas (EJERCICIO 6).
+// Archivo: src/context/TasksProvider.jsx
+// Qué hace: el Provider del contexto global de tareas (EJERCICIO 6).
+//           El contexto en sí se crea en TasksContext.js.
 //           Guarda la lista de tareas en UN SOLO lugar para que cualquier
 //           componente (Navbar/ProgressBar, AssigneesChart, BoardPage, App)
 //           lea y modifique la MISMA lista sin pasar props en cadena.
 // Conceptos: createContext, Provider, useState, props.children, useContext.
 // ==============================================
 
-import React, { createContext, useState } from 'react';
+import { useState } from 'react';
+import { TasksContext } from './TasksContext.js';
 
-// 1) Creamos el contexto. El valor por defecto solo se usa si algún
-//    componente consume el contexto SIN estar dentro del Provider.
-//    Lo dejamos con la misma forma ({ tasks, setTasks }) para que no explote.
-export const TasksContext = createContext({
-  tasks: [],
-  setTasks: function () {},
-});
-
-// 2) El Provider es un componente normal que "envuelve" a la app.
+// El Provider es un componente normal que "envuelve" a la app.
 //    Todo lo que esté dentro (props.children) puede hacer
 //    useContext(TasksContext) y recibir { tasks, setTasks }.
 export function TasksProvider(props) {

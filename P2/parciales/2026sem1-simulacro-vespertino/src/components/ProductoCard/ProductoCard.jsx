@@ -1,5 +1,5 @@
-import { formatoPrecio } from '../../utils/cuentas.js'
-import styles from './ProductoCard.module.css'
+import { formatoPrecio } from '../../utils/cuentas.js';
+import styles from './ProductoCard.module.css';
 
 export function ProductoCard({ producto }) {
   return (
@@ -12,5 +12,5 @@ export function ProductoCard({ producto }) {
         {formatoPrecio(producto.precio)}
       </span>
     </li>
-  )
+  );
 }

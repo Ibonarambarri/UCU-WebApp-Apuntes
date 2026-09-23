@@ -1,0 +1,42 @@
+meta {
+  name: List countries
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/countries
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body: isArray
+  res.body: length 250
+}
+
+tests {
+  test("solo devuelve los campos del listado", function() {
+    const fields = [
+      "code", "name", "flag", "capital",
+      "region", "subregion", "population", "area",
+    ];
+    expect(Object.keys(res.getBody()[0]).sort()).to.eql(fields.sort());
+  });
+
+  test("todos los codigos son alpha-3 en mayusculas", function() {
+    const bad = res.getBody().filter((c) => !/^[A-Z]{3}$/.test(c.code));
+    expect(bad).to.eql([]);
+  });
+
+  test("hay 5 paises sin capital", function() {
+    const sinCapital = res.getBody().filter((c) => !c.capital);
+    expect(sinCapital).to.have.lengthOf(5);
+  });
+}
+
+docs {
+  Listado usado por la pantalla `/countries`. El detalle de cada pais trae
+  ademas idiomas, monedas, husos horarios, `borders` y demas.
+}

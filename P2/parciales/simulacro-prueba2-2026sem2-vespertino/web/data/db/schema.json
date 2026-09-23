@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.json",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "players": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "readOnly": true },
+          "name": { "type": "string" }
+        },
+        "required": ["id", "name"],
+        "additionalProperties": false
+      }
+    },
+    "matches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "readOnly": true },
+          "playerX": { "type": "string" },
+          "playerO": { "type": "string" },
+          "history": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "winner": {
+            "type": ["string", "null"],
+            "enum": ["X", "O", null]
+          }
+        },
+        "required": ["id", "playerX", "playerO", "history", "winner"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["players", "matches"],
+  "additionalProperties": false
+}

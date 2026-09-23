@@ -6,14 +6,14 @@
 // Conceptos: Routes / Route, Navigate (redirección), componentes de página.
 // ==============================================
 
-import { Route, Routes, Navigate } from 'react-router-dom'
-import { NavBar } from './components/NavBar/NavBar.jsx'
-import { CuentasPage } from './pages/CuentasPage.jsx'
-import { NuevaCuentaPage } from './pages/NuevaCuentaPage.jsx'
-import { ProductosPage } from './pages/ProductosPage.jsx'
-import { NuevoProductoPage } from './pages/NuevoProductoPage.jsx'
+import { Route, Routes, Navigate } from 'react-router-dom';
+import { NavBar } from './components/NavBar/NavBar.jsx';
+import { CuentasPage } from './pages/CuentasPage.jsx';
+import { NuevaCuentaPage } from './pages/NuevaCuentaPage.jsx';
+import { ProductosPage } from './pages/ProductosPage.jsx';
+import { NuevoProductoPage } from './pages/NuevoProductoPage.jsx';
 
-import styles from './App.module.css'
+import styles from './App.module.css';
 
 export default function App() {
   return (
@@ -36,5 +36,5 @@ export default function App() {
         <Route path="/productos/nuevo" element={<NuevoProductoPage />} />
       </Routes>
     </div>
-  )
+  );
 }

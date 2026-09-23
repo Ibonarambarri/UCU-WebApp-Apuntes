@@ -1,0 +1,40 @@
+meta {
+  name: Get country
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/countries/{{code}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.code: eq URY
+  res.body.name: eq Uruguay
+}
+
+tests {
+  test("trae los campos del detalle", function() {
+    const body = res.getBody();
+    for (const field of [
+      "nativeName", "populationDensity", "independent", "borders",
+      "languages", "currencies", "timezones", "topLevelDomain",
+    ]) {
+      expect(body, field).to.have.property(field);
+    }
+  });
+
+  test("borders viene en alpha-3, igual que la ruta", function() {
+    expect(res.getBody().borders).to.eql(["ARG", "BRA"]);
+  });
+}
+
+docs {
+  `{{code}}` sale del environment. Notar que es el alpha-3 (`URY`), no el
+  alpha-2 (`UY`) ni el codigo de moneda (`UYU`).
+
+  Probar tambien con `ATA` (sin capital) y `NRU` (sin limitrofes).
+}

@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.json",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "countries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string", "pattern": "^[A-Z]{3}$", "readOnly": true },
+          "alpha2Code": { "type": "string", "pattern": "^[A-Z]{2}$", "readOnly": true },
+          "name": { "type": "string" },
+          "nativeName": { "type": "string" },
+          "flag": { "type": "string" },
+          "capital": { "type": ["string", "null"] },
+          "region": { "type": ["string", "null"] },
+          "subregion": { "type": ["string", "null"] },
+          "population": { "type": "integer" },
+          "area": { "type": ["number", "null"] },
+          "populationDensity": { "type": ["number", "null"] },
+          "independent": { "type": "boolean" },
+          "borders": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^[A-Z]{3}$" }
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": { "type": ["string", "null"] },
+                "name": { "type": "string" },
+                "nativeName": { "type": "string" }
+              },
+              "required": ["code", "name", "nativeName"],
+              "additionalProperties": false
+            }
+          },
+          "currencies": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": { "type": ["string", "null"] },
+                "name": { "type": ["string", "null"] },
+                "symbol": { "type": ["string", "null"] }
+              },
+              "required": ["code", "name", "symbol"],
+              "additionalProperties": false
+            }
+          },
+          "timezones": { "type": "array", "items": { "type": "string" } },
+          "topLevelDomain": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": [
+          "code", "alpha2Code", "name", "nativeName", "flag", "capital", "region",
+          "subregion", "population", "area", "populationDensity", "independent",
+          "borders", "languages", "currencies", "timezones", "topLevelDomain"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "favorites": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string", "pattern": "^[A-Z]{3}$" },
+          "date": { "type": "string", "format": "date-time", "readOnly": true }
+        },
+        "required": ["code", "date"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["countries", "favorites"],
+  "additionalProperties": false
+}

@@ -1,0 +1,19 @@
+/* Estilos globales mínimos: el resto va en CSS Modules por componente. */
+
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  background: #f5f5f5;
+  color: #1e1e1e;
+}
+
+a {
+  text-decoration: none;
+}
+
+button,
+input,
+select {
+  font-family: inherit;
+  font-size: 1rem;
+}

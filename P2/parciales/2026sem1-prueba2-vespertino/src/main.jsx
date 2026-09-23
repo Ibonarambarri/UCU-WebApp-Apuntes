@@ -9,7 +9,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
-import { TasksProvider } from './context/TasksContext.jsx';
+import { TasksProvider } from './context/TasksProvider.jsx';
 import './index.css';
 
 // Decisión: el Provider va ACÁ (afuera de App) y no adentro de App, porque

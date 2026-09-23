@@ -7,50 +7,50 @@
 //            map con key, Link.
 // ==============================================
 
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { cuentasApi, productosApi } from '../api/client.js'
-import { CuentaCard } from '../components/CuentaCard/CuentaCard.jsx'
-import styles from './CuentasPage.module.css'
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { cuentasApi, productosApi } from '../api/client.js';
+import { CuentaCard } from '../components/CuentaCard/CuentaCard.jsx';
+import styles from './CuentasPage.module.css';
 
 export function CuentasPage() {
   // Lista de cuentas que devuelve la API.
-  const [cuentas, setCuentas] = useState([])
+  const [cuentas, setCuentas] = useState([]);
   // Lista de productos: hace falta porque cada consumo de una cuenta solo
   // tiene el NOMBRE del producto, el precio hay que buscarlo acá.
-  const [productos, setProductos] = useState([])
+  const [productos, setProductos] = useState([]);
   // true mientras esperamos las dos respuestas.
-  const [cargando, setCargando] = useState(true)
+  const [cargando, setCargando] = useState(true);
   // Mensaje de error de la API ('' = sin error).
-  const [error, setError] = useState('')
+  const [error, setError] = useState('');
 
   // Dependencias []: se ejecuta una sola vez, al montar la página.
   useEffect(() => {
     async function cargar() {
-      setCargando(true)
-      setError('')
+      setCargando(true);
+      setError('');
       try {
-        const cuentasDeLaApi = await cuentasApi.listar()
-        const productosDeLaApi = await productosApi.listar()
-        setCuentas(cuentasDeLaApi)
-        setProductos(productosDeLaApi)
+        const cuentasDeLaApi = await cuentasApi.listar();
+        const productosDeLaApi = await productosApi.listar();
+        setCuentas(cuentasDeLaApi);
+        setProductos(productosDeLaApi);
       } catch (errorCapturado) {
-        setError(errorCapturado.message)
+        setError(errorCapturado.message);
       } finally {
-        setCargando(false)
+        setCargando(false);
       }
     }
 
-    cargar()
-  }, [])
+    cargar();
+  }, []);
 
   // Returns tempranos para los estados de carga y error.
   if (cargando) {
-    return <p>Cargando cuentas...</p>
+    return <p>Cargando cuentas...</p>;
   }
 
   if (error) {
-    return <p className={styles.error}>{error}</p>
+    return <p className={styles.error}>{error}</p>;
   }
 
   return (
@@ -78,5 +78,5 @@ export function CuentasPage() {
         </ul>
       )}
     </main>
-  )
+  );
 }

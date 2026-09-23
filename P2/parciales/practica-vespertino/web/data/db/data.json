@@ -1,0 +1,54 @@
+{
+  "players": [
+    {
+      "id": "1",
+      "name": "Adriana"
+    },
+    {
+      "id": "2",
+      "name": "Alberto"
+    },
+    {
+      "id": "3",
+      "name": "Alejandra"
+    },
+    {
+      "id": "4",
+      "name": "Alfonso"
+    }
+  ],
+  "matches": [
+    {
+      "id": "1",
+      "playerX": "1",
+      "playerO": "3",
+      "history": [
+        ".........",
+        "X........",
+        "X...O....",
+        "X.X.O....",
+        "XOX.O....",
+        "XOX.OX...",
+        "XOX.OXO..",
+        "XOX.OXO.X"
+      ],
+      "winner": "X"
+    },
+    {
+      "id": "2",
+      "playerX": "1",
+      "playerO": "2",
+      "history": [
+        ".........",
+        "....X....",
+        ".O..X....",
+        ".OX.X....",
+        ".OX.X.O..",
+        ".OX.X.O.X",
+        ".OXOX.O.X",
+        ".OXOXXO.X"
+      ],
+      "winner": "X"
+    }
+  ]
+}

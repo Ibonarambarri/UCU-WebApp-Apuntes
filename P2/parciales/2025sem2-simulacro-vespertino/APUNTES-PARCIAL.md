@@ -1,5 +1,9 @@
 # Apuntes: Simulacro parcial 2 (2025 sem 2, vespertino) — "Flag Trivia" (viaje por fronteras)
 
+> Formato 2025 (mock API en Vite, `fetch` a pelo). No es el formato 2026sem2.
+
+Cómo correrlo: ver [README principal](../../README.md#cómo-correr-cada-cosa) (formato 2025: `cd web && npm install && npm start`).
+
 ## 1. Resumen del enunciado
 
 - En `/` hay 3 botones de dificultad: Fácil (8 errores), Medio (5), Difícil (3). Al presionar uno se guarda el contador de errores, se vacía la lista de visitados y se **redirige** a `/:cca3` de un país al azar.
@@ -11,20 +15,10 @@
 | Ruta | Componente | Qué muestra |
 |------|------------|-------------|
 | `/` | `Home.jsx` | 3 botones de dificultad; inicializa el Context y navega |
-| `/:cca3` | `PaginaPais.jsx` | País actual, 9 banderas, "Ninguno", visitados y errores |
 | `/end` | `PaginaFinal.jsx` | Lista de visitados + "Volver al inicio" |
+| `/:cca3` | `PaginaPais.jsx` | País actual, 9 banderas, "Ninguno", visitados y errores |
 
-## 2. Cómo correrlo
-
-```bash
-cd web
-npm install        # instala react, react-router-dom, vite y lowdb (lo usa el mock)
-npm start          # = vite. Abrir http://localhost:5173
-```
-
-Si `npm install` avisa de `allow-scripts` para esbuild: `npm approve-scripts esbuild --yes && npm rebuild esbuild`.
-
-## 3. Estructura de archivos creados
+## 2. Archivos creados
 
 ```
 web/src/
@@ -44,103 +38,57 @@ web/src/
 └── index.css                Grilla 3x3 para las banderas, estilos simples
 ```
 
-## 4. Dónde estaba lo difícil
+## 3. Dónde estaba lo difícil (propio de este parcial)
 
-### a) Estado compartido entre 3 rutas → Context
-`erroresRestantes`, `paisesVisitados` y `dificultad` los escribe `Home`, los usa `PaginaPais` y los muestra `PaginaFinal`. Cada cambio de ruta **desmonta** el componente anterior y destruye su `useState`. Por eso viven en `ContextoJuego`, cuyo `Provider` está en `App` por encima del `BrowserRouter` (nunca se desmonta). Los componentes lo leen con `useContext(ContextoJuego)`.
+### a) Estado compartido entre 3 rutas → `ContextoJuego`
+`erroresRestantes`, `paisesVisitados` y `dificultad` los escribe `Home`, los usa `PaginaPais` y los muestra
+`PaginaFinal`. Cada cambio de ruta desmonta el componente anterior → viven en el Context, con el `Provider` en `App`
+por encima del `BrowserRouter`. (Context: [tema 16](../../clase/16-context.md).)
 
-### b) LA trampa: `useEffect` con dependencia `[cca3]`
-De `/URY` a `/ARG` es la **misma ruta** `/:cca3` con otro parámetro. React Router **no desmonta** `PaginaPais`: reutiliza la instancia y solo cambia lo que devuelve `useParams()`. Con `useEffect(..., [])` el fetch se haría una sola vez y la página quedaría clavada en el primer país. Con `[cca3]` el efecto se vuelve a ejecutar en cada país.
+### b) De `/URY` a `/ARG`: `useEffect([cca3])`
+Misma ruta `/:cca3`, otro parámetro: `PaginaPais` NO se desmonta; con `[]` quedaría clavado en el primer país
+→ [tema 10](../../clase/10-useeffect.md) §10.5.
 
-### c) Redirecciones: `useNavigate` vs `<Navigate>`
-- Desde código (en un handler, después de un `await`): `const navegar = useNavigate(); navegar('/' + cca3);`
-- Desde el JSX (render condicional): `if (contexto.dificultad === '') return <Navigate to="/" replace />;` — cubre el caso "recargó la página en `/URY`" (el Context vuelve a su valor inicial). Los hooks van todos **antes** de ese `return`.
+### c) Guardia si recargó en `/URY`
+El Context vuelve a su valor inicial → `if (contexto.dificultad === '') return <Navigate to="/" replace />;`, con
+todos los hooks **antes** de ese `return` ([tema 13](../../clase/13-router-rutas.md)). Desde un handler: `navegar('/' + cca3)`.
 
-### d) `setEstado` es asíncrono → no leer el valor recién seteado
-Al descontar un error necesito saber si quedó en 0 **en el mismo click**. `contexto.erroresRestantes` todavía tiene el valor viejo después de `setErroresRestantes`. Solución: `descontarError()` calcula `erroresRestantes - 1`, lo setea y **lo devuelve**; el handler usa el valor devuelto para decidir `/end`.
+### d) Decidir el fin del juego en el mismo click
+`setErroresRestantes` no cambia la variable al instante → `descontarError()` calcula, setea y **devuelve**
+(→ [tema 7](../../clase/07-usestate.md) §7.3):
+```jsx
+function descontarError() { const quedan = erroresRestantes - 1; setErroresRestantes(quedan); return quedan; }
+// handler:
+const erroresQueQuedan = contexto.descontarError();
+if (erroresQueQuedan <= 0) { navegar('/end'); } else { navegar(rutaDestino); }
+```
 
-### e) Orden de los `setEstado` del Context: forma funcional
-`Home` hace `setPaisesVisitados([])` y navega; `PaginaPais` monta y llama `agregarPaisVisitado(cca3)`. Para que el agregado se aplique **sobre** el array ya vaciado se usa `setPaisesVisitados((anterior) => [...anterior, cca3])`. Nunca `push` sobre el estado (mutación → React no se entera).
+### e) Visitados con setter funcional
+`Home` hace `setPaisesVisitados([])` y navega; `PaginaPais` monta y llama `agregarPaisVisitado(cca3)`. Para aplicar
+el agregado **sobre** el array ya vaciado: `setPaisesVisitados((anterior) => anterior.includes(cca3) ? anterior : [...anterior, cca3])`
+→ [tema 7](../../clase/07-usestate.md) §7.4.
 
 ### f) Armar las 9 opciones
 1. `cantidadDeFronterizos = Math.floor(Math.random() * (Math.min(borders.length, 9) + 1))` (puede ser 0 → "Ninguno" es la respuesta).
 2. `mezclarArray(borders).slice(0, cantidad)` para elegir cuáles.
 3. Relleno con `elegirVariosDistintos(codigos, 9 - cantidad, [cca3, ...borders])`: se excluyen todos los fronterizos para que el relleno no sea correcto "de casualidad".
-4. `mezclarArray` del total. La imagen es `/flags/CCA3.svg` directo (lo garantiza el enunciado), no hace falta pedir cada país.
+4. `mezclarArray` del total. La imagen es `/flags/CCA3.svg` directo, no hace falta pedir cada país.
 
 ### g) Lógica de "Ninguno"
-Recorrer las opciones con un `for` y preguntar `borders.includes(codigo) && !visitados.includes(codigo)`; si alguna cumple, "Ninguno" es error. El destino es `elegirAlAzar(codigos.filter(no visitado))`. La respuesta correcta se decide **con datos** (`borders` y `visitados`), no con "cuántos fronterizos puse".
+Recorrer las opciones y preguntar `borders.includes(codigo) && !visitados.includes(codigo)`; si alguna cumple,
+"Ninguno" es error. Destino: `elegirAlAzar(codigos.filter(no visitado))`. Se decide **con datos** (`borders` y
+`visitados`), no con "cuántos fronterizos puse".
 
 ### h) Islas
-86 países tienen `borders: []`. Ahí las 9 opciones son relleno y la única jugada correcta es "Ninguno". Por eso el código nunca asume que hay fronterizos.
+86 países con `borders: []`: las 9 opciones son relleno y la única jugada correcta es "Ninguno". El código nunca
+asume que hay fronterizos.
 
 ### i) Orden de rutas
-`/end` y `/:cca3` conviven: React Router 6 elige la más específica (`/end`) aunque el orden no importe. Igual conviene poner `/end` antes para que sea evidente.
+`/end` y `/:cca3` conviven: React Router 6 elige la más específica (`/end`). Igual conviene ponerla antes.
 
-## 5. Lo más importante para repetir en el parcial
+## 4. Conceptos clave
 
-```jsx
-// Context con estado + funciones (crear, proveer, consumir)
-export const ContextoJuego = createContext(null);
-export function ProveedorJuego(props) {
-  const [erroresRestantes, setErroresRestantes] = useState(0);
-  const [paisesVisitados, setPaisesVisitados] = useState([]);
-  function agregarPaisVisitado(cca3) {
-    setPaisesVisitados((anterior) => anterior.includes(cca3) ? anterior : [...anterior, cca3]);
-  }
-  function descontarError() { const quedan = erroresRestantes - 1; setErroresRestantes(quedan); return quedan; }
-  return <ContextoJuego.Provider value={{ erroresRestantes, paisesVisitados, agregarPaisVisitado, descontarError }}>{props.children}</ContextoJuego.Provider>;
-}
-// App: <ProveedorJuego><BrowserRouter><Routes>...</Routes></BrowserRouter></ProveedorJuego>
-// Componente: const contexto = useContext(ContextoJuego);
-```
-
-```jsx
-// useEffect que depende del parámetro de la URL
-const parametros = useParams();
-const cca3 = parametros.cca3;
-useEffect(() => {
-  async function cargar() { try { ... } catch (error) { ... } finally { ... } }
-  cargar();
-}, [cca3]);   // ← sin esto, al navegar de /URY a /ARG no se recarga nada
-```
-
-```jsx
-// Redirigir desde código y desde el JSX
-const navegar = useNavigate();
-navegar('/' + codigoElegido);              // en un handler
-if (contexto.dificultad === '') { return <Navigate to="/" replace />; }   // en el render
-```
-
-```jsx
-// Decidir el fin del juego en el mismo click
-const erroresQueQuedan = contexto.descontarError();
-if (erroresQueQuedan <= 0) { navegar('/end'); } else { navegar(rutaDestino); }
-```
-
-```js
-// Elegir N distintos excluyendo algunos
-function elegirVariosDistintos(lista, cantidad, excluidos) {
-  const elegidos = [];
-  while (elegidos.length < cantidad) {
-    const candidato = lista[Math.floor(Math.random() * lista.length)];
-    if (!excluidos.includes(candidato) && !elegidos.includes(candidato)) { elegidos.push(candidato); }
-  }
-  return elegidos;
-}
-```
-
-```jsx
-// Lista con .map y key única
-{contexto.paisesVisitados.map((cca3) => <li key={cca3}>{cca3}</li>)}
-```
-
-## 6. Plan de ataque (2 horas)
-
-1. **0–10 min**: `npm install`, `npm start`, mirar `mock-routes.js` y `/api/countries/URY` (forma de `borders` y `flag`).
-2. **10–20 min**: `services/api.js` y `utils/azar.js` (elegirAlAzar, mezclarArray, elegirVariosDistintos).
-3. **20–35 min**: `ContextoJuego.jsx` con los 3 estados y las 3 funciones; `App.jsx` con Provider + 3 rutas; `Home.jsx` con los 3 botones que hacen `iniciarJuego` + `navegar`.
-4. **35–75 min**: `PaginaPais.jsx`: `useParams`, `useEffect [cca3]`, cargar país y armar 9 opciones, render con título/bandera/9 botones/"Ninguno"/textos. Probar que al hacer click cambia la URL **y** el país (dependencia `[cca3]`).
-5. **75–95 min**: reglas: `esFronterizoNoVisitado`, `resolverJugada` (descontar error y `/end`), lógica de "Ninguno" con destino no visitado. `<Navigate>` si no hay dificultad.
-6. **95–110 min**: `PaginaFinal.jsx` (lista + volver), CSS grilla 3x3.
-7. **110–120 min**: casos borde (islas sin fronteras, cca3 inválido, recargar en `/URY`), comentarios y README.
+- Setter asíncrono y forma funcional → [tema 7](../../clase/07-usestate.md).
+- `useEffect([cca3])` → [tema 10](../../clase/10-useeffect.md).
+- Azar (`elegirAlAzar`, `mezclarArray`, `elegirVariosDistintos`) → [tema 2](../../clase/02-javascript-para-react.md).
+- `useNavigate` vs `<Navigate replace>` ([tema 13](../../clase/13-router-rutas.md), [tema 14](../../clase/14-useparams-usenavigate.md)); Context de juego ([tema 16](../../clase/16-context.md)).

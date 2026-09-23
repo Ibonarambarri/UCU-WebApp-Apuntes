@@ -8,19 +8,19 @@
 //            useNavigate, useContext, async/await + try/catch, validación.
 // ==============================================
 
-import { useState, useContext } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { cuentasApi } from '../api/client.js'
-import { RecaudacionContext } from '../context/RecaudacionContext.jsx'
-import styles from './NuevaCuentaPage.module.css'
+import { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { cuentasApi } from '../api/client.js';
+import { RecaudacionContext } from '../context/RecaudacionContext.js';
+import styles from './NuevaCuentaPage.module.css';
 
 export function NuevaCuentaPage() {
   // Función para cambiar de ruta desde código (después de guardar).
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   // Del contexto solo necesitamos recargar(), para que la NavBar muestre
   // el total actualizado apenas se cree la cuenta.
-  const contexto = useContext(RecaudacionContext)
-  const recargar = contexto.recargar
+  const contexto = useContext(RecaudacionContext);
+  const recargar = contexto.recargar;
 
   // Estado del formulario: UN objeto con los 4 campos. Cada input tiene
   // name igual a la clave correspondiente.
@@ -29,32 +29,32 @@ export function NuevaCuentaPage() {
     nombre: '',
     icono: '',
     cantidad: '1',
-  })
+  });
   // Mensaje de error de validación o de la API.
-  const [error, setError] = useState('')
+  const [error, setError] = useState('');
 
   // Un solo handler para todos los inputs: usa el atributo name como clave
   // calculada [name] para pisar solo el campo que cambió.
   function handleChange(evento) {
-    const name = evento.target.name
-    const value = evento.target.value
-    setFormulario({ ...formulario, [name]: value })
+    const name = evento.target.name;
+    const value = evento.target.value;
+    setFormulario({ ...formulario, [name]: value });
   }
 
   // Al enviar el formulario.
   async function handleSubmit(evento) {
     // Evitamos que el navegador recargue la página.
-    evento.preventDefault()
-    setError('')
+    evento.preventDefault();
+    setError('');
 
     // Validación: sin cliente o sin producto no se crea nada.
     if (!formulario.cliente.trim() || !formulario.nombre.trim()) {
-      setError('El cliente y el producto son obligatorios.')
-      return
+      setError('El cliente y el producto son obligatorios.');
+      return;
     }
     if (Number(formulario.cantidad) < 1) {
-      setError('La cantidad debe ser al menos 1.')
-      return
+      setError('La cantidad debe ser al menos 1.');
+      return;
     }
 
     // Armamos la cuenta con la forma que espera el backend
@@ -69,17 +69,17 @@ export function NuevaCuentaPage() {
           cantidad: Number(formulario.cantidad),
         },
       ],
-    }
+    };
 
     try {
       // POST /cuentas
-      await cuentasApi.crear(cuentaNueva)
+      await cuentasApi.crear(cuentaNueva);
       // PUNTO 5: recalculamos el total global para que la NavBar cambie.
-      await recargar()
+      await recargar();
       // PUNTO 6: redirigimos al listado.
-      navigate('/cuentas')
+      navigate('/cuentas');
     } catch (errorCapturado) {
-      setError('Error al crear la cuenta: ' + errorCapturado.message)
+      setError('Error al crear la cuenta: ' + errorCapturado.message);
     }
   }
 
@@ -147,5 +147,5 @@ export function NuevaCuentaPage() {
         </button>
       </form>
     </main>
-  )
+  );
 }

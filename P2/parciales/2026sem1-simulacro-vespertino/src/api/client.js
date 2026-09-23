@@ -11,7 +11,7 @@
 // usan 3001. Lo importante es que este puerto sea EL MISMO que el del script
 // "dev" de BE/package.json. En esta máquina el 3000 estaba ocupado por otro
 // proceso, así que se unificó todo en 3001.
-const BASE = 'http://localhost:3001'
+const BASE = 'http://localhost:3001';
 
 // Función genérica: recibe la ruta ("/cuentas") y opciones de fetch
 // (method, body...). Arma la URL, agrega el header JSON, comprueba
@@ -20,23 +20,23 @@ export async function fetchJson(ruta, opciones = {}) {
   const respuesta = await fetch(`${BASE}${ruta}`, {
     headers: { 'Content-Type': 'application/json', ...opciones.headers },
     ...opciones,
-  })
+  });
   // fetch NO lanza error con 404/500: hay que lanzarlo nosotros.
   if (!respuesta.ok) {
-    const texto = await respuesta.text()
-    throw new Error(texto || `Error HTTP ${respuesta.status}`)
+    const texto = await respuesta.text();
+    throw new Error(texto || `Error HTTP ${respuesta.status}`);
   }
   // 204 = "No Content" (por ejemplo algunos DELETE): no hay JSON que leer.
-  if (respuesta.status === 204) return null
-  return respuesta.json()
+  if (respuesta.status === 204) return null;
+  return respuesta.json();
 }
 
 // Operaciones sobre el recurso /cuentas.
 export const cuentasApi = {
   // GET /cuentas -> array con todas las cuentas. (TODO resuelto)
   listar: async function () {
-    const cuentas = await fetchJson('/cuentas')
-    return cuentas
+    const cuentas = await fetchJson('/cuentas');
+    return cuentas;
   },
 
   // GET /cuentas/:id -> una cuenta.
@@ -49,8 +49,8 @@ export const cuentasApi = {
     const cuentaCreada = await fetchJson('/cuentas', {
       method: 'POST',
       body: JSON.stringify(cuerpo),
-    })
-    return cuentaCreada
+    });
+    return cuentaCreada;
   },
 
   // PUT /cuentas/:id -> reemplaza la cuenta ENTERA (hay que mandar todo).
@@ -72,7 +72,7 @@ export const cuentasApi = {
     fetchJson(`/cuentas/${id}`, {
       method: 'DELETE',
     }),
-}
+};
 
 // Operaciones sobre el recurso /productos (venían hechas en la plantilla).
 export const productosApi = {
@@ -92,4 +92,4 @@ export const productosApi = {
     }),
   borrar: (id) =>
     fetchJson(`/productos/${id}`, { method: 'DELETE' }),
-}
+};

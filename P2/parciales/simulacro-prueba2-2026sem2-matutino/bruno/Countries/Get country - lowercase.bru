@@ -1,0 +1,20 @@
+meta {
+  name: Get country - lowercase
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/countries/ury
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.code: eq URY
+}
+
+docs {
+  La API normaliza el codigo con `toUpperCase()`, asi que minusculas andan.
+}

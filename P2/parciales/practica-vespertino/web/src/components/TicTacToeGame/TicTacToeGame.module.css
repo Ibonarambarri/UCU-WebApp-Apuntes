@@ -1,0 +1,11 @@
+.board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.status {
+  font-size: 1.2em;
+  font-weight: 500;
+}

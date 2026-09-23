@@ -6,3 +6,6 @@ dist/
 .DS_Store
 # Copias de seguridad de json-server
 BE/db.original.json
+
+# Documentación descargada (copias de repos externos)
+docs-offline/*/

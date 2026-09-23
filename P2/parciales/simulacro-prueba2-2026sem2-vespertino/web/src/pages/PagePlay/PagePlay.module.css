@@ -1,0 +1,28 @@
+/* flex: 1 ocupa toda la tarjeta; margin-top: auto manda el footer abajo. */
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.after {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.message {
+  text-align: center;
+}
+
+.error {
+  color: #c62828;
+  text-align: center;
+}
+
+.footer {
+  margin-top: auto;
+  padding-top: 24px;
+}

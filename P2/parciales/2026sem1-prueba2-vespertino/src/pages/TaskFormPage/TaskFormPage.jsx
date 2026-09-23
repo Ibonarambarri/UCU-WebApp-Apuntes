@@ -61,7 +61,7 @@ function TaskFormPage(props) {
           // assignee puede venir undefined en el db.json -> usamos ''.
           assignee: tarea.assignee ? tarea.assignee : '',
         });
-      } catch (errorCapturado) {
+      } catch {
         setError('No se encontró la tarea.');
       } finally {
         setLoading(false);
@@ -72,7 +72,7 @@ function TaskFormPage(props) {
     if (isEditing) {
       cargarTarea();
     }
-  }, [id]);
+  }, [id, isEditing]);
 
   // UN solo handler para todos los inputs. Usa el atributo name del input
   // como clave: [name] es "clave calculada". Copiamos el form anterior con
@@ -115,7 +115,7 @@ function TaskFormPage(props) {
       onSave(tareaGuardada, isEditing);
       // Volvemos al tablero.
       navigate('/');
-    } catch (errorCapturado) {
+    } catch {
       setError('Error al guardar la tarea. Intentá de nuevo.');
     }
   }

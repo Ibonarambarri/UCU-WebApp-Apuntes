@@ -5,21 +5,21 @@
 // Conceptos: NavLink (marca el link activo), useContext, CSS Modules.
 // ==============================================
 
-import { useContext } from 'react'
-import { NavLink } from 'react-router-dom'
-import { RecaudacionContext } from '../../context/RecaudacionContext.jsx'
-import { formatoPrecio } from '../../utils/cuentas.js'
+import { useContext } from 'react';
+import { NavLink } from 'react-router-dom';
+import { RecaudacionContext } from '../../context/RecaudacionContext.js';
+import { formatoPrecio } from '../../utils/cuentas.js';
 // TRAMPA: la plantilla importaba './Navbar.module.css' (b minúscula) pero el
 // archivo se llama 'NavBar.module.css'. En macOS/Windows funciona igual
 // porque el sistema de archivos ignora mayúsculas, pero en Linux (y en el
 // build de un servidor) falla con "Cannot find module". El import tiene
 // que coincidir EXACTAMENTE con el nombre del archivo.
-import styles from './NavBar.module.css'
+import styles from './NavBar.module.css';
 
 export function NavBar() {
   // PUNTO 5: el total viene del contexto global, no se calcula acá.
-  const contexto = useContext(RecaudacionContext)
-  const total = contexto.total
+  const contexto = useContext(RecaudacionContext);
+  const total = contexto.total;
 
   return (
     <header className={styles.header}>
@@ -50,5 +50,5 @@ export function NavBar() {
         Recaudacion: {formatoPrecio(total)}
       </p>
     </header>
-  )
+  );
 }

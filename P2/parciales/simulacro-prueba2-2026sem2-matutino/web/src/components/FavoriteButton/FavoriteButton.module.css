@@ -1,0 +1,17 @@
+.star {
+  font-size: 1.6em;
+  line-height: 1;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999;
+}
+
+.active {
+  color: #e6a700;
+}
+
+.star:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}

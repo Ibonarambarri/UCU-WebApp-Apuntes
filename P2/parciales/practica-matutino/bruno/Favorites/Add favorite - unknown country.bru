@@ -1,0 +1,21 @@
+meta {
+  name: Add favorite - unknown country
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/api/favorites
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "code": "XYZ"
+  }
+}
+
+assert {
+  res.status: eq 404
+}

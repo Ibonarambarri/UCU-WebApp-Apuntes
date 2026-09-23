@@ -1,6 +1,7 @@
 // ==============================================
-// Archivo: src/context/RecaudacionContext.jsx
-// Qué hace: contexto global con el TOTAL RECAUDADO del bar (PUNTO 5).
+// Archivo: src/context/RecaudacionProvider.jsx
+// Qué hace: Provider del contexto global con el TOTAL RECAUDADO (PUNTO 5).
+//           El contexto en sí se crea en RecaudacionContext.js.
 //           El Provider carga cuentas y productos de la API, calcula el
 //           total con totalRecaudado() y lo expone junto con una función
 //           recargar() para volver a calcularlo (por ejemplo después de
@@ -9,18 +10,12 @@
 //            props.children.
 // ==============================================
 
-import { createContext, useState, useEffect } from 'react'
-import { cuentasApi, productosApi } from '../api/client.js'
-import { totalRecaudado } from '../utils/cuentas.js'
+import { useState, useEffect } from 'react';
+import { cuentasApi, productosApi } from '../api/client.js';
+import { totalRecaudado } from '../utils/cuentas.js';
+import { RecaudacionContext } from './RecaudacionContext.js';
 
-// 1) El contexto. El valor por defecto solo aplica si alguien lo consume
-//    fuera del Provider; lo dejamos con la misma forma para que no rompa.
-export const RecaudacionContext = createContext({
-  total: 0,
-  recargar: function () {},
-})
-
-// 2) El Provider: envuelve la app (ver main.jsx) y comparte { total, recargar }
+// El Provider: envuelve la app (ver main.jsx) y comparte { total, recargar }
 //    con todos los componentes que hagan useContext(RecaudacionContext).
 //
 // Decisión de diseño: el Provider carga cuentas y productos POR SU CUENTA
@@ -30,21 +25,21 @@ export const RecaudacionContext = createContext({
 // autocontenida: dos fetch + una cuenta.
 export function RecaudacionProvider(props) {
   // Estado global: el total recaudado en pesos.
-  const [total, setTotal] = useState(0)
+  const [total, setTotal] = useState(0);
 
   // Pide cuentas y productos a la API y recalcula el total.
   // Es async y va en try/catch: si la API está caída dejamos el total en 0.
   async function recargar() {
     try {
-      const cuentas = await cuentasApi.listar()
-      const productos = await productosApi.listar()
+      const cuentas = await cuentasApi.listar();
+      const productos = await productosApi.listar();
       // totalRecaudado suma, para cada cuenta, cantidad * precio de cada
       // producto (busca el precio por nombre en la lista de productos).
-      const totalCalculado = totalRecaudado(cuentas, productos)
-      setTotal(totalCalculado)
+      const totalCalculado = totalRecaudado(cuentas, productos);
+      setTotal(totalCalculado);
     } catch (errorCapturado) {
-      console.error('No se pudo calcular la recaudación:', errorCapturado)
-      setTotal(0)
+      console.error('No se pudo calcular la recaudación:', errorCapturado);
+      setTotal(0);
     }
   }
 
@@ -52,19 +47,19 @@ export function RecaudacionProvider(props) {
   // (o sea, al cargar la app). Después, quien cree una cuenta o un producto
   // llama recargar() a mano.
   useEffect(() => {
-    recargar()
-  }, [])
+    recargar();
+  }, []);
 
   // Objeto que reciben los consumidores.
   const valorDelContexto = {
     total: total,
     recargar: recargar,
-  }
+  };
 
   return (
     <RecaudacionContext.Provider value={valorDelContexto}>
       {/* props.children = todo lo que esté entre <RecaudacionProvider> y </RecaudacionProvider> */}
       {props.children}
     </RecaudacionContext.Provider>
-  )
+  );
 }

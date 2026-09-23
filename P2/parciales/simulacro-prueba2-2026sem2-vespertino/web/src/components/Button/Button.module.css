@@ -1,0 +1,26 @@
+/* Estilos compartidos por <Button> y <LinkButton>: así un Link y un button
+   se ven iguales. Primario = negro relleno, secundario = blanco con borde. */
+.button {
+  display: inline-block;
+  min-width: 120px;
+  padding: 8px 16px;
+  border: 2px solid #1e1e1e;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.primary {
+  background: #1e1e1e;
+  color: #fff;
+}
+
+.secondary {
+  background: #fff;
+  color: #1e1e1e;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -51,7 +51,9 @@ function BoardPage(props) {
     }
 
     cargarTareas();
-  }, []);
+    // setTasks viene del contexto: es un setter de useState (nunca cambia),
+    // así que agregarlo no hace que el efecto corra más de una vez.
+  }, [setTasks]);
 
   // Se ejecuta cuando en una TaskCard se cambia el <select> de estado.
   // Pasos: 1) buscar la tarea, 2) copiarla con el nuevo status,

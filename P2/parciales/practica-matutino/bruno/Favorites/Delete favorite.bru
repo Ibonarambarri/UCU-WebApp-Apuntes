@@ -1,0 +1,21 @@
+meta {
+  name: Delete favorite
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/api/favorites/ARG
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.code: eq ARG
+}
+
+docs {
+  Corre despues de `Add favorite`, asi la coleccion entera queda idempotente
+  y el seed no se ensucia.
+}

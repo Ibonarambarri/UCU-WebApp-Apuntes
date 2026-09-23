@@ -1,0 +1,21 @@
+meta {
+  name: Get country - alpha-2 is 404
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/countries/UY
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 404
+}
+
+docs {
+  `UY` existe en los datos como `alpha2Code`, pero la busqueda es solo por
+  `code` (alpha-3), asi que responde 404. Sirve para verificar el manejo de
+  error de la pantalla de detalle.
+}

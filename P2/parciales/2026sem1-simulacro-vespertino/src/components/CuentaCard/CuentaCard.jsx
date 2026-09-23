@@ -6,18 +6,18 @@
 // Conceptos: props, map con key, find para buscar el precio, CSS Modules.
 // ==============================================
 
-import { formatoPrecio, totalDeCuenta } from '../../utils/cuentas.js'
-import styles from './CuentaCard.module.css'
+import { formatoPrecio, totalDeCuenta } from '../../utils/cuentas.js';
+import styles from './CuentaCard.module.css';
 
 // props.cuenta: { id, cliente, productos: [{ icono, nombre, cantidad }] }
 // props.productos: la lista de productos del bar (para saber los precios,
 //                  porque en la cuenta NO viene el precio, solo el nombre).
 export function CuentaCard(props) {
-  const cuenta = props.cuenta
-  const productos = props.productos
+  const cuenta = props.cuenta;
+  const productos = props.productos;
 
   // Total de esta cuenta: suma de cantidad * precio de cada consumo.
-  const total = totalDeCuenta(cuenta, productos)
+  const total = totalDeCuenta(cuenta, productos);
 
   // Devuelve el precio unitario de un consumo buscando el producto por
   // nombre. Si no existe (producto borrado) devuelve 0.
@@ -25,11 +25,11 @@ export function CuentaCard(props) {
     // find: primer producto cuyo nombre coincide, o undefined.
     const productoEncontrado = productos.find(
       (producto) => producto.nombre === consumo.nombre,
-    )
+    );
     if (!productoEncontrado) {
-      return 0
+      return 0;
     }
-    return Number(productoEncontrado.precio)
+    return Number(productoEncontrado.precio);
   }
 
   return (
@@ -50,5 +50,5 @@ export function CuentaCard(props) {
       {/* PUNTO 2: total de la cuenta al final del componente */}
       <p className={styles.total}>{formatoPrecio(total)}</p>
     </li>
-  )
+  );
 }

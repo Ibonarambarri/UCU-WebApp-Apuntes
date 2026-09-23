@@ -1,0 +1,24 @@
+/* Tablero tipo "#": sin marco exterior, solo líneas internas.
+   El gap con fondo negro dibuja las líneas entre celdas. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 80px);
+  grid-template-rows: repeat(3, 80px);
+  gap: 3px;
+  background: #1e1e1e;
+}
+
+.cell {
+  font-size: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: #fff;
+  color: #1e1e1e;
+  cursor: pointer;
+}
+
+.cell:disabled {
+  cursor: default;
+}

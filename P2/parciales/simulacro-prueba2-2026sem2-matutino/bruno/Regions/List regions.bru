@@ -1,0 +1,35 @@
+meta {
+  name: List regions
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/regions
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body: isArray
+}
+
+tests {
+  test("vienen ordenadas alfabeticamente y sin repetir", function() {
+    const body = res.getBody();
+    expect(body).to.eql([...new Set(body)].sort());
+  });
+
+  test("son las 8 regiones del dataset", function() {
+    expect(res.getBody()).to.eql([
+      "Africa", "Americas", "Antarctic", "Antarctic Ocean",
+      "Asia", "Europe", "Oceania", "Polar",
+    ]);
+  });
+}
+
+docs {
+  Alimenta el filtro por region del listado. Ojo que no son las 5 regiones
+  clasicas: el dataset trae tambien `Antarctic`, `Antarctic Ocean` y `Polar`.
+}

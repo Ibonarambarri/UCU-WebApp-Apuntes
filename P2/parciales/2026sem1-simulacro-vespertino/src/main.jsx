@@ -6,12 +6,12 @@
 // Conceptos: createRoot, StrictMode, BrowserRouter, Provider de contexto.
 // ==============================================
 
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
-import App from './App.jsx'
-import { RecaudacionProvider } from './context/RecaudacionContext.jsx'
-import './index.css'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App.jsx';
+import { RecaudacionProvider } from './context/RecaudacionProvider.jsx';
+import './index.css';
 
 // El Provider va ADENTRO del BrowserRouter y AFUERA de App: así cualquier
 // componente (NavBar, páginas) puede usar tanto el router como el contexto.
@@ -23,4 +23,4 @@ createRoot(document.getElementById('root')).render(
       </RecaudacionProvider>
     </BrowserRouter>
   </StrictMode>,
-)
+);

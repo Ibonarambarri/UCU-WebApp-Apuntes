@@ -1,0 +1,19 @@
+meta {
+  name: Get country - not found
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/api/countries/XYZ
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 404
+}
+
+docs {
+  El caso borde `/countries/XYZ` que pide la letra del ejercicio.
+}

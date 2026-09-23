@@ -7,40 +7,40 @@
 // Conceptos: formulario controlado con [name], useNavigate, useContext.
 // ==============================================
 
-import { useState, useContext } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { productosApi } from '../api/client.js'
-import { RecaudacionContext } from '../context/RecaudacionContext.jsx'
-import styles from './NuevoProductoPage.module.css'
+import { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { productosApi } from '../api/client.js';
+import { RecaudacionContext } from '../context/RecaudacionContext.js';
+import styles from './NuevoProductoPage.module.css';
 
 export function NuevoProductoPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   // recargar() recalcula el total global (un producto nuevo puede darle
   // precio a consumos que ya existían en alguna cuenta).
-  const contexto = useContext(RecaudacionContext)
-  const recargar = contexto.recargar
+  const contexto = useContext(RecaudacionContext);
+  const recargar = contexto.recargar;
 
   // Estado del formulario: un objeto con los 3 campos.
   const [formulario, setFormulario] = useState({
     nombre: '',
     icono: '',
     precio: '',
-  })
+  });
 
   // Un solo handler: [name] es la clave calculada con el name del input.
   // (Plantilla: usa destructuring y arrow en setFormulario(prev => ...).)
   function handleChange(e) {
-    const { name, value } = e.target
+    const { name, value } = e.target;
 
     setFormulario((prev) => ({
       ...prev,
       [name]: value,
-    }))
+    }));
   }
 
   async function handleSubmit(e) {
     // Evita la recarga de página del submit nativo.
-    e.preventDefault()
+    e.preventDefault();
 
     try {
       // POST /productos. precio se convierte a número (los inputs dan string).
@@ -48,15 +48,15 @@ export function NuevoProductoPage() {
         nombre: formulario.nombre,
         icono: formulario.icono,
         precio: Number(formulario.precio),
-      })
+      });
 
       // PUNTO 5: actualizar el total de la NavBar.
-      await recargar()
+      await recargar();
       // PUNTO 6: redirigir al listado.
-      navigate('/productos')
+      navigate('/productos');
     } catch (error) {
-      console.error(error)
-      alert('Error al crear producto')
+      console.error(error);
+      alert('Error al crear producto');
     }
   }
 
@@ -114,5 +114,5 @@ export function NuevoProductoPage() {
         </button>
       </form>
     </main>
-  )
+  );
 }
