@@ -6,8 +6,34 @@ import StatusMessage from '../StatusMessage/StatusMessage.jsx';
 import { useFetchCountries } from '../../hooks/useFetchCountries.js';
 import { useFetchRegions } from '../../hooks/useFetchRegions.js';
 import { useFavorites } from '../../context/FavoritesContext.js';
-import { DEFAULT_SORT, SORT_OPTIONS, filterAndSortCountries } from '../../utils/countries.js';
 import styles from './PageCountryList.module.css';
+
+/** Opciones de orden. La clave (`name`, `population`, `area`) es lo que va en
+ * la URL (`?sort=population`) y el texto es lo que se ve en el <select>.
+ */
+const SORT_OPTIONS = {
+  name: 'Nombre (A-Z)',
+  population: 'Población (mayor a menor)',
+  area: 'Área (mayor a menor)',
+};
+const DEFAULT_SORT = 'name';
+
+/** Pasa a minúsculas y saca tildes: "Perú" → "peru", "Åland" → "aland".
+ * Así buscar "peru" encuentra "Perú".
+ */
+function normalizeText(text) {
+  return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+/** Compara números de mayor a menor mandando los null al final
+ * (hay 10 países con `area: null`; sin esto quedarían mezclados).
+ */
+function compareDescending(a, b) {
+  if (a === null && b === null) return 0;
+  if (a === null) return 1;
+  if (b === null) return -1;
+  return b - a;
+}
 
 /** /countries — listado con búsqueda, orden, filtro por región y favoritos.
  *
@@ -52,7 +78,33 @@ export default function PageCountryList() {
     if (!countries) {
       return [];
     }
-    return filterAndSortCountries(countries, { query, region, onlyFavorites, isFavorite, sort });
+
+    // 3a) FILTRAR: cada filtro se saltea si está vacío.
+    const normalizedQuery = normalizeText(query.trim());
+    const filtered = countries.filter((country) => {
+      if (normalizedQuery && !normalizeText(country.name).includes(normalizedQuery)) {
+        return false;
+      }
+      if (region && country.region !== region) {
+        return false;
+      }
+      if (onlyFavorites && !isFavorite(country.code)) {
+        return false;
+      }
+      return true;
+    });
+
+    // 3b) ORDENAR: sort() modifica el array, pero `filtered` ya es un array
+    // NUEVO (lo creó filter), así que no tocamos los datos del hook.
+    return filtered.sort((a, b) => {
+      if (sort === 'population') {
+        return compareDescending(a.population, b.population);
+      }
+      if (sort === 'area') {
+        return compareDescending(a.area, b.area);
+      }
+      return a.name.localeCompare(b.name);
+    });
   }, [countries, query, region, onlyFavorites, isFavorite, sort]);
 
   // --- 4. Qué mostrar según el estado del pedido ---

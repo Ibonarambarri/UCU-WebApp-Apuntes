@@ -1,0 +1,60 @@
+meta {
+  name: List countries
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/countries
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body: isArray
+  res.body: length 250
+}
+
+tests {
+  test("solo devuelve los campos del listado", function() {
+    const fields = [
+      "code", "name", "flag", "capital", "region",
+      "subregion", "population", "area", "languages", "currencies",
+    ];
+    expect(Object.keys(res.getBody()[0]).sort()).to.eql(fields.sort());
+  });
+
+  test("trae idiomas y monedas: alcanza para filtrar sin volver a pedir", function() {
+    const conEspanol = res.getBody().filter(
+      (c) => c.languages.some((l) => l.code === "es"),
+    );
+    const conEuro = res.getBody().filter(
+      (c) => c.currencies.some((m) => m.code === "EUR"),
+    );
+    expect(conEspanol).to.have.lengthOf(24);
+    expect(conEuro).to.have.lengthOf(36);
+  });
+
+  test("todos los codigos son alpha-3 en mayusculas", function() {
+    const bad = res.getBody().filter((c) => !/^[A-Z]{3}$/.test(c.code));
+    expect(bad).to.eql([]);
+  });
+
+  test("hay 5 paises sin capital y 10 sin area", function() {
+    expect(res.getBody().filter((c) => !c.capital)).to.have.lengthOf(5);
+    expect(res.getBody().filter((c) => c.area === null)).to.have.lengthOf(10);
+  });
+}
+
+docs {
+  Unico pedido que hace la pantalla `/countries`: la busqueda, el orden y los
+  tres filtros se resuelven en memoria sobre esta lista.
+
+  El detalle de cada pais trae ademas `nativeName`, `populationDensity`,
+  `borders`, husos horarios y dominio de primer nivel.
+
+  Ojo con `area`, que puede venir en `null` (10 paises), y con `languages` y
+  `currencies`, que pueden traer varios valores o ninguno: para filtrar hay
+  que mirar si *alguno* coincide.
+}

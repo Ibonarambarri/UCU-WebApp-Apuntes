@@ -1,0 +1,46 @@
+meta {
+  name: Get random country
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/api/countries/random
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("devuelve un pais entero, no una lista", function() {
+    const body = res.getBody();
+    expect(body).to.not.be.an("array");
+    expect(body.code).to.match(/^[A-Z]{3}$/);
+    for (const field of [
+      "nativeName", "populationDensity", "independent", "borders",
+      "languages", "currencies", "timezones", "topLevelDomain",
+    ]) {
+      expect(body, field).to.have.property(field);
+    }
+  });
+
+  test("es la misma forma que el detalle de un pais: 17 campos", function() {
+    expect(Object.keys(res.getBody())).to.have.lengthOf(17);
+  });
+}
+
+docs {
+  Pantalla `/countries/random`. Devuelve los datos completos de uno de los 250
+  paises, sorteado en cada pedido: correr la request varias veces tiene que ir
+  dando paises distintos.
+
+  `random` no es un codigo de pais: esta ruta va antes que
+  `/api/countries/:code` en `mock-routes.js`, que si no responderia 404.
+
+  La app se queda en `/countries/random`: como la URL no cambia, cada recarga
+  y cada click en el boton de la barra tienen que volver a pegarle a esta
+  request y mostrar otro pais.
+}

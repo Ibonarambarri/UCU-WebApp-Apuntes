@@ -87,7 +87,7 @@ se copia la base entera de una vez:
 cd web/src
 mkdir -p hooks context components/StatusMessage components/Layout components/FavoriteButton components/CountryCard components/PageNotFound
 cp "$SOL/web/src/hooks/"* hooks/                                   # useFetchJSON + 1 hook por endpoint
-cp "$SOL/web/src/utils/format.js" "$SOL/web/src/utils/countries.js" utils/
+cp "$SOL/web/src/utils/format.js" utils/
 cp "$SOL/web/src/context/"* context/                               # FavoritesContext.js + FavoritesProvider.jsx
 cp "$SOL/web/src/components/StatusMessage/"* components/StatusMessage/
 cp "$SOL/web/src/components/Layout/"* components/Layout/
@@ -112,7 +112,7 @@ borrá en `Layout.jsx` y `CountryCard.jsx` las líneas que usan `useFavorites` /
 | `CountryCard.jsx` | `FavoriteButton/`, `utils/format.js` |
 | `FavoriteButton.jsx` | `context/FavoritesContext.js` |
 | `PageCountry.jsx` | `Header/` (viene en la plantilla), `FavoriteButton/`, `StatusMessage/`, `useFetchCountry`, `useFetchCountries`, `utils/format.js` |
-| `PageCountryList.jsx` | `CountryCard/`, `StatusMessage/`, `useFetchCountries`, `useFetchRegions`, `context/`, `utils/countries.js` |
+| `PageCountryList.jsx` | `CountryCard/`, `StatusMessage/`, `useFetchCountries`, `useFetchRegions`, `context/` (el filtrado y el orden están dentro del propio archivo) |
 
 ### Escenario C (otra app): solo lo genérico
 ```bash
@@ -167,7 +167,7 @@ y adaptar campos. Si preferís escribirlo, este es el orden:
 
 ## FASE 3 — Listado `/countries` (45–75 min)
 
-Copiar como base: `PageCountryList/`, `CountryCard/` y `utils/countries.js` del `SOL`, o escribir en este orden:
+Copiar como base: `PageCountryList/` y `CountryCard/` del `SOL` (búsqueda y orden están **dentro** de `PageCountryList.jsx`), o escribir en este orden:
 
 | Paso | Qué | Dónde está explicado |
 |---|---|---|
@@ -176,7 +176,7 @@ Copiar como base: `PageCountryList/`, `CountryCard/` y `utils/countries.js` del 
 | 3.3 | `useSearchParams` + función **`updateParam`** (copiar de CHULETA §2) | [tema 15.4](clase/15-usesearchparams.md) |
 | 3.4 | Buscador: `const query = searchParams.get('q') ?? ''` + `<input value={query} onChange={(e) => updateParam('q', e.target.value)} />` | [tema 15.5](clase/15-usesearchparams.md) |
 | 3.5 | Orden: `sort` validado (`name`/`population`/`area`) + `<select>` | [tema 15.3](clase/15-usesearchparams.md) |
-| 3.6 | Lista visible **calculada**: `filter` (texto normalizado) + `[...].sort` (nulls de área al final) | [tema 9](clase/09-estado-derivado.md), `utils/countries.js` |
+| 3.6 | Lista visible **calculada**: `filter` (texto normalizado) + `[...].sort` (nulls de área al final) | [tema 9](clase/09-estado-derivado.md), `useMemo` de `PageCountryList.jsx` |
 | 3.7 | "Mostrando {visibles.length} de {countries.length} países" | [tema 9](clase/09-estado-derivado.md) |
 | 3.8 | Sin resultados: `No se encontraron países para "{query}".` | [tema 5.3](clase/05-listas-y-condicionales.md) |
 | 3.9 | Filtros nuevos del enunciado → receta: leer de la URL → control con `updateParam` → condición en el filter → deps del `useMemo` | [tema 15.7](clase/15-usesearchparams.md) + recetario |

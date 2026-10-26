@@ -16,7 +16,7 @@ Cada render ejecuta el componente **desde cero**: cada `const` se recalcula y ca
 
 ```jsx
 const visibleCountries = useMemo(
-  () => filterAndSortCountries(countries, { query, region, sort }),
+  () => countries.filter((c) => …).sort((a, b) => …),      // filtrar + ordenar
   [countries, query, region, sort],          // recalcula SOLO si cambia algo de esto
 );
 ```

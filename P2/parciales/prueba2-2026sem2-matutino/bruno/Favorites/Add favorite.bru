@@ -1,0 +1,33 @@
+meta {
+  name: Add favorite
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/api/favorites
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "code": "ARG"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.code: eq ARG
+}
+
+tests {
+  test("devuelve el favorito con su fecha", function() {
+    expect(Number.isNaN(Date.parse(res.getBody().date))).to.be.false;
+  });
+}
+
+docs {
+  Alta idempotente: correrla dos veces devuelve el mismo favorito sin
+  duplicarlo (la segunda conserva la `date` original).
+}

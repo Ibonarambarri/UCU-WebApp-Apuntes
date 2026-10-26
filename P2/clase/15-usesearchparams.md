@@ -115,7 +115,7 @@ const visibles = [...countries]
 ```
 
 📂 **Verlo funcionando:** `parciales/simulacro-prueba2-2026sem2-matutino/web/src/components/PageCountryList/PageCountryList.jsx` ·
-`.../utils/countries.js` · `.../components/Layout/Layout.jsx` (link `?fav=1`)
+`.../components/Layout/Layout.jsx` (link `?fav=1`)
 
 ---
 

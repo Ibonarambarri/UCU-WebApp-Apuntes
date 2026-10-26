@@ -14,8 +14,8 @@ Cómo correrlo: ver [README principal](../../README.md#cómo-correr-cada-cosa) (
 | Requisito | Dónde | Cómo |
 |---|---|---|
 | Listado con bandera, nombre, capital, región, población | `components/CountryCard/CountryCard.jsx` | Una `<li>` por país; `formatNumber` pone los puntos de miles |
-| Búsqueda por nombre (del lado del cliente) | `utils/countries.js` → `filterAndSortCountries` | `filter` + `includes` sobre texto normalizado (sin tildes, minúsculas) |
-| Orden nombre A-Z / población ↓ / área ↓ | `utils/countries.js` → `sortCountries` | `[...array].sort(...)`; `localeCompare` para texto; los `null` van al final |
+| Búsqueda por nombre (del lado del cliente) | `PageCountryList.jsx` → `filter` dentro del `useMemo` | `filter` + `includes` sobre texto normalizado (sin tildes, minúsculas) |
+| Orden nombre A-Z / población ↓ / área ↓ | `PageCountryList.jsx` → `sort` dentro del `useMemo` (+ `compareDescending`) | `[...array].sort(...)`; `localeCompare` para texto; los `null` van al final |
 | Búsqueda y orden **en la URL** (`?q=uru&sort=population`) | `PageCountryList.jsx` | `useSearchParams` (la URL es el estado, no hay `useState`) |
 | "Mostrando X de 250" + aviso sin resultados | `PageCountryList.jsx` | `visibleCountries.length` / `countries.length`; `StatusMessage` |
 | Cada país enlaza a su detalle | `CountryCard.jsx` | `<Link to={`/countries/${code}`}>` |
@@ -36,7 +36,6 @@ Cómo correrlo: ver [README principal](../../README.md#cómo-correr-cada-cosa) (
 main.jsx                      (sin tocar)
 utils/fetch.js                (DADO: fetchJSON)
 utils/format.js               formatNumber / formatText / formatList (todo contempla null)
-utils/countries.js            SORT_OPTIONS, normalizeText, sortCountries, filterAndSortCountries
 hooks/useFetchJSON.js         hook genérico GET → { data, isLoading, error, refetch }
 hooks/useFetchCountries.js    GET /api/countries
 hooks/useFetchCountry.js      GET /api/countries/:code
@@ -71,13 +70,14 @@ Teoría: `useSearchParams` ([tema 15](../../clase/15-usesearchparams.md)).
 
 ### 2.2 Lista visible = derivada + `useMemo`
 
-`visibleCountries = useMemo(() => countries ? filterAndSortCountries(countries, { query, region, onlyFavorites, isFavorite, sort }) : [], [countries, query, region, onlyFavorites, isFavorite, sort])`.
+Todo en `PageCountryList.jsx`: `visibleCountries = useMemo(() => { filtrar con filter; ordenar con sort }, [countries, query, region, onlyFavorites, isFavorite, sort])`.
+Arriba del componente (fuera, porque no dependen de nada de React): `SORT_OPTIONS`, `normalizeText` y `compareDescending`.
 Ningún `useState` para la lista filtrada → [tema 9](../../clase/09-estado-derivado.md);
 `useMemo` ([tema 17](../../clase/17-usememo-usecallback-useref.md)) es opcional con 250 países.
 
-### 2.3 Orden en `utils/countries.js`
+### 2.3 Orden
 
-`sortCountries` ordena una **copia** (`[...array].sort`) → [tema 2](../../clase/02-javascript-para-react.md).
+`sort()` modifica el array, pero se aplica sobre el resultado de `filter`, que ya es un array **nuevo** → no se tocan los datos del hook ([tema 2](../../clase/02-javascript-para-react.md)). Sin filtrar antes, habría que copiar: `[...countries].sort(...)`.
 `compareDescending` manda los `null` al final (10 países con `area`/`populationDensity` null);
 texto con `localeCompare` y `normalizeText` (sin tildes, minúsculas).
 
@@ -136,8 +136,8 @@ Dos archivos (contexto+hook en `.js`, Provider en `.jsx`) por el lint `react-ref
 ## 4. RECETARIO DE VARIANTES PROBABLES EN EL EXAMEN
 
 Todas se enchufan en la solución que ya tenés. Receta general para un filtro nuevo:
-**(1)** leerlo de la URL, **(2)** control que llama `updateParam`, **(3)** condición en
-`filterAndSortCountries`, **(4)** agregarlo a las dependencias del `useMemo`.
+**(1)** leerlo de la URL, **(2)** control que llama `updateParam`, **(3)** condición en el
+`filter` del `useMemo` de `PageCountryList.jsx`, **(4)** agregarlo a las dependencias del `useMemo`.
 
 ### V1. Filtro por región (ya hecho) — `?region=Americas`
 
@@ -169,8 +169,9 @@ function changeRegion(value) {
 
 ```js
 const dir = searchParams.get('dir') === 'asc' ? 'asc' : 'desc';
-let sorted = sortCountries(filtered, sort);
-if (dir === 'asc' && sort !== 'name') sorted = sorted.reverse(); // reverse sobre la COPIA ya ordenada
+// al final del useMemo, en vez de `return filtered.sort(...)`:
+const sorted = filtered.sort(/* igual que antes */);
+return dir === 'asc' && sort !== 'name' ? sorted.reverse() : sorted;   // agregar dir a las deps
 ```
 (con nulls: mejor invertir el signo dentro de `compareDescending` para que los null sigan al final).
 

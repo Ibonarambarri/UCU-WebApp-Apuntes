@@ -1,0 +1,19 @@
+headers {
+  Content-Type: application/json
+}
+
+docs {
+  # Countries API
+
+  API de la prueba, servida como middleware de Vite en el mismo puerto que
+  la app (`http://localhost:5173`). Levantarla con `npm start` desde la raiz
+  del repo.
+
+  Los codigos de pais son **alpha-3 en mayusculas** (`URY`, `ARG`, `BRA`),
+  igual que los valores del campo `borders`. Los de idioma son ISO 639-1 en
+  minusculas (`es`, `en`) y los de moneda ISO 4217 en mayusculas (`UYU`).
+
+  La coleccion corre entera y es idempotente: las requests de Favorites
+  escriben en `web/data/db/data.json`, pero la ultima borra lo que agrego la
+  primera.
+}

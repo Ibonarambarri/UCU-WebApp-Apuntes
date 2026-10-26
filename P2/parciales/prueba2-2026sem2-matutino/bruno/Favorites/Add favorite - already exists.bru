@@ -1,0 +1,27 @@
+meta {
+  name: Add favorite - already exists
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{baseUrl}}/api/favorites
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "code": "ury"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.code: eq URY
+}
+
+docs {
+  Doble chequeo: normaliza el codigo a mayusculas y, como `URY` ya venia en
+  el seed, lo devuelve sin duplicarlo.
+}

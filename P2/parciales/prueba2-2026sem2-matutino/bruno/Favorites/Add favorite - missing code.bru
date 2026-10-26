@@ -1,0 +1,19 @@
+meta {
+  name: Add favorite - missing code
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/api/favorites
+  body: json
+  auth: none
+}
+
+body:json {
+  {}
+}
+
+assert {
+  res.status: eq 400
+}

@@ -46,7 +46,7 @@ Con `…-matutino/APUNTES-PARCIAL.md` abierto, leé el código **en este orden**
 1. `components/App/App.jsx` + `Layout/Layout.jsx` → rutas anidadas y `<Outlet />`.
 2. `hooks/useFetchJSON.js` → el patrón `data/isLoading/error/refetch` (§2.4 de los apuntes).
 3. `components/PageCountry/PageCountry.jsx` → `useParams`, los 4 estados, 404, limítrofes.
-4. `utils/countries.js` + `utils/format.js` → filtrar/ordenar, los `null`.
+4. `utils/format.js` → mostrar los `null` (`—`).
 5. `components/PageCountryList/PageCountryList.jsx` → **`useSearchParams`** (lo nuevo, §2.1) y `useMemo`.
 6. `context/FavoritesContext.js` + `FavoritesProvider.jsx` + `FavoriteButton` → Context y PUT/DELETE.
 

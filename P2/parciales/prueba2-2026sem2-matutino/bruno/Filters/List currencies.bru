@@ -1,0 +1,48 @@
+meta {
+  name: List currencies
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/currencies
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body: length 163
+}
+
+tests {
+  test("cada moneda es { code, name, symbol, countries }", function() {
+    for (const cur of res.getBody()) {
+      expect(Object.keys(cur).sort()).to.eql(
+        ["code", "countries", "name", "symbol"],
+      );
+    }
+  });
+
+  test("vienen ordenadas por codigo", function() {
+    const codes = res.getBody().map((c) => c.code);
+    expect(codes).to.eql([...codes].sort((a, b) => a.localeCompare(b)));
+  });
+
+  test("el euro es la moneda mas usada", function() {
+    const byCode = Object.fromEntries(res.getBody().map((c) => [c.code, c]));
+    expect(byCode.EUR.countries).to.eql(36);
+    expect(byCode.USD.countries).to.eql(18);
+    expect(byCode.UYU.countries).to.eql(1);
+  });
+}
+
+docs {
+  Los codigos son ISO 4217 en mayusculas: los mismos que trae cada pais en
+  `currencies[].code` y los que van en la URL de la app
+  (`/countries?currency=EUR`).
+
+  El dataset repite algunos codigos con nombres apenas distintos (`USD` como
+  "United States Dollar" y "United States dollar"); el endpoint los unifica
+  quedandose con la primera aparicion.
+}

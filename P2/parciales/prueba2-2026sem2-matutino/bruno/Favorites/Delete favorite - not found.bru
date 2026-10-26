@@ -1,0 +1,20 @@
+meta {
+  name: Delete favorite - not found
+  type: http
+  seq: 7
+}
+
+delete {
+  url: {{baseUrl}}/api/favorites/ARG
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 404
+}
+
+docs {
+  Misma ruta que la anterior, pero corriendo segunda: `ARG` ya no esta
+  marcado, asi que responde 404.
+}

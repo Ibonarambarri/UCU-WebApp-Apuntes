@@ -78,7 +78,7 @@ const activePlayer = isFinished ? null : countX > countO ? 'O' : 'X';
 
 ```jsx
 const visibles = useMemo(
-  () => filterAndSortCountries(countries, { query, sort }),
+  () => countries.filter((c) => …).sort((a, b) => …),
   [countries, query, sort],     // recalcula SOLO si cambia algo de esto
 );
 ```

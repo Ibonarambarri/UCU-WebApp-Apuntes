@@ -1,0 +1,25 @@
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: #f1f3f5;
+  border-bottom: 1px solid #ddd;
+}
+
+.brand {
+  font-size: 1.4em;
+  font-weight: 700;
+  color: #222;
+}
+
+.favorites {
+  color: #222;
+  font-weight: 500;
+}
+
+.main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px;
+}

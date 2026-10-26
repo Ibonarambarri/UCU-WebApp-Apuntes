@@ -1,0 +1,48 @@
+meta {
+  name: List languages
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/languages
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body: length 122
+}
+
+tests {
+  test("cada idioma es { code, name, nativeName, countries }", function() {
+    for (const lang of res.getBody()) {
+      expect(Object.keys(lang).sort()).to.eql(
+        ["code", "countries", "name", "nativeName"],
+      );
+      expect(lang.countries).to.be.at.least(1);
+    }
+  });
+
+  test("vienen ordenados por nombre", function() {
+    const names = res.getBody().map((l) => l.name);
+    expect(names).to.eql([...names].sort((a, b) => a.localeCompare(b)));
+  });
+
+  test("el ingles es el mas hablado y el espanol esta en 24 paises", function() {
+    const byCode = Object.fromEntries(res.getBody().map((l) => [l.code, l]));
+    expect(byCode.en.countries).to.eql(91);
+    expect(byCode.es.countries).to.eql(24);
+    expect(byCode.es.nativeName).to.eql("Español");
+  });
+}
+
+docs {
+  Los codigos son ISO 639-1 en minusculas: los mismos que trae cada pais en
+  `languages[].code` y los que van en la URL de la app
+  (`/countries?language=es`).
+
+  83 de los 122 idiomas los habla un solo pais, asi que conviene mostrar la
+  cantidad al lado de cada opcion.
+}

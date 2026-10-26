@@ -108,7 +108,7 @@ Rutas de código relativas a `P2/`.
 | Formulario de alta + `refetch` (2026sem2) | [8](clase/08-formularios-controlados.md) | `parciales/simulacro-prueba2-2026sem2-vespertino/web/src/pages/PagePlayers/PagePlayers.jsx` |
 | Formulario crear/editar (`Boolean(id)`, `handleChange` con `[name]`) | [8](clase/08-formularios-controlados.md), [14](clase/14-useparams-usenavigate.md) | `parciales/2026sem1-prueba2-vespertino/src/pages/TaskFormPage/TaskFormPage.jsx` |
 | `<select>` controlado con opciones de la API + filtros combinados | [8](clase/08-formularios-controlados.md), [10](clase/10-useeffect.md) | `parciales/2025sem2-parcial2-matutino/web/src/components/Home.jsx` |
-| Estado derivado: filtrar/ordenar sin `useState` | [9](clase/09-estado-derivado.md) | `parciales/simulacro-prueba2-2026sem2-matutino/web/src/utils/countries.js` |
+| Estado derivado: filtrar/ordenar sin `useState` | [9](clase/09-estado-derivado.md) | `parciales/simulacro-prueba2-2026sem2-matutino/web/src/components/PageCountryList/PageCountryList.jsx` |
 | Lista filtrada calculada en el render | [9](clase/09-estado-derivado.md) | `Ejers/UT5/UT5.1.1-paises-router/src/paginas/ListaDePaises.jsx` |
 | `useEffect` con dependencias (`document.title`) | [10](clase/10-useeffect.md) | `Ejers/UT4/TA09-useeffect-titulo/src/componentes/Contador.jsx` |
 | `useEffect` + `fetch` + loading/error | [10](clase/10-useeffect.md), [11](clase/11-api-fetch.md) | `Ejers/UT4/TA10-fetch-usuarios/src/componentes/ListaUsuarios.jsx` |

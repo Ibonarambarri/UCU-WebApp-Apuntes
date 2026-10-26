@@ -56,18 +56,18 @@ if (error) { const notFound = error.message.includes(' 404 '); … }   // 11.3, 
 - `formatNumber`/`formatText` para `null` (2.6).
 - `<Link to={`/countries/${border.code}`}>` sin recargar (13.3) + hook con `[url]` (10.5).
 
-## 19.5 Listado: `PageCountryList.jsx` + `utils/countries.js` (temas 2, 5, 8, 9, 15, 17)
+## 19.5 Listado: `PageCountryList.jsx` (temas 2, 5, 8, 9, 15, 17)
 
 ```jsx
 const [searchParams, setSearchParams] = useSearchParams();
 const query = searchParams.get('q') ?? '';
 const sort = Object.hasOwn(SORT_OPTIONS, sortParam ?? '') ? sortParam : DEFAULT_SORT;
 function updateParam(name, value) { … }
-const visibleCountries = useMemo(() => filterAndSortCountries(…), […]);
+const visibleCountries = useMemo(() => { /* filter + sort */ }, […]);
 let content; if (isLoading) … else if (error) … else if (visibleCountries.length === 0) … else …
 <input value={query} onChange={(e) => updateParam('q', e.target.value)} />
 ```
-`utils/countries.js`: `filter` + `includes`, `[...].sort` + `localeCompare`, nulls de área al final.
+Dentro del `useMemo`: `filter` + `includes` (texto sin tildes con `normalizeText`), `sort` + `localeCompare`, nulls de área al final con `compareDescending` (definidas arriba del componente).
 
 ## 19.6 Favoritos (temas 6, 7, 11, 16, 18)
 

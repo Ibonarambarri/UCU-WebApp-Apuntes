@@ -1,0 +1,31 @@
+meta {
+  name: List favorites
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/favorites
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body: isArray
+}
+
+tests {
+  test("cada favorito es { code, date }", function() {
+    for (const fav of res.getBody()) {
+      expect(Object.keys(fav).sort()).to.eql(["code", "date"]);
+      expect(fav.code).to.match(/^[A-Z]{3}$/);
+      expect(Number.isNaN(Date.parse(fav.date))).to.be.false;
+    }
+  });
+}
+
+docs {
+  Devuelve solo los codigos: para pintar la estrella en el listado hay que
+  cruzarlos con los paises ya cargados.
+}
