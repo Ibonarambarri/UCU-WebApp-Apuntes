@@ -21,7 +21,7 @@
 | Plantilla limpia para practicar | `parciales/practica-matutino/` |
 | Parciales anteriores resueltos | `parciales/2026sem1-*`, `parciales/2025sem2-*`, `parciales/2025sem1-*` (formato viejo) |
 | Docs offline (RN, Expo SDK 58, AsyncStorage) | `docs-offline/INDICE.md` |
-| Visor/buscador | `visor-apuntes/` → `npm start` → http://localhost:5191 (`npm run build-index` si cambian los .md) |
+| Visor/buscador | `visor-apuntes/` → `npm start` → http://localhost:5191 (`npm run build-index` si cambian los .md). Depende de archivos NO versionados (node_modules, public/models, public/ort, public/data, docs-offline): en un clon nuevo hay que regenerarlos con internet |
 
 Correr el simulacro: `cd parciales/simulacro-prueba3-2026sem2-matutino && npm start` → `w` (puerto 8081).
 Lint: `npm run lint` **y** `cd mobile && npx eslint .` (expo lint no mira `hooks/` ni `common/`).
@@ -58,6 +58,6 @@ Lint: `npm run lint` **y** `cd mobile && npx eslint .` (expo lint no mira `hooks
 
 ## Pendientes fuera de la clase
 
-- 2026-10-26: `P3/` commiteado en el repo WebApp (commit "P3: preparación del parcial 3…"), **sin push** a `origin` (Desarrollo-Web-y-Mobile-UCU). Preguntar antes de pushear.
+- 2026-10-26: `P3/` commiteado y pusheado al repo WebApp (`origin` = github.com/Ibonarambarri/UCU-WebApp-Apuntes, antes Desarrollo-Web-y-Mobile-UCU).
 - La solución del simulacro está en la rama `solucion` del fork, con PR abierto: https://github.com/Ibonarambarri/simulacro-prueba3-2026sem2-matutino/pull/1
 - El repo del simulacro tiene su propio `.git` dentro de `P3/parciales/…`: para versionar cambios suyos en WebApp hay que apartar ese `.git` un momento al hacer `git add` (mismo truco que en P2).
