@@ -1,0 +1,25 @@
+meta {
+  name: Guess - invalid
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/games/{{gameId}}/guess
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "guess": "mas"
+  }
+}
+
+assert {
+  res.status: eq 400
+}
+
+docs {
+  Solo se aceptan `higher` y `lower`.
+}

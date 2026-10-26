@@ -1,0 +1,25 @@
+meta {
+  name: Guess - game over
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseUrl}}/api/games/1/guess
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "guess": "lower"
+  }
+}
+
+assert {
+  res.status: eq 409
+}
+
+docs {
+  La partida 1 del seed ya termino: no se puede seguir respondiendo.
+}

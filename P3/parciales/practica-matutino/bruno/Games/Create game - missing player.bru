@@ -1,0 +1,25 @@
+meta {
+  name: Create game - missing player
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/games
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "player": "   "
+  }
+}
+
+assert {
+  res.status: eq 400
+}
+
+docs {
+  Un nombre vacio o solo con espacios cuenta como faltante.
+}

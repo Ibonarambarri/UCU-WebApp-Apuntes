@@ -1,0 +1,15 @@
+# Dependencias instaladas (se regeneran con npm install)
+node_modules/
+# Basura de macOS
+.DS_Store
+
+# Documentación descargada (copias de repos externos); el INDICE.md sí entra al repo
+docs-offline/*/
+
+# Visor de apuntes: dependencias, build, datos generados y modelo/onnxruntime (se regeneran con
+# `npm install` + `npm run build-index`)
+visor-apuntes/node_modules/
+visor-apuntes/dist/
+visor-apuntes/public/data/
+visor-apuntes/public/models/
+visor-apuntes/public/ort/

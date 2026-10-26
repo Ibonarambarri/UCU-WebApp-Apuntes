@@ -1,0 +1,35 @@
+meta {
+  name: Ranking
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/ranking
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body: isArray
+}
+
+tests {
+  test("ordenado por puntaje, de mayor a menor", function() {
+    const scores = res.getBody().map((g) => g.score);
+    expect(scores).to.eql([...scores].sort((a, b) => b - a));
+  });
+
+  test("como mucho 10 partidas, cada una { id, player, score, finishedAt }", function() {
+    expect(res.getBody().length).to.be.at.most(10);
+    for (const game of res.getBody()) {
+      expect(Object.keys(game).sort()).to.eql(["finishedAt", "id", "player", "score"]);
+    }
+  });
+}
+
+docs {
+  Solo partidas terminadas. Si dos tienen el mismo puntaje, va primero la que
+  termino antes.
+}

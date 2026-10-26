@@ -1,0 +1,17 @@
+headers {
+  Content-Type: application/json
+}
+
+docs {
+  # Higher / Lower API
+
+  API de la prueba, servida por el servidor de desarrollo de Expo en el mismo
+  puerto que la app (`http://localhost:8081`). Levantarla con `npm start`
+  desde la raiz del repo.
+
+  Los codigos de pais son **alpha-3 en mayusculas** (`URY`, `ARG`, `BRA`).
+
+  La coleccion corre entera y es idempotente: las requests de Games escriben
+  en `mobile/data/db/data.json`, pero la ultima borra la partida que creo la
+  primera.
+}

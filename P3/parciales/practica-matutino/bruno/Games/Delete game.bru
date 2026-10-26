@@ -1,0 +1,20 @@
+meta {
+  name: Delete game
+  type: http
+  seq: 9
+}
+
+delete {
+  url: {{baseUrl}}/api/games/{{gameId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+}
+
+docs {
+  No se usa en el ejercicio. Borra la partida que creo `Create game`, para
+  que la coleccion no ensucie el seed.
+}

@@ -1,0 +1,50 @@
+meta {
+  name: Create game
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/games
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "player": "  Bruno  "
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.player: eq Bruno
+  res.body.status: eq playing
+  res.body.score: eq 0
+}
+
+script:post-response {
+  bru.setVar("gameId", res.getBody().id);
+}
+
+tests {
+  test("el actual trae poblacion y superficie, el siguiente no", function() {
+    const { current, next } = res.getBody();
+    expect(current).to.have.property("population");
+    expect(current.area).to.be.a("number");
+    expect(next).to.not.have.property("population");
+    expect(next).to.not.have.property("area");
+    expect(next.code).to.not.eql(current.code);
+  });
+
+  test("la ronda es de poblacion o de superficie", function() {
+    expect(["population", "area"]).to.include(res.getBody().stat);
+  });
+}
+
+docs {
+  Crea la partida con dos paises sorteados y el tipo de la primera ronda en
+  `stat`. El nombre se guarda sin espacios
+  al principio ni al final. Guarda el `id` en la variable `gameId` para las
+  requests siguientes.
+}

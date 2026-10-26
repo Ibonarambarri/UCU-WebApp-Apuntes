@@ -1,0 +1,1831 @@
+{
+  "countries": [
+    {
+      "code": "AFG",
+      "name": "Afghanistan",
+      "flag": "🇦🇫",
+      "population": 40218234,
+      "area": 652230
+    },
+    {
+      "code": "ALA",
+      "name": "Åland Islands",
+      "flag": "🇦🇽",
+      "population": 28875,
+      "area": 1580
+    },
+    {
+      "code": "ALB",
+      "name": "Albania",
+      "flag": "🇦🇱",
+      "population": 2837743,
+      "area": 28748
+    },
+    {
+      "code": "DZA",
+      "name": "Algeria",
+      "flag": "🇩🇿",
+      "population": 44700000,
+      "area": 2381741
+    },
+    {
+      "code": "ASM",
+      "name": "American Samoa",
+      "flag": "🇦🇸",
+      "population": 55197,
+      "area": 199
+    },
+    {
+      "code": "AND",
+      "name": "Andorra",
+      "flag": "🇦🇩",
+      "population": 77265,
+      "area": 468
+    },
+    {
+      "code": "AGO",
+      "name": "Angola",
+      "flag": "🇦🇴",
+      "population": 32866268,
+      "area": 1246700
+    },
+    {
+      "code": "AIA",
+      "name": "Anguilla",
+      "flag": "🇦🇮",
+      "population": 13452,
+      "area": 91
+    },
+    {
+      "code": "ATA",
+      "name": "Antarctica",
+      "flag": "🇦🇶",
+      "population": 1000,
+      "area": 14000000
+    },
+    {
+      "code": "ATG",
+      "name": "Antigua and Barbuda",
+      "flag": "🇦🇬",
+      "population": 97928,
+      "area": 442
+    },
+    {
+      "code": "ARG",
+      "name": "Argentina",
+      "flag": "🇦🇷",
+      "population": 45376763,
+      "area": 2780400
+    },
+    {
+      "code": "ARM",
+      "name": "Armenia",
+      "flag": "🇦🇲",
+      "population": 2963234,
+      "area": 29743
+    },
+    {
+      "code": "ABW",
+      "name": "Aruba",
+      "flag": "🇦🇼",
+      "population": 106766,
+      "area": 180
+    },
+    {
+      "code": "AUS",
+      "name": "Australia",
+      "flag": "🇦🇺",
+      "population": 25687041,
+      "area": 7692024
+    },
+    {
+      "code": "AUT",
+      "name": "Austria",
+      "flag": "🇦🇹",
+      "population": 8917205,
+      "area": 83871
+    },
+    {
+      "code": "AZE",
+      "name": "Azerbaijan",
+      "flag": "🇦🇿",
+      "population": 10110116,
+      "area": 86600
+    },
+    {
+      "code": "BHS",
+      "name": "Bahamas",
+      "flag": "🇧🇸",
+      "population": 393248,
+      "area": 13943
+    },
+    {
+      "code": "BHR",
+      "name": "Bahrain",
+      "flag": "🇧🇭",
+      "population": 1701583,
+      "area": 765
+    },
+    {
+      "code": "BGD",
+      "name": "Bangladesh",
+      "flag": "🇧🇩",
+      "population": 164689383,
+      "area": 147570
+    },
+    {
+      "code": "BRB",
+      "name": "Barbados",
+      "flag": "🇧🇧",
+      "population": 287371,
+      "area": 430
+    },
+    {
+      "code": "BLR",
+      "name": "Belarus",
+      "flag": "🇧🇾",
+      "population": 9398861,
+      "area": 207600
+    },
+    {
+      "code": "BEL",
+      "name": "Belgium",
+      "flag": "🇧🇪",
+      "population": 11555997,
+      "area": 30528
+    },
+    {
+      "code": "BLZ",
+      "name": "Belize",
+      "flag": "🇧🇿",
+      "population": 397621,
+      "area": 22966
+    },
+    {
+      "code": "BEN",
+      "name": "Benin",
+      "flag": "🇧🇯",
+      "population": 12123198,
+      "area": 112622
+    },
+    {
+      "code": "BMU",
+      "name": "Bermuda",
+      "flag": "🇧🇲",
+      "population": 63903,
+      "area": 54
+    },
+    {
+      "code": "BTN",
+      "name": "Bhutan",
+      "flag": "🇧🇹",
+      "population": 771612,
+      "area": 38394
+    },
+    {
+      "code": "BOL",
+      "name": "Bolivia (Plurinational State of)",
+      "flag": "🇧🇴",
+      "population": 11673029,
+      "area": 1098581
+    },
+    {
+      "code": "BES",
+      "name": "Bonaire, Sint Eustatius and Saba",
+      "flag": "🇧🇶",
+      "population": 17408,
+      "area": 294
+    },
+    {
+      "code": "BIH",
+      "name": "Bosnia and Herzegovina",
+      "flag": "🇧🇦",
+      "population": 3280815,
+      "area": 51209
+    },
+    {
+      "code": "BWA",
+      "name": "Botswana",
+      "flag": "🇧🇼",
+      "population": 2351625,
+      "area": 582000
+    },
+    {
+      "code": "BVT",
+      "name": "Bouvet Island",
+      "flag": "🇧🇻",
+      "population": 0,
+      "area": 49
+    },
+    {
+      "code": "BRA",
+      "name": "Brazil",
+      "flag": "🇧🇷",
+      "population": 212559409,
+      "area": 8515767
+    },
+    {
+      "code": "IOT",
+      "name": "British Indian Ocean Territory",
+      "flag": "🇮🇴",
+      "population": 3000,
+      "area": 60
+    },
+    {
+      "code": "BRN",
+      "name": "Brunei Darussalam",
+      "flag": "🇧🇳",
+      "population": 437483,
+      "area": 5765
+    },
+    {
+      "code": "BGR",
+      "name": "Bulgaria",
+      "flag": "🇧🇬",
+      "population": 6927288,
+      "area": 110879
+    },
+    {
+      "code": "BFA",
+      "name": "Burkina Faso",
+      "flag": "🇧🇫",
+      "population": 20903278,
+      "area": 272967
+    },
+    {
+      "code": "BDI",
+      "name": "Burundi",
+      "flag": "🇧🇮",
+      "population": 11890781,
+      "area": 27834
+    },
+    {
+      "code": "CPV",
+      "name": "Cabo Verde",
+      "flag": "🇨🇻",
+      "population": 555988,
+      "area": 4033
+    },
+    {
+      "code": "KHM",
+      "name": "Cambodia",
+      "flag": "🇰🇭",
+      "population": 16718971,
+      "area": 181035
+    },
+    {
+      "code": "CMR",
+      "name": "Cameroon",
+      "flag": "🇨🇲",
+      "population": 26545864,
+      "area": 475442
+    },
+    {
+      "code": "CAN",
+      "name": "Canada",
+      "flag": "🇨🇦",
+      "population": 38005238,
+      "area": 9984670
+    },
+    {
+      "code": "CYM",
+      "name": "Cayman Islands",
+      "flag": "🇰🇾",
+      "population": 65720,
+      "area": 264
+    },
+    {
+      "code": "CAF",
+      "name": "Central African Republic",
+      "flag": "🇨🇫",
+      "population": 4829764,
+      "area": 622984
+    },
+    {
+      "code": "TCD",
+      "name": "Chad",
+      "flag": "🇹🇩",
+      "population": 16425859,
+      "area": 1284000
+    },
+    {
+      "code": "CHL",
+      "name": "Chile",
+      "flag": "🇨🇱",
+      "population": 19116209,
+      "area": 756102
+    },
+    {
+      "code": "CHN",
+      "name": "China",
+      "flag": "🇨🇳",
+      "population": 1402112000,
+      "area": 9640011
+    },
+    {
+      "code": "CXR",
+      "name": "Christmas Island",
+      "flag": "🇨🇽",
+      "population": 2072,
+      "area": 135
+    },
+    {
+      "code": "CCK",
+      "name": "Cocos (Keeling) Islands",
+      "flag": "🇨🇨",
+      "population": 550,
+      "area": 14
+    },
+    {
+      "code": "COL",
+      "name": "Colombia",
+      "flag": "🇨🇴",
+      "population": 50882884,
+      "area": 1141748
+    },
+    {
+      "code": "COM",
+      "name": "Comoros",
+      "flag": "🇰🇲",
+      "population": 869595,
+      "area": 1862
+    },
+    {
+      "code": "COG",
+      "name": "Congo",
+      "flag": "🇨🇬",
+      "population": 5518092,
+      "area": 342000
+    },
+    {
+      "code": "COD",
+      "name": "Congo (Democratic Republic of the)",
+      "flag": "🇨🇩",
+      "population": 89561404,
+      "area": 2344858
+    },
+    {
+      "code": "COK",
+      "name": "Cook Islands",
+      "flag": "🇨🇰",
+      "population": 18100,
+      "area": 236
+    },
+    {
+      "code": "CRI",
+      "name": "Costa Rica",
+      "flag": "🇨🇷",
+      "population": 5094114,
+      "area": 51100
+    },
+    {
+      "code": "HRV",
+      "name": "Croatia",
+      "flag": "🇭🇷",
+      "population": 4047200,
+      "area": 56594
+    },
+    {
+      "code": "CUB",
+      "name": "Cuba",
+      "flag": "🇨🇺",
+      "population": 11326616,
+      "area": 109884
+    },
+    {
+      "code": "CUW",
+      "name": "Curaçao",
+      "flag": "🇨🇼",
+      "population": 155014,
+      "area": 444
+    },
+    {
+      "code": "CYP",
+      "name": "Cyprus",
+      "flag": "🇨🇾",
+      "population": 1207361,
+      "area": 9251
+    },
+    {
+      "code": "CZE",
+      "name": "Czech Republic",
+      "flag": "🇨🇿",
+      "population": 10698896,
+      "area": 78865
+    },
+    {
+      "code": "DNK",
+      "name": "Denmark",
+      "flag": "🇩🇰",
+      "population": 5831404,
+      "area": 43094
+    },
+    {
+      "code": "DJI",
+      "name": "Djibouti",
+      "flag": "🇩🇯",
+      "population": 988002,
+      "area": 23200
+    },
+    {
+      "code": "DMA",
+      "name": "Dominica",
+      "flag": "🇩🇲",
+      "population": 71991,
+      "area": 751
+    },
+    {
+      "code": "DOM",
+      "name": "Dominican Republic",
+      "flag": "🇩🇴",
+      "population": 10847904,
+      "area": 48671
+    },
+    {
+      "code": "ECU",
+      "name": "Ecuador",
+      "flag": "🇪🇨",
+      "population": 17643060,
+      "area": 276841
+    },
+    {
+      "code": "EGY",
+      "name": "Egypt",
+      "flag": "🇪🇬",
+      "population": 102334403,
+      "area": 1002450
+    },
+    {
+      "code": "SLV",
+      "name": "El Salvador",
+      "flag": "🇸🇻",
+      "population": 6486201,
+      "area": 21041
+    },
+    {
+      "code": "GNQ",
+      "name": "Equatorial Guinea",
+      "flag": "🇬🇶",
+      "population": 1402985,
+      "area": 28051
+    },
+    {
+      "code": "ERI",
+      "name": "Eritrea",
+      "flag": "🇪🇷",
+      "population": 5352000,
+      "area": 117600
+    },
+    {
+      "code": "EST",
+      "name": "Estonia",
+      "flag": "🇪🇪",
+      "population": 1331057,
+      "area": 45227
+    },
+    {
+      "code": "ETH",
+      "name": "Ethiopia",
+      "flag": "🇪🇹",
+      "population": 114963583,
+      "area": 1104300
+    },
+    {
+      "code": "FLK",
+      "name": "Falkland Islands (Malvinas)",
+      "flag": "🇫🇰",
+      "population": 2563,
+      "area": 12173
+    },
+    {
+      "code": "FRO",
+      "name": "Faroe Islands",
+      "flag": "🇫🇴",
+      "population": 48865,
+      "area": 1393
+    },
+    {
+      "code": "FJI",
+      "name": "Fiji",
+      "flag": "🇫🇯",
+      "population": 896444,
+      "area": 18272
+    },
+    {
+      "code": "FIN",
+      "name": "Finland",
+      "flag": "🇫🇮",
+      "population": 5530719,
+      "area": 338424
+    },
+    {
+      "code": "FRA",
+      "name": "France",
+      "flag": "🇫🇷",
+      "population": 67391582,
+      "area": 640679
+    },
+    {
+      "code": "GUF",
+      "name": "French Guiana",
+      "flag": "🇬🇫",
+      "population": 254541,
+      "area": null
+    },
+    {
+      "code": "PYF",
+      "name": "French Polynesia",
+      "flag": "🇵🇫",
+      "population": 280904,
+      "area": 4167
+    },
+    {
+      "code": "ATF",
+      "name": "French Southern Territories",
+      "flag": "🇹🇫",
+      "population": 140,
+      "area": 7747
+    },
+    {
+      "code": "GAB",
+      "name": "Gabon",
+      "flag": "🇬🇦",
+      "population": 2225728,
+      "area": 267668
+    },
+    {
+      "code": "GMB",
+      "name": "Gambia",
+      "flag": "🇬🇲",
+      "population": 2416664,
+      "area": 11295
+    },
+    {
+      "code": "GEO",
+      "name": "Georgia",
+      "flag": "🇬🇪",
+      "population": 3714000,
+      "area": 69700
+    },
+    {
+      "code": "DEU",
+      "name": "Germany",
+      "flag": "🇩🇪",
+      "population": 83240525,
+      "area": 357114
+    },
+    {
+      "code": "GHA",
+      "name": "Ghana",
+      "flag": "🇬🇭",
+      "population": 31072945,
+      "area": 238533
+    },
+    {
+      "code": "GIB",
+      "name": "Gibraltar",
+      "flag": "🇬🇮",
+      "population": 33691,
+      "area": 6
+    },
+    {
+      "code": "GRC",
+      "name": "Greece",
+      "flag": "🇬🇷",
+      "population": 10715549,
+      "area": 131990
+    },
+    {
+      "code": "GRL",
+      "name": "Greenland",
+      "flag": "🇬🇱",
+      "population": 56367,
+      "area": 2166086
+    },
+    {
+      "code": "GRD",
+      "name": "Grenada",
+      "flag": "🇬🇩",
+      "population": 112519,
+      "area": 344
+    },
+    {
+      "code": "GLP",
+      "name": "Guadeloupe",
+      "flag": "🇬🇵",
+      "population": 400132,
+      "area": null
+    },
+    {
+      "code": "GUM",
+      "name": "Guam",
+      "flag": "🇬🇺",
+      "population": 168783,
+      "area": 549
+    },
+    {
+      "code": "GTM",
+      "name": "Guatemala",
+      "flag": "🇬🇹",
+      "population": 16858333,
+      "area": 108889
+    },
+    {
+      "code": "GGY",
+      "name": "Guernsey",
+      "flag": "🇬🇬",
+      "population": 62999,
+      "area": 78
+    },
+    {
+      "code": "GIN",
+      "name": "Guinea",
+      "flag": "🇬🇳",
+      "population": 13132792,
+      "area": 245857
+    },
+    {
+      "code": "GNB",
+      "name": "Guinea-Bissau",
+      "flag": "🇬🇼",
+      "population": 1967998,
+      "area": 36125
+    },
+    {
+      "code": "GUY",
+      "name": "Guyana",
+      "flag": "🇬🇾",
+      "population": 786559,
+      "area": 214969
+    },
+    {
+      "code": "HTI",
+      "name": "Haiti",
+      "flag": "🇭🇹",
+      "population": 11402533,
+      "area": 27750
+    },
+    {
+      "code": "HMD",
+      "name": "Heard Island and McDonald Islands",
+      "flag": "🇭🇲",
+      "population": 0,
+      "area": 412
+    },
+    {
+      "code": "HND",
+      "name": "Honduras",
+      "flag": "🇭🇳",
+      "population": 9904608,
+      "area": 112492
+    },
+    {
+      "code": "HKG",
+      "name": "Hong Kong",
+      "flag": "🇭🇰",
+      "population": 7481800,
+      "area": 1104
+    },
+    {
+      "code": "HUN",
+      "name": "Hungary",
+      "flag": "🇭🇺",
+      "population": 9749763,
+      "area": 93028
+    },
+    {
+      "code": "ISL",
+      "name": "Iceland",
+      "flag": "🇮🇸",
+      "population": 366425,
+      "area": 103000
+    },
+    {
+      "code": "IND",
+      "name": "India",
+      "flag": "🇮🇳",
+      "population": 1380004385,
+      "area": 3287590
+    },
+    {
+      "code": "IDN",
+      "name": "Indonesia",
+      "flag": "🇮🇩",
+      "population": 273523621,
+      "area": 1904569
+    },
+    {
+      "code": "IRN",
+      "name": "Iran (Islamic Republic of)",
+      "flag": "🇮🇷",
+      "population": 83992953,
+      "area": 1648195
+    },
+    {
+      "code": "IRQ",
+      "name": "Iraq",
+      "flag": "🇮🇶",
+      "population": 40222503,
+      "area": 438317
+    },
+    {
+      "code": "IRL",
+      "name": "Ireland",
+      "flag": "🇮🇪",
+      "population": 4994724,
+      "area": 70273
+    },
+    {
+      "code": "IMN",
+      "name": "Isle of Man",
+      "flag": "🇮🇲",
+      "population": 85032,
+      "area": 572
+    },
+    {
+      "code": "ISR",
+      "name": "Israel",
+      "flag": "🇮🇱",
+      "population": 9216900,
+      "area": 20770
+    },
+    {
+      "code": "ITA",
+      "name": "Italy",
+      "flag": "🇮🇹",
+      "population": 59554023,
+      "area": 301336
+    },
+    {
+      "code": "CIV",
+      "name": "Ivory Coast",
+      "flag": "🇨🇮",
+      "population": 26378275,
+      "area": 322463
+    },
+    {
+      "code": "JAM",
+      "name": "Jamaica",
+      "flag": "🇯🇲",
+      "population": 2961161,
+      "area": 10991
+    },
+    {
+      "code": "JPN",
+      "name": "Japan",
+      "flag": "🇯🇵",
+      "population": 125836021,
+      "area": 377930
+    },
+    {
+      "code": "JEY",
+      "name": "Jersey",
+      "flag": "🇯🇪",
+      "population": 100800,
+      "area": 116
+    },
+    {
+      "code": "JOR",
+      "name": "Jordan",
+      "flag": "🇯🇴",
+      "population": 10203140,
+      "area": 89342
+    },
+    {
+      "code": "KAZ",
+      "name": "Kazakhstan",
+      "flag": "🇰🇿",
+      "population": 18754440,
+      "area": 2724900
+    },
+    {
+      "code": "KEN",
+      "name": "Kenya",
+      "flag": "🇰🇪",
+      "population": 53771300,
+      "area": 580367
+    },
+    {
+      "code": "KIR",
+      "name": "Kiribati",
+      "flag": "🇰🇮",
+      "population": 119446,
+      "area": 811
+    },
+    {
+      "code": "PRK",
+      "name": "Korea (Democratic People's Republic of)",
+      "flag": "🇰🇵",
+      "population": 25778815,
+      "area": 120538
+    },
+    {
+      "code": "KOR",
+      "name": "Korea (Republic of)",
+      "flag": "🇰🇷",
+      "population": 51780579,
+      "area": 100210
+    },
+    {
+      "code": "KWT",
+      "name": "Kuwait",
+      "flag": "🇰🇼",
+      "population": 4270563,
+      "area": 17818
+    },
+    {
+      "code": "KGZ",
+      "name": "Kyrgyzstan",
+      "flag": "🇰🇬",
+      "population": 6591600,
+      "area": 199951
+    },
+    {
+      "code": "LAO",
+      "name": "Lao People's Democratic Republic",
+      "flag": "🇱🇦",
+      "population": 7275556,
+      "area": 236800
+    },
+    {
+      "code": "LVA",
+      "name": "Latvia",
+      "flag": "🇱🇻",
+      "population": 1901548,
+      "area": 64559
+    },
+    {
+      "code": "LBN",
+      "name": "Lebanon",
+      "flag": "🇱🇧",
+      "population": 6825442,
+      "area": 10452
+    },
+    {
+      "code": "LSO",
+      "name": "Lesotho",
+      "flag": "🇱🇸",
+      "population": 2142252,
+      "area": 30355
+    },
+    {
+      "code": "LBR",
+      "name": "Liberia",
+      "flag": "🇱🇷",
+      "population": 5057677,
+      "area": 111369
+    },
+    {
+      "code": "LBY",
+      "name": "Libya",
+      "flag": "🇱🇾",
+      "population": 6871287,
+      "area": 1759540
+    },
+    {
+      "code": "LIE",
+      "name": "Liechtenstein",
+      "flag": "🇱🇮",
+      "population": 38137,
+      "area": 160
+    },
+    {
+      "code": "LTU",
+      "name": "Lithuania",
+      "flag": "🇱🇹",
+      "population": 2794700,
+      "area": 65300
+    },
+    {
+      "code": "LUX",
+      "name": "Luxembourg",
+      "flag": "🇱🇺",
+      "population": 632275,
+      "area": 2586
+    },
+    {
+      "code": "MAC",
+      "name": "Macao",
+      "flag": "🇲🇴",
+      "population": 649342,
+      "area": 30
+    },
+    {
+      "code": "MDG",
+      "name": "Madagascar",
+      "flag": "🇲🇬",
+      "population": 27691019,
+      "area": 587041
+    },
+    {
+      "code": "MWI",
+      "name": "Malawi",
+      "flag": "🇲🇼",
+      "population": 19129955,
+      "area": 118484
+    },
+    {
+      "code": "MYS",
+      "name": "Malaysia",
+      "flag": "🇲🇾",
+      "population": 32365998,
+      "area": 330803
+    },
+    {
+      "code": "MDV",
+      "name": "Maldives",
+      "flag": "🇲🇻",
+      "population": 540542,
+      "area": 300
+    },
+    {
+      "code": "MLI",
+      "name": "Mali",
+      "flag": "🇲🇱",
+      "population": 20250834,
+      "area": 1240192
+    },
+    {
+      "code": "MLT",
+      "name": "Malta",
+      "flag": "🇲🇹",
+      "population": 525285,
+      "area": 316
+    },
+    {
+      "code": "MHL",
+      "name": "Marshall Islands",
+      "flag": "🇲🇭",
+      "population": 59194,
+      "area": 181
+    },
+    {
+      "code": "MTQ",
+      "name": "Martinique",
+      "flag": "🇲🇶",
+      "population": 378243,
+      "area": null
+    },
+    {
+      "code": "MRT",
+      "name": "Mauritania",
+      "flag": "🇲🇷",
+      "population": 4649660,
+      "area": 1030700
+    },
+    {
+      "code": "MUS",
+      "name": "Mauritius",
+      "flag": "🇲🇺",
+      "population": 1265740,
+      "area": 2040
+    },
+    {
+      "code": "MYT",
+      "name": "Mayotte",
+      "flag": "🇾🇹",
+      "population": 226915,
+      "area": null
+    },
+    {
+      "code": "MEX",
+      "name": "Mexico",
+      "flag": "🇲🇽",
+      "population": 128932753,
+      "area": 1964375
+    },
+    {
+      "code": "FSM",
+      "name": "Micronesia (Federated States of)",
+      "flag": "🇫🇲",
+      "population": 115021,
+      "area": 702
+    },
+    {
+      "code": "MDA",
+      "name": "Moldova (Republic of)",
+      "flag": "🇲🇩",
+      "population": 2617820,
+      "area": 33846
+    },
+    {
+      "code": "MCO",
+      "name": "Monaco",
+      "flag": "🇲🇨",
+      "population": 39244,
+      "area": 2.02
+    },
+    {
+      "code": "MNG",
+      "name": "Mongolia",
+      "flag": "🇲🇳",
+      "population": 3278292,
+      "area": 1564110
+    },
+    {
+      "code": "MNE",
+      "name": "Montenegro",
+      "flag": "🇲🇪",
+      "population": 621718,
+      "area": 13812
+    },
+    {
+      "code": "MSR",
+      "name": "Montserrat",
+      "flag": "🇲🇸",
+      "population": 4922,
+      "area": 102
+    },
+    {
+      "code": "MAR",
+      "name": "Morocco",
+      "flag": "🇲🇦",
+      "population": 36910558,
+      "area": 446550
+    },
+    {
+      "code": "MOZ",
+      "name": "Mozambique",
+      "flag": "🇲🇿",
+      "population": 31255435,
+      "area": 801590
+    },
+    {
+      "code": "MMR",
+      "name": "Myanmar",
+      "flag": "🇲🇲",
+      "population": 54409794,
+      "area": 676578
+    },
+    {
+      "code": "NAM",
+      "name": "Namibia",
+      "flag": "🇳🇦",
+      "population": 2540916,
+      "area": 825615
+    },
+    {
+      "code": "NRU",
+      "name": "Nauru",
+      "flag": "🇳🇷",
+      "population": 10834,
+      "area": 21
+    },
+    {
+      "code": "NPL",
+      "name": "Nepal",
+      "flag": "🇳🇵",
+      "population": 29136808,
+      "area": 147181
+    },
+    {
+      "code": "NLD",
+      "name": "Netherlands",
+      "flag": "🇳🇱",
+      "population": 17441139,
+      "area": 41850
+    },
+    {
+      "code": "NCL",
+      "name": "New Caledonia",
+      "flag": "🇳🇨",
+      "population": 271960,
+      "area": 18575
+    },
+    {
+      "code": "NZL",
+      "name": "New Zealand",
+      "flag": "🇳🇿",
+      "population": 5084300,
+      "area": 270467
+    },
+    {
+      "code": "NIC",
+      "name": "Nicaragua",
+      "flag": "🇳🇮",
+      "population": 6624554,
+      "area": 130373
+    },
+    {
+      "code": "NER",
+      "name": "Niger",
+      "flag": "🇳🇪",
+      "population": 24206636,
+      "area": 1267000
+    },
+    {
+      "code": "NGA",
+      "name": "Nigeria",
+      "flag": "🇳🇬",
+      "population": 206139587,
+      "area": 923768
+    },
+    {
+      "code": "NIU",
+      "name": "Niue",
+      "flag": "🇳🇺",
+      "population": 1470,
+      "area": 260
+    },
+    {
+      "code": "NFK",
+      "name": "Norfolk Island",
+      "flag": "🇳🇫",
+      "population": 2302,
+      "area": 36
+    },
+    {
+      "code": "MKD",
+      "name": "North Macedonia",
+      "flag": "🇲🇰",
+      "population": 2083380,
+      "area": 25713
+    },
+    {
+      "code": "MNP",
+      "name": "Northern Mariana Islands",
+      "flag": "🇲🇵",
+      "population": 57557,
+      "area": 464
+    },
+    {
+      "code": "NOR",
+      "name": "Norway",
+      "flag": "🇳🇴",
+      "population": 5379475,
+      "area": 323802
+    },
+    {
+      "code": "OMN",
+      "name": "Oman",
+      "flag": "🇴🇲",
+      "population": 5106622,
+      "area": 309500
+    },
+    {
+      "code": "PAK",
+      "name": "Pakistan",
+      "flag": "🇵🇰",
+      "population": 220892331,
+      "area": 881912
+    },
+    {
+      "code": "PLW",
+      "name": "Palau",
+      "flag": "🇵🇼",
+      "population": 18092,
+      "area": 459
+    },
+    {
+      "code": "PSE",
+      "name": "Palestine, State of",
+      "flag": "🇵🇸",
+      "population": 4803269,
+      "area": null
+    },
+    {
+      "code": "PAN",
+      "name": "Panama",
+      "flag": "🇵🇦",
+      "population": 4314768,
+      "area": 75417
+    },
+    {
+      "code": "PNG",
+      "name": "Papua New Guinea",
+      "flag": "🇵🇬",
+      "population": 8947027,
+      "area": 462840
+    },
+    {
+      "code": "PRY",
+      "name": "Paraguay",
+      "flag": "🇵🇾",
+      "population": 7132530,
+      "area": 406752
+    },
+    {
+      "code": "PER",
+      "name": "Peru",
+      "flag": "🇵🇪",
+      "population": 32971846,
+      "area": 1285216
+    },
+    {
+      "code": "PHL",
+      "name": "Philippines",
+      "flag": "🇵🇭",
+      "population": 109581085,
+      "area": 342353
+    },
+    {
+      "code": "PCN",
+      "name": "Pitcairn",
+      "flag": "🇵🇳",
+      "population": 56,
+      "area": 47
+    },
+    {
+      "code": "POL",
+      "name": "Poland",
+      "flag": "🇵🇱",
+      "population": 37950802,
+      "area": 312679
+    },
+    {
+      "code": "PRT",
+      "name": "Portugal",
+      "flag": "🇵🇹",
+      "population": 10305564,
+      "area": 92090
+    },
+    {
+      "code": "PRI",
+      "name": "Puerto Rico",
+      "flag": "🇵🇷",
+      "population": 3194034,
+      "area": 8870
+    },
+    {
+      "code": "QAT",
+      "name": "Qatar",
+      "flag": "🇶🇦",
+      "population": 2881060,
+      "area": 11586
+    },
+    {
+      "code": "UNK",
+      "name": "Republic of Kosovo",
+      "flag": "🇽🇰",
+      "population": 1775378,
+      "area": 10908
+    },
+    {
+      "code": "REU",
+      "name": "Réunion",
+      "flag": "🇷🇪",
+      "population": 840974,
+      "area": null
+    },
+    {
+      "code": "ROU",
+      "name": "Romania",
+      "flag": "🇷🇴",
+      "population": 19286123,
+      "area": 238391
+    },
+    {
+      "code": "RUS",
+      "name": "Russian Federation",
+      "flag": "🇷🇺",
+      "population": 144104080,
+      "area": 17124442
+    },
+    {
+      "code": "RWA",
+      "name": "Rwanda",
+      "flag": "🇷🇼",
+      "population": 12952209,
+      "area": 26338
+    },
+    {
+      "code": "BLM",
+      "name": "Saint Barthélemy",
+      "flag": "🇧🇱",
+      "population": 9417,
+      "area": 21
+    },
+    {
+      "code": "SHN",
+      "name": "Saint Helena, Ascension and Tristan da Cunha",
+      "flag": "🇸🇭",
+      "population": 4255,
+      "area": null
+    },
+    {
+      "code": "KNA",
+      "name": "Saint Kitts and Nevis",
+      "flag": "🇰🇳",
+      "population": 53192,
+      "area": 261
+    },
+    {
+      "code": "LCA",
+      "name": "Saint Lucia",
+      "flag": "🇱🇨",
+      "population": 183629,
+      "area": 616
+    },
+    {
+      "code": "MAF",
+      "name": "Saint Martin (French part)",
+      "flag": "🇲🇫",
+      "population": 38659,
+      "area": 53
+    },
+    {
+      "code": "SPM",
+      "name": "Saint Pierre and Miquelon",
+      "flag": "🇵🇲",
+      "population": 6069,
+      "area": 242
+    },
+    {
+      "code": "VCT",
+      "name": "Saint Vincent and the Grenadines",
+      "flag": "🇻🇨",
+      "population": 110947,
+      "area": 389
+    },
+    {
+      "code": "WSM",
+      "name": "Samoa",
+      "flag": "🇼🇸",
+      "population": 198410,
+      "area": 2842
+    },
+    {
+      "code": "SMR",
+      "name": "San Marino",
+      "flag": "🇸🇲",
+      "population": 33938,
+      "area": 61
+    },
+    {
+      "code": "STP",
+      "name": "Sao Tome and Principe",
+      "flag": "🇸🇹",
+      "population": 219161,
+      "area": 964
+    },
+    {
+      "code": "SAU",
+      "name": "Saudi Arabia",
+      "flag": "🇸🇦",
+      "population": 34813867,
+      "area": 2149690
+    },
+    {
+      "code": "SEN",
+      "name": "Senegal",
+      "flag": "🇸🇳",
+      "population": 16743930,
+      "area": 196722
+    },
+    {
+      "code": "SRB",
+      "name": "Serbia",
+      "flag": "🇷🇸",
+      "population": 6908224,
+      "area": 88361
+    },
+    {
+      "code": "SYC",
+      "name": "Seychelles",
+      "flag": "🇸🇨",
+      "population": 98462,
+      "area": 452
+    },
+    {
+      "code": "SLE",
+      "name": "Sierra Leone",
+      "flag": "🇸🇱",
+      "population": 7976985,
+      "area": 71740
+    },
+    {
+      "code": "SGP",
+      "name": "Singapore",
+      "flag": "🇸🇬",
+      "population": 5685807,
+      "area": 710
+    },
+    {
+      "code": "SXM",
+      "name": "Sint Maarten (Dutch part)",
+      "flag": "🇸🇽",
+      "population": 40812,
+      "area": 34
+    },
+    {
+      "code": "SVK",
+      "name": "Slovakia",
+      "flag": "🇸🇰",
+      "population": 5458827,
+      "area": 49037
+    },
+    {
+      "code": "SVN",
+      "name": "Slovenia",
+      "flag": "🇸🇮",
+      "population": 2100126,
+      "area": 20273
+    },
+    {
+      "code": "SLB",
+      "name": "Solomon Islands",
+      "flag": "🇸🇧",
+      "population": 686878,
+      "area": 28896
+    },
+    {
+      "code": "SOM",
+      "name": "Somalia",
+      "flag": "🇸🇴",
+      "population": 15893219,
+      "area": 637657
+    },
+    {
+      "code": "ZAF",
+      "name": "South Africa",
+      "flag": "🇿🇦",
+      "population": 59308690,
+      "area": 1221037
+    },
+    {
+      "code": "SGS",
+      "name": "South Georgia and the South Sandwich Islands",
+      "flag": "🇬🇸",
+      "population": 30,
+      "area": null
+    },
+    {
+      "code": "SSD",
+      "name": "South Sudan",
+      "flag": "🇸🇸",
+      "population": 11193729,
+      "area": 619745
+    },
+    {
+      "code": "ESP",
+      "name": "Spain",
+      "flag": "🇪🇸",
+      "population": 47351567,
+      "area": 505992
+    },
+    {
+      "code": "LKA",
+      "name": "Sri Lanka",
+      "flag": "🇱🇰",
+      "population": 21919000,
+      "area": 65610
+    },
+    {
+      "code": "SDN",
+      "name": "Sudan",
+      "flag": "🇸🇩",
+      "population": 43849269,
+      "area": 1886068
+    },
+    {
+      "code": "SUR",
+      "name": "Suriname",
+      "flag": "🇸🇷",
+      "population": 586634,
+      "area": 163820
+    },
+    {
+      "code": "SJM",
+      "name": "Svalbard and Jan Mayen",
+      "flag": "🇸🇯",
+      "population": 2562,
+      "area": null
+    },
+    {
+      "code": "SWZ",
+      "name": "Swaziland",
+      "flag": "🇸🇿",
+      "population": 1160164,
+      "area": 17364
+    },
+    {
+      "code": "SWE",
+      "name": "Sweden",
+      "flag": "🇸🇪",
+      "population": 10353442,
+      "area": 450295
+    },
+    {
+      "code": "CHE",
+      "name": "Switzerland",
+      "flag": "🇨🇭",
+      "population": 8636896,
+      "area": 41284
+    },
+    {
+      "code": "SYR",
+      "name": "Syrian Arab Republic",
+      "flag": "🇸🇾",
+      "population": 17500657,
+      "area": 185180
+    },
+    {
+      "code": "TWN",
+      "name": "Taiwan",
+      "flag": "🇹🇼",
+      "population": 23503349,
+      "area": 36193
+    },
+    {
+      "code": "TJK",
+      "name": "Tajikistan",
+      "flag": "🇹🇯",
+      "population": 9537642,
+      "area": 143100
+    },
+    {
+      "code": "TZA",
+      "name": "Tanzania, United Republic of",
+      "flag": "🇹🇿",
+      "population": 59734213,
+      "area": 945087
+    },
+    {
+      "code": "THA",
+      "name": "Thailand",
+      "flag": "🇹🇭",
+      "population": 69799978,
+      "area": 513120
+    },
+    {
+      "code": "TLS",
+      "name": "Timor-Leste",
+      "flag": "🇹🇱",
+      "population": 1318442,
+      "area": 14874
+    },
+    {
+      "code": "TGO",
+      "name": "Togo",
+      "flag": "🇹🇬",
+      "population": 8278737,
+      "area": 56785
+    },
+    {
+      "code": "TKL",
+      "name": "Tokelau",
+      "flag": "🇹🇰",
+      "population": 1411,
+      "area": 12
+    },
+    {
+      "code": "TON",
+      "name": "Tonga",
+      "flag": "🇹🇴",
+      "population": 105697,
+      "area": 747
+    },
+    {
+      "code": "TTO",
+      "name": "Trinidad and Tobago",
+      "flag": "🇹🇹",
+      "population": 1399491,
+      "area": 5130
+    },
+    {
+      "code": "TUN",
+      "name": "Tunisia",
+      "flag": "🇹🇳",
+      "population": 11818618,
+      "area": 163610
+    },
+    {
+      "code": "TUR",
+      "name": "Turkey",
+      "flag": "🇹🇷",
+      "population": 84339067,
+      "area": 783562
+    },
+    {
+      "code": "TKM",
+      "name": "Turkmenistan",
+      "flag": "🇹🇲",
+      "population": 6031187,
+      "area": 488100
+    },
+    {
+      "code": "TCA",
+      "name": "Turks and Caicos Islands",
+      "flag": "🇹🇨",
+      "population": 38718,
+      "area": 948
+    },
+    {
+      "code": "TUV",
+      "name": "Tuvalu",
+      "flag": "🇹🇻",
+      "population": 11792,
+      "area": 26
+    },
+    {
+      "code": "UGA",
+      "name": "Uganda",
+      "flag": "🇺🇬",
+      "population": 45741000,
+      "area": 241550
+    },
+    {
+      "code": "UKR",
+      "name": "Ukraine",
+      "flag": "🇺🇦",
+      "population": 44134693,
+      "area": 603700
+    },
+    {
+      "code": "ARE",
+      "name": "United Arab Emirates",
+      "flag": "🇦🇪",
+      "population": 9890400,
+      "area": 83600
+    },
+    {
+      "code": "GBR",
+      "name": "United Kingdom of Great Britain and Northern Ireland",
+      "flag": "🇬🇧",
+      "population": 67215293,
+      "area": 242900
+    },
+    {
+      "code": "UMI",
+      "name": "United States Minor Outlying Islands",
+      "flag": "🇺🇲",
+      "population": 300,
+      "area": null
+    },
+    {
+      "code": "USA",
+      "name": "United States of America",
+      "flag": "🇺🇸",
+      "population": 329484123,
+      "area": 9629091
+    },
+    {
+      "code": "URY",
+      "name": "Uruguay",
+      "flag": "🇺🇾",
+      "population": 3473727,
+      "area": 181034
+    },
+    {
+      "code": "UZB",
+      "name": "Uzbekistan",
+      "flag": "🇺🇿",
+      "population": 34232050,
+      "area": 447400
+    },
+    {
+      "code": "VUT",
+      "name": "Vanuatu",
+      "flag": "🇻🇺",
+      "population": 307150,
+      "area": 12189
+    },
+    {
+      "code": "VAT",
+      "name": "Vatican City",
+      "flag": "🇻🇦",
+      "population": 451,
+      "area": 0.44
+    },
+    {
+      "code": "VEN",
+      "name": "Venezuela (Bolivarian Republic of)",
+      "flag": "🇻🇪",
+      "population": 28435943,
+      "area": 916445
+    },
+    {
+      "code": "VNM",
+      "name": "Vietnam",
+      "flag": "🇻🇳",
+      "population": 97338583,
+      "area": 331212
+    },
+    {
+      "code": "VGB",
+      "name": "Virgin Islands (British)",
+      "flag": "🇻🇬",
+      "population": 30237,
+      "area": 151
+    },
+    {
+      "code": "VIR",
+      "name": "Virgin Islands (U.S.)",
+      "flag": "🇻🇮",
+      "population": 106290,
+      "area": 346.36
+    },
+    {
+      "code": "WLF",
+      "name": "Wallis and Futuna",
+      "flag": "🇼🇫",
+      "population": 11750,
+      "area": 142
+    },
+    {
+      "code": "ESH",
+      "name": "Western Sahara",
+      "flag": "🇪🇭",
+      "population": 510713,
+      "area": 266000
+    },
+    {
+      "code": "YEM",
+      "name": "Yemen",
+      "flag": "🇾🇪",
+      "population": 29825968,
+      "area": 527968
+    },
+    {
+      "code": "ZMB",
+      "name": "Zambia",
+      "flag": "🇿🇲",
+      "population": 18383956,
+      "area": 752618
+    },
+    {
+      "code": "ZWE",
+      "name": "Zimbabwe",
+      "flag": "🇿🇼",
+      "population": 14862927,
+      "area": 390757
+    }
+  ],
+  "games": [
+    {
+      "id": 1,
+      "player": "Ayrton Senna",
+      "status": "lost",
+      "score": 7,
+      "stat": "population",
+      "current": "BRA",
+      "next": "IND",
+      "used": [
+        "BRA",
+        "IND"
+      ],
+      "createdAt": "2026-10-20T13:02:11.000Z",
+      "finishedAt": "2026-10-20T13:04:40.000Z"
+    },
+    {
+      "id": 2,
+      "player": "Niki Lauda",
+      "status": "lost",
+      "score": 4,
+      "stat": "area",
+      "current": "DEU",
+      "next": "CHN",
+      "used": [
+        "DEU",
+        "CHN"
+      ],
+      "createdAt": "2026-10-20T13:10:05.000Z",
+      "finishedAt": "2026-10-20T13:11:30.000Z"
+    },
+    {
+      "id": 3,
+      "player": "Alain Prost",
+      "status": "lost",
+      "score": 4,
+      "stat": "population",
+      "current": "FRA",
+      "next": "USA",
+      "used": [
+        "FRA",
+        "USA"
+      ],
+      "createdAt": "2026-10-21T09:15:00.000Z",
+      "finishedAt": "2026-10-21T09:16:48.000Z"
+    },
+    {
+      "id": 4,
+      "player": "Juan Manuel Fangio",
+      "status": "lost",
+      "score": 2,
+      "stat": "area",
+      "current": "ARG",
+      "next": "NGA",
+      "used": [
+        "ARG",
+        "NGA"
+      ],
+      "createdAt": "2026-10-21T09:30:00.000Z",
+      "finishedAt": "2026-10-21T09:30:52.000Z"
+    },
+    {
+      "id": 5,
+      "player": "Michael Schumacher",
+      "status": "lost",
+      "score": 0,
+      "stat": "population",
+      "current": "CHE",
+      "next": "ISL",
+      "used": [
+        "CHE",
+        "ISL"
+      ],
+      "createdAt": "2026-10-22T18:40:00.000Z",
+      "finishedAt": "2026-10-22T18:40:09.000Z"
+    }
+  ]
+}

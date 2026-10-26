@@ -1,0 +1,26 @@
+**/node_modules/
+**/dist/
+
+# Expo
+**/.expo/
+**/web-build/
+**/expo-env.d.ts
+**/.metro-health-check*
+
+# Native
+**/.kotlin/
+**/ios/
+**/android/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+
+# Local env files
+.env*.local
+
+npm-debug.log*
+.DS_Store

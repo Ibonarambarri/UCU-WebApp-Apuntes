@@ -1,0 +1,18 @@
+meta {
+  name: Games
+  seq: 1
+}
+
+docs {
+  Partidas del Higher / Lower. Toda la logica del juego vive en la API: el
+  cliente crea la partida, manda `higher` o `lower` y dibuja lo que vuelve.
+
+  Cada ronda pregunta por `population` o por `area`, segun el `stat` de la
+  partida. Mientras la partida esta en curso, `next` viene **sin** esos dos
+  campos: la respuesta recien se ve en el `revealed` de
+  `POST /api/games/:id/guess`. Los 10 paises sin area no salen en el juego.
+
+  El seed trae 5 partidas terminadas (ids 1 a 5) para que el ranking no
+  arranque vacio. Estas requests crean una partida nueva y la ultima la
+  borra, asi la coleccion queda idempotente.
+}

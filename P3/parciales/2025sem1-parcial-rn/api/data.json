@@ -1,0 +1,70 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "icon": "📤",
+      "name": "Fork repo",
+      "description": "Make a private fork the repository for the test at <https://github.com/ucu-fit-dwym/parcial2-2025sem1>.",
+      "status": "pending"
+    },
+    {
+      "id": 2,
+      "icon": "📂",
+      "name": "Clone the repo",
+      "description": "Clone the forked repository to your local machine.",
+      "status": "pending"
+    },
+    {
+      "id": 3,
+      "icon": "📦",
+      "name": "Install dependencies",
+      "description": "Install the dependencies for the project using npm.",
+      "status": "pending"
+    },
+    {
+      "id": 4,
+      "icon": "📱",
+      "name": "Code the app",
+      "description": "Develop the application according to the requirements specified in </docs/PLANTEO.md>.",
+      "status": "pending"
+    },
+    {
+      "id": 5,
+      "icon": "📊",
+      "name": "Test the app",
+      "description": "Test the application to ensure it works as expected.",
+      "status": "pending"
+    },
+    {
+      "id": 6,
+      "icon": "📤",
+      "name": "Create a pull request",
+      "description": "Create a pull request to the original repository with your changes.",
+      "status": "pending"
+    }
+  ],
+  "icons": [
+    { "name": "Baby", "icon": "🍼" },
+    { "name": "Box", "icon": "📦" },
+    { "name": "Calendar", "icon": "📅" },
+    { "name": "Call", "icon": "📞" },
+    { "name": "Computer", "icon": "💻" },
+    { "name": "Doctor", "icon": "🩺" },
+    { "name": "Eat", "icon": "🍔" },
+    { "name": "Exercise", "icon": "🏋️‍♂️" },
+    { "name": "Folder", "icon": "📂" },
+    { "name": "Game", "icon": "🎮" },
+    { "name": "House", "icon": "🏠" },
+    { "name": "Inbox", "icon": "📥" },
+    { "name": "Mail", "icon": "✉️" },
+    { "name": "Mobile", "icon": "📱" },
+    { "name": "Music", "icon": "🎵" },
+    { "name": "Outbox", "icon": "📤" },
+    { "name": "Report", "icon": "📊" },
+    { "name": "Shop", "icon": "🛒" },
+    { "name": "Taxi", "icon": "🚖" },
+    { "name": "Travel", "icon": "✈️" },
+    { "name": "Video", "icon": "🎥" },
+    { "name": "Write", "icon": "📝" }
+  ]
+}

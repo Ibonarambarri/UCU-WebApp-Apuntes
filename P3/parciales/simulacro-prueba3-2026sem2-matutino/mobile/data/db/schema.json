@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.json",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "countries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string", "pattern": "^[A-Z]{3}$", "readOnly": true },
+          "name": { "type": "string" },
+          "flag": { "type": "string" },
+          "population": { "type": "integer" },
+          "area": { "type": ["number", "null"] }
+        },
+        "required": ["code", "name", "flag", "population", "area"],
+        "additionalProperties": false
+      }
+    },
+    "games": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "readOnly": true },
+          "player": { "type": "string", "minLength": 1 },
+          "status": { "enum": ["playing", "lost", "won"] },
+          "score": { "type": "integer", "minimum": 0 },
+          "stat": { "enum": ["population", "area"] },
+          "current": { "type": "string", "pattern": "^[A-Z]{3}$" },
+          "next": { "type": ["string", "null"], "pattern": "^[A-Z]{3}$" },
+          "used": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^[A-Z]{3}$" }
+          },
+          "createdAt": { "type": "string", "format": "date-time", "readOnly": true },
+          "finishedAt": { "type": ["string", "null"], "format": "date-time" }
+        },
+        "required": [
+          "id", "player", "status", "score", "stat", "current", "next", "used",
+          "createdAt", "finishedAt"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["countries", "games"],
+  "additionalProperties": false
+}

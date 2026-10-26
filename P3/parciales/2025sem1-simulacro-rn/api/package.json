@@ -1,0 +1,12 @@
+{
+  "name": "@simulacro-parcial2-2025sem1/api",
+  "main": "expo-router/entry",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "json-server": "^1.0.0-beta.3"
+  },
+  "scripts": {
+    "start": "json-server ./data.json"
+  }
+}

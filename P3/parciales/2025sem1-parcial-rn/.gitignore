@@ -1,0 +1,16 @@
+# npm
+**/node_modules/
+npm-debug.*
+
+# Expo
+mobile/.expo/
+mobile/dist/
+mobile/web-build/
+mobile/expo-env.d.ts
+
+# Env files
+.env*.local
+
+# Other
+.DS_Store
+*.pem

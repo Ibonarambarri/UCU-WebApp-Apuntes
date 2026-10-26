@@ -1,0 +1,58 @@
+meta {
+  name: Guess
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/api/games/{{gameId}}/guess
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "guess": "higher"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.guess: eq higher
+  res.body.correct: isBoolean
+}
+
+tests {
+  test("revela la poblacion y la superficie del pais que estaba oculto", function() {
+    expect(res.getBody().revealed).to.have.property("population");
+    expect(res.getBody().revealed).to.have.property("area");
+  });
+
+  test("stat es el tipo de la ronda respondida", function() {
+    expect(["population", "area"]).to.include(res.getBody().stat);
+  });
+
+  test("si acerto sigue jugando, si no la partida queda perdida", function() {
+    const { correct, game } = res.getBody();
+    if (correct) {
+      expect(game.status).to.eql("playing");
+      expect(game.score).to.eql(1);
+      expect(game.current.code).to.eql(res.getBody().revealed.code);
+    } else {
+      expect(game.status).to.eql("lost");
+      expect(game.score).to.eql(0);
+      expect(game.next).to.have.property("population");
+      expect(game.stat).to.eql(res.getBody().stat);
+    }
+  });
+}
+
+docs {
+  El resultado depende del sorteo, asi que los tests cubren los dos casos.
+  `game` es la partida ya actualizada: si se acerto, el revelado pasa a ser
+  `current` y hay un `next` nuevo.
+
+  `stat` es el tipo de la ronda que se respondio y `game.stat` el de la
+  siguiente, que se sortea de nuevo y puede ser distinto. Con valores iguales
+  cualquier respuesta es correcta.
+}

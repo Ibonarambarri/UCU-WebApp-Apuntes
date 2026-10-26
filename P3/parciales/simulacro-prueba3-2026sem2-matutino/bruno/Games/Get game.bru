@@ -1,0 +1,21 @@
+meta {
+  name: Get game
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/games/{{gameId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.status: eq playing
+}
+
+docs {
+  Lo que pide la pantalla `/games/:id` al cargar: con esto alcanza para
+  retomar la partida despues de un refresh.
+}

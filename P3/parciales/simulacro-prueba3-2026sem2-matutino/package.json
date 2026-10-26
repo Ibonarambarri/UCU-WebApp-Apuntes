@@ -1,0 +1,18 @@
+{
+  "name": "simulacro-prueba3-2026sem2-matutino",
+  "private": true,
+  "version": "0.0.0",
+  "workspaces": [
+    "mobile"
+  ],
+  "scripts": {
+    "start": "npm run start --workspace mobile",
+    "android": "npm run android --workspace mobile",
+    "ios": "npm run ios --workspace mobile",
+    "web": "npm run web --workspace mobile",
+    "lint": "npm run lint --workspace mobile"
+  },
+  "allowScripts": {
+    "unrs-resolver@1.12.2": true
+  }
+}

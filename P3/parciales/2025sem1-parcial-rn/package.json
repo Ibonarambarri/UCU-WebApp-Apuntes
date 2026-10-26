@@ -1,0 +1,17 @@
+{
+  "description": "DWYM, Segundo parcial, 2025sem1",
+  "directories": {
+    "doc": "docs"
+  },
+  "license": "UNLICENSED",
+  "name": "@parcial2-2025sem1/root",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ucu-fit-dwym/parcial2-2025sem1.git"
+  },
+  "version": "0.1.0",
+  "workspaces": [
+    "api",
+    "mobile"
+  ]
+}

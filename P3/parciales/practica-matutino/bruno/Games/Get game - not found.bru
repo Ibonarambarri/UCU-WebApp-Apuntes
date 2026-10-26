@@ -1,0 +1,15 @@
+meta {
+  name: Get game - not found
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/api/games/9999
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 404
+}
